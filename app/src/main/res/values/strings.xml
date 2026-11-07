@@ -1,3 +1,55 @@
 <resources>
     <string name="app_name">apptours</string>
+
+    <!-- Categorías (T-02) -->
+    <string name="category_gastronomy">Gastronomía</string>
+    <string name="category_culture">Cultura</string>
+    <string name="category_nature">Naturaleza</string>
+    <string name="category_entertainment">Entretenimiento</string>
+    <string name="category_history">Historia</string>
+
+    <!-- Rangos de precio (T-04) -->
+    <string name="price_free">Gratuito</string>
+    <string name="price_cheap">Económico</string>
+    <string name="price_moderate">Moderado</string>
+    <string name="price_expensive">Costoso</string>
+
+    <!-- Estados de publicación -->
+    <string name="status_pending">Pendiente de verificación</string>
+    <string name="status_verified">Verificado por moderación</string>
+    <string name="status_rejected">Rechazada</string>
+    <string name="status_resolved">Finalizada / Resuelta</string>
+
+    <!-- Niveles (T-07) -->
+    <string name="level_tourist">Turista</string>
+    <string name="level_explorer">Explorador</string>
+    <string name="level_adventurer">Aventurero</string>
+    <string name="level_local_ambassador">Embajador Local</string>
+    <string name="level_max">Nivel Máximo</string>
+
+    <!-- Horario -->
+    <string name="schedule_every_day">Todos los días</string>
+    <string name="schedule_mon_sat">Lun–Sáb</string>
+    <string name="schedule_format">%1$s %2$s – %3$s</string>
+
+    <!-- Errores -->
+    <string name="error_invalid_email">Ingresa un correo electrónico válido</string>
+    <string name="error_password_required">La contraseña es obligatoria</string>
+    <string name="error_full_name_required">El nombre completo es obligatorio</string>
+    <string name="error_password_min_length">Mínimo 8 caracteres</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="error_terms_required">Debes aceptar los términos y la política de privacidad</string>
+    <string name="error_place_required_fields">Completa el título y la descripción del lugar.</string>
+    <string name="error_comment_required">Escribe un comentario antes de enviarlo.</string>
+    <string name="error_reject_reason_required">Debes escribir un motivo obligatorio para rechazar la publicación</string>
+    <string name="error_invalid_credentials">Credenciales incorrectas. Verifica tu correo y contraseña.</string>
+    <string name="error_email_in_use">Ya existe una cuenta registrada con este correo.</string>
+    <string name="error_not_authenticated">Tu sesión expiró. Inicia sesión de nuevo.</string>
+    <string name="error_not_allowed">No tienes permiso para realizar esta acción.</string>
+    <string name="error_place_not_found">Publicación no encontrada</string>
+    <string name="error_user_not_found">No encontramos tu perfil de usuario.</string>
+    <string name="error_unknown">Ocurrió un error inesperado. Inténtalo de nuevo.</string>
+
+    <!-- Autenticación -->
+    <string name="recovery_link_sent">Hemos enviado un enlace de recuperación a %1$s</string>
 </resources>

@@ -1,0 +1,15 @@
+package co.edu.uniquindio.apptours.domain.model
+
+/** Datos que el autor llena en el formulario de crear/editar publicación. */
+data class PlaceDraft(
+    val title: String,
+    val category: PlaceCategory,
+    val description: String,
+    val priceRange: PriceRange,
+    val daysActive: List<String>,
+    val openTime: String,
+    val closeTime: String,
+    val latitude: Double,
+    val longitude: Double,
+    val photosCount: Int
+)

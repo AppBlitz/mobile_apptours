@@ -2,27 +2,40 @@ package co.edu.uniquindio.apptours.data.local
 
 import co.edu.uniquindio.apptours.domain.model.*
 
+/**
+ * Datos semilla de la Fase 2, usados por los repositorios en memoria mientras se migra a Firestore.
+ * TODO(IT-2): eliminar junto con los repositorios en memoria.
+ */
 object InMemoryDataSource {
 
-    val initialUsers = listOf(
+    private const val MINUTE = 60_000L
+    private const val HOUR = 60 * MINUTE
+    private const val DAY = 24 * HOUR
+    private val now = System.currentTimeMillis()
+
+    data class Credential(val uid: String, val email: String, val password: String)
+
+    val credentials = listOf(
+        Credential("user_valentina", "valentina@correo.com", "12345678"),
+        Credential("user_camila", "camila@correo.com", "12345678"),
+        Credential("mod_1", "moderador@colabtour.com", "12345678"),
+        Credential("mod_2", "admin@colabtour.com", "12345678")
+    )
+
+    val users = listOf(
         User(
             id = "user_valentina",
             fullName = "Valentina Ríos",
             email = "valentina@correo.com",
-            password = "12345678",
             role = UserRole.USER,
             latitude = 4.5350,
             longitude = -75.6750,
-            addressLabel = "Punto elegido en el mapa",
-            points = 640,
-            visitedPlaceIds = setOf("place_1", "place_2"),
-            interestedPlaceIds = setOf("place_1")
+            points = 640
         ),
         User(
             id = "user_camila",
             fullName = "Camila R.",
             email = "camila@correo.com",
-            password = "12345678",
             role = UserRole.USER,
             latitude = 4.5380,
             longitude = -75.6720,
@@ -32,25 +45,19 @@ object InMemoryDataSource {
             id = "mod_1",
             fullName = "Moderador coLab",
             email = "moderador@colabtour.com",
-            password = "12345678",
             role = UserRole.MODERATOR,
-            latitude = 4.5350,
-            longitude = -75.6750,
             points = 1500
         ),
         User(
             id = "mod_2",
             fullName = "Admin Moderador",
             email = "admin@colabtour.com",
-            password = "12345678",
             role = UserRole.MODERATOR,
-            latitude = 4.5350,
-            longitude = -75.6750,
             points = 1500
         )
     )
 
-    val initialPlaces = listOf(
+    val places = listOf(
         Place(
             id = "place_1",
             title = "Café Cordillera",
@@ -63,9 +70,10 @@ object InMemoryDataSource {
             latitude = 4.5410,
             longitude = -75.6710,
             photosCount = 4,
-            authorId = "user_valentina",
+            authorId = "user_camila",
             authorName = "Camila R.",
             authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - 20 * MINUTE,
             createdAtLabel = "hace 20 min",
             status = PlaceStatus.VERIFICADA,
             votesCount = 48
@@ -76,7 +84,7 @@ object InMemoryDataSource {
             category = PlaceCategory.NATURALEZA,
             description = "Mirador natural con vista panorámica de la cordillera central y avistamiento de aves al amanecer. Sendero bien señalizado y seguro.",
             priceRange = PriceRange.GRATUITO,
-            daysActive = listOf("L", "M", "X", "J", "V", "S", "D"),
+            daysActive = Place.ALL_DAYS,
             openTime = "5:00 a. m.",
             closeTime = "6:00 p. m.",
             latitude = 4.5620,
@@ -85,6 +93,7 @@ object InMemoryDataSource {
             authorId = "user_valentina",
             authorName = "Valentina Ríos",
             authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - DAY,
             createdAtLabel = "ayer",
             status = PlaceStatus.VERIFICADA,
             votesCount = 132
@@ -95,15 +104,16 @@ object InMemoryDataSource {
             category = PlaceCategory.CULTURA,
             description = "Mural colectivo sobre la historia cafetera del barrio; acceso libre a cualquier hora con iluminación nocturna e información histórica.",
             priceRange = PriceRange.GRATUITO,
-            daysActive = listOf("L", "M", "X", "J", "V", "S", "D"),
+            daysActive = Place.ALL_DAYS,
             openTime = "6:00 a. m.",
             closeTime = "10:00 p. m.",
             latitude = 4.5310,
             longitude = -75.6810,
             photosCount = 2,
-            authorId = "user_valentina",
-            authorName = "Diego F.",
-            authorLevel = UserLevel.TURISTA,
+            authorId = "user_camila",
+            authorName = "Camila R.",
+            authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - HOUR,
             createdAtLabel = "hace 1 h",
             status = PlaceStatus.PENDIENTE,
             votesCount = 19
@@ -114,15 +124,16 @@ object InMemoryDataSource {
             category = PlaceCategory.NATURALEZA,
             description = "Caminata corta de dificultad baja junto a la quebrada cristalina, pensada para ir en familia y disfrutar del bosque de niebla.",
             priceRange = PriceRange.GRATUITO,
-            daysActive = listOf("L", "M", "X", "J", "V", "S", "D"),
+            daysActive = Place.ALL_DAYS,
             openTime = "6:30 a. m.",
             closeTime = "5:00 p. m.",
             latitude = 4.5490,
             longitude = -75.6620,
             photosCount = 3,
             authorId = "user_valentina",
-            authorName = "Andrés P.",
-            authorLevel = UserLevel.AVENTURERO,
+            authorName = "Valentina Ríos",
+            authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - 2 * HOUR,
             createdAtLabel = "hace 2 h",
             status = PlaceStatus.PENDIENTE,
             votesCount = 27
@@ -140,8 +151,9 @@ object InMemoryDataSource {
             longitude = -75.6730,
             photosCount = 4,
             authorId = "user_camila",
-            authorName = "Luisa M.",
-            authorLevel = UserLevel.TURISTA,
+            authorName = "Camila R.",
+            authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - 5 * HOUR,
             createdAtLabel = "hace 5 h",
             status = PlaceStatus.PENDIENTE,
             votesCount = 14
@@ -161,6 +173,7 @@ object InMemoryDataSource {
             authorId = "user_valentina",
             authorName = "Valentina Ríos",
             authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - 3 * DAY,
             createdAtLabel = "hace 3 días",
             status = PlaceStatus.RESUELTA,
             votesCount = 34
@@ -176,14 +189,52 @@ object InMemoryDataSource {
             authorId = "user_valentina",
             authorName = "Valentina Ríos",
             authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - 2 * DAY,
             createdAtLabel = "hace 2 días",
             status = PlaceStatus.RECHAZADA,
             votesCount = 0,
-            rejectionReason = "No pudimos verificar que el lugar exista en la ubicación indicada."
+            rejectionReason = "No pudimos verificar que el lugar exista en la ubicación indicada.",
+            moderatorId = "mod_1",
+            reviewedAt = now - 2 * DAY
+        ),
+        Place(
+            id = "place_8",
+            title = "Parque Recreativo Los Fundadores",
+            category = PlaceCategory.ENTRETENIMIENTO,
+            description = "Parque con juegos mecánicos para niños, tarima de conciertos los fines de semana y feria gastronómica en las noches. Plan ideal para ir en familia o con amigos.",
+            priceRange = PriceRange.ECONOMICO,
+            daysActive = Place.ALL_DAYS,
+            openTime = "10:00 a. m.",
+            closeTime = "9:00 p. m.",
+            latitude = 4.5395,
+            longitude = -75.6655,
+            photosCount = 3,
+            authorId = "user_camila",
+            authorName = "Camila R.",
+            authorLevel = UserLevel.EXPLORADOR,
+            createdAt = now - 4 * DAY,
+            createdAtLabel = "hace 4 días",
+            status = PlaceStatus.VERIFICADA,
+            votesCount = 41,
+            moderatorId = "mod_1",
+            reviewedAt = now - 4 * DAY
         )
     )
 
-    val initialComments = listOf(
+    /** placeId -> ids de usuarios que marcaron "Me interesa". */
+    val votes = mapOf(
+        "place_1" to setOf("user_valentina")
+    )
+
+    /** userId -> lugares visitados. */
+    val visits = mapOf(
+        "user_valentina" to listOf(
+            Visit("place_1", PlaceCategory.GASTRONOMIA, 4.5410, -75.6710, now - DAY),
+            Visit("place_2", PlaceCategory.NATURALEZA, 4.5620, -75.6590, now - 2 * DAY)
+        )
+    )
+
+    val comments = listOf(
         Comment(
             id = "comm_1",
             placeId = "place_1",
@@ -191,6 +242,7 @@ object InMemoryDataSource {
             authorName = "Camila R.",
             authorLevel = UserLevel.EXPLORADOR,
             text = "Fui el sábado y conviene llegar temprano: el pan sale caliente a las 8 y la terraza se llena rápido.",
+            createdAt = now - 2 * HOUR,
             timeAgo = "hace 2 h"
         ),
         Comment(
@@ -200,32 +252,31 @@ object InMemoryDataSource {
             authorName = "Andrés P.",
             authorLevel = UserLevel.AVENTURERO,
             text = "El precio es justo, pero los domingos cierran más temprano. Lo confirmé con el encargado.",
+            createdAt = now - DAY,
             timeAgo = "ayer"
         )
     )
 
-    val initialNotifications = listOf(
+    val notifications = listOf(
         AppNotification(
             id = "notif_1",
             userId = "user_valentina",
             type = NotificationType.VOTE,
-            title = "Camila R. marcó «Me interesa» en tu publicación «Café Cordillera»",
+            title = "Camila R. marcó «Me interesa» en tu publicación «Mirador Alto del Águila»",
             body = "Tu publicación sigue sumando relevancia en la comunidad.",
             timeAgo = "hace 5 min",
-            isToday = true,
-            isRead = false,
-            relatedPlaceId = "place_1"
+            relatedPlaceId = "place_2",
+            createdAt = now - 5 * MINUTE
         ),
         AppNotification(
             id = "notif_2",
             userId = "user_valentina",
             type = NotificationType.COMMENT,
-            title = "Andrés P. comentó en «Café Cordillera»",
-            body = "El precio es justo, pero los domingos cierran más temprano...",
+            title = "Andrés P. comentó en «Mirador Alto del Águila»",
+            body = "Excelente para ver el amanecer, lleven abrigo...",
             timeAgo = "hace 1 h",
-            isToday = true,
-            isRead = false,
-            relatedPlaceId = "place_1"
+            relatedPlaceId = "place_2",
+            createdAt = now - HOUR
         ),
         AppNotification(
             id = "notif_3",
@@ -234,9 +285,8 @@ object InMemoryDataSource {
             title = "Un moderador verificó tu publicación «Mirador Alto del Águila»",
             body = "Ya es visible en el feed público.",
             timeAgo = "hace 3 h",
-            isToday = true,
-            isRead = false,
-            relatedPlaceId = "place_2"
+            relatedPlaceId = "place_2",
+            createdAt = now - 3 * HOUR
         ),
         AppNotification(
             id = "notif_4",
@@ -247,7 +297,7 @@ object InMemoryDataSource {
             timeAgo = "ayer",
             isToday = false,
             isRead = true,
-            relatedPlaceId = null
+            createdAt = now - DAY
         ),
         AppNotification(
             id = "notif_5",
@@ -258,57 +308,8 @@ object InMemoryDataSource {
             timeAgo = "hace 2 días",
             isToday = false,
             isRead = true,
-            relatedPlaceId = "place_7"
+            relatedPlaceId = "place_7",
+            createdAt = now - 2 * DAY
         )
     )
-
-    fun getBadgesForUser(points: Int, verifiedCount: Int): List<Badge> {
-        return listOf(
-            Badge(
-                id = "badge_1",
-                title = "Primera publicación",
-                description = "Compartiste tu primer punto de interés con la comunidad.",
-                unlocked = true,
-                obtainedDate = "Obtenida el 12 de septiembre"
-            ),
-            Badge(
-                id = "badge_2",
-                title = "Explorador",
-                description = "Superaste los 300 puntos de reputación ayudando a viajeros.",
-                unlocked = points >= 300,
-                obtainedDate = "Obtenida el 28 de septiembre"
-            ),
-            Badge(
-                id = "badge_3",
-                title = "Comentarista",
-                description = "Aportaste experiencias útiles en publicaciones de otros viajeros.",
-                unlocked = true,
-                obtainedDate = "Obtenida el 04 de octubre"
-            ),
-            Badge(
-                id = "badge_4",
-                title = "10 verificadas",
-                description = "Consigue que los moderadores verifiquen 10 de tus publicaciones.",
-                unlocked = verifiedCount >= 10,
-                progressText = "$verifiedCount/10",
-                progressFraction = (verifiedCount / 10f).coerceIn(0f, 1f)
-            ),
-            Badge(
-                id = "badge_5",
-                title = "Destacada del mes",
-                description = "Logra la publicación con más votos «Me interesa» del mes.",
-                unlocked = false,
-                progressText = "En curso",
-                progressFraction = 0.65f
-            ),
-            Badge(
-                id = "badge_6",
-                title = "Aventurero",
-                description = "Alcanza los 1000 puntos de reputación en coLab tour.",
-                unlocked = points >= 1000,
-                progressText = "$points/1000",
-                progressFraction = (points / 1000f).coerceIn(0f, 1f)
-            )
-        )
-    }
 }

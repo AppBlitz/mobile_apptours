@@ -8,7 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import co.edu.uniquindio.apptours.core.theme.CoLabTourTheme
 import co.edu.uniquindio.apptours.core.theme.ColabBackground
-import co.edu.uniquindio.apptours.features.principal.AppNavigation
+import co.edu.uniquindio.apptours.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = ColabBackground
                 ) {
-                    AppNavigation()
+                    AppNavHost()
                 }
             }
         }
