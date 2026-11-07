@@ -104,9 +104,9 @@ internal fun PhotoPickerSection(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = ColabBrown)
             ) {
-                Icon(Icons.Outlined.PhotoCamera, contentDescription = null, modifier = Modifier.size(18.dp))
+                Icon(Icons.Outlined.PhotoCamera, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Subir fotos a Cloudinary", fontWeight = FontWeight.Bold)
+                Text("Subir fotos a Cloudinary", color = Color.White, fontWeight = FontWeight.Bold)
             }
             Spacer(modifier = Modifier.height(6.dp))
             Text(

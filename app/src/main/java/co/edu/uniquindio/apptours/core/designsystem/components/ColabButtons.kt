@@ -68,15 +68,18 @@ fun ColabPrimaryButton(
             disabledContentColor = ColabTextSecondary
         )
     ) {
+        // Color explícito: así el texto no hereda el color oscuro de la tipografía del tema.
+        val textColor = if (enabled) contentColor else ColabTextSecondary
         if (leadingIcon != null) {
             Icon(
                 imageVector = leadingIcon,
                 contentDescription = null,
+                tint = textColor,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
-        Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        Text(text = text, color = textColor, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -99,9 +102,14 @@ fun ColabOutlinedButton(
         colors = ButtonDefaults.outlinedButtonColors(contentColor = contentColor)
     ) {
         if (leadingIcon != null) {
-            Icon(imageVector = leadingIcon, contentDescription = null, modifier = Modifier.size(20.dp))
+            Icon(
+                imageVector = leadingIcon,
+                contentDescription = null,
+                tint = contentColor,
+                modifier = Modifier.size(20.dp)
+            )
             Spacer(modifier = Modifier.width(8.dp))
         }
-        Text(text = text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+        Text(text = text, color = contentColor, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
     }
 }
