@@ -50,6 +50,10 @@
     <string name="error_user_not_found">No encontramos tu perfil de usuario.</string>
     <string name="error_unknown">Ocurrió un error inesperado. Inténtalo de nuevo.</string>
 
+    <!-- Fotos de la publicación -->
+    <string name="photos_upload_button">Cargar foto</string>
+    <string name="photos_hint">JPG o PNG · %1$d seleccionadas</string>
+
     <!-- Autenticación -->
     <string name="recovery_link_sent">Hemos enviado un enlace de recuperación a %1$s</string>
 </resources>

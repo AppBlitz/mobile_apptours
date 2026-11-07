@@ -17,3 +17,9 @@ Prompt escrito el 07/11/2026 : "el botón de inicio sesión y registra es color 
 Respuesta de la Inteligencia Artificial Generativa: "Se corrigió el contraste de los botones. En core/designsystem/components/ColabButtons.kt, ColabPrimaryButton ahora asigna de forma explícita el color del texto y del icono (blanco, o gris cuando está deshabilitado) en lugar de depender del color heredado del tema, y ColabOutlinedButton hace lo mismo con su contentColor. También se fijó texto e icono blancos en el botón café \"Subir fotos a Cloudinary\" de PhotoPickerSection.kt, que tenía el mismo riesgo. La primera compilación falló por un error de la compilación incremental de Gradle (no encontraba los colores de la paleta aunque los imports estaban bien); con ./gradlew clean assembleDebug compiló sin errores. No se pudo verificar visualmente porque no hay emulador disponible; la integrante debe confirmar en el dispositivo que el texto ya se ve."
 
 ---
+
+Prompt escrito el 07/11/2026 : "En ningun lado, quiero que pongas \"subir a cloudinary\" siempre va a ser cargar foto. nada referente a tecnologías que usa la aplicacíon por debajo"
+
+Respuesta de la Inteligencia Artificial Generativa: "Se revisaron todos los textos visibles de la app buscando nombres de tecnologías (Cloudinary, Mapbox, Firebase, Firestore, Gemini). Solo aparecían en PhotoPickerSection.kt: el botón \"Subir fotos a Cloudinary\" pasó a \"Cargar foto\" y el texto de ayuda \"JPG o PNG · se guardan en tu almacenamiento externo (N seleccionadas)\" pasó a \"JPG o PNG · N seleccionadas\"; ambos quedaron como recursos en strings.xml (photos_upload_button, photos_hint). Las demás apariciones son nombres de clases, imports y comentarios del código, que el usuario no ve. Se agregó la regla 11 en la sección 4.2 de ROADMAP.md (la UI nunca nombra tecnologías internas) para que se respete en las siguientes iteraciones. Compiló con ./gradlew assembleDebug."
+
+---

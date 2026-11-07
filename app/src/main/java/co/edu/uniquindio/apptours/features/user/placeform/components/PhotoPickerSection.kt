@@ -49,7 +49,7 @@ import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.core.util.*
 import co.edu.uniquindio.apptours.domain.model.*
 
-// TODO(IT-8): reemplazar la simulación por Photo Picker + Cloudinary.
+// TODO(IT-8): reemplazar la simulación por el selector de fotos real.
 @Composable
 internal fun PhotoPickerSection(
     photosCount: Int,
@@ -106,11 +106,11 @@ internal fun PhotoPickerSection(
             ) {
                 Icon(Icons.Outlined.PhotoCamera, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Subir fotos a Cloudinary", color = Color.White, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.photos_upload_button), color = Color.White, fontWeight = FontWeight.Bold)
             }
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "JPG o PNG · se guardan en tu almacenamiento externo ($photosCount seleccionadas)",
+                text = stringResource(R.string.photos_hint, photosCount),
                 fontSize = 11.sp,
                 color = ColabTextSecondary
             )
