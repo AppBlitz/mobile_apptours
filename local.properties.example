@@ -1,0 +1,14 @@
+## Copia este archivo como `local.properties` (NO se sube al repositorio) y llena tus llaves.
+## sdk.dir lo genera Android Studio automáticamente.
+# sdk.dir=C\:\Users\<usuario>\AppData\Local\Android\Sdk
+
+# Mapbox (token público pk.*) · https://account.mapbox.com/access-tokens/
+MAPBOX_ACCESS_TOKEN=
+
+# Google Gemini API (Google AI Studio) · https://aistudio.google.com/apikey
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.5-flash
+
+# Cloudinary (upload preset unsigned) · https://console.cloudinary.com/
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_UPLOAD_PRESET=
