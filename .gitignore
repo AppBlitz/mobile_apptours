@@ -21,3 +21,6 @@ ROADMAP.md
 *.jks
 *.keystore
 keystore.properties
+
+# Caché del compilador de Kotlin
+.kotlin/
