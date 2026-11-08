@@ -124,7 +124,8 @@ internal fun PlaceDetailActions(
                 onClick = onEditPlace,
                 modifier = Modifier.weight(1f)
             )
-            if (place.status != PlaceStatus.RESUELTA) {
+            // Solo lo verificado se puede finalizar (lo pendiente o rechazado aún no pasó moderación).
+            if (place.status == PlaceStatus.VERIFICADA) {
                 OwnerAction(
                     text = stringResource(R.string.place_action_resolve),
                     icon = Icons.Outlined.CheckCircle,

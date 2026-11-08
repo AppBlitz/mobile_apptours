@@ -1,27 +1,27 @@
 package co.edu.uniquindio.apptours.domain.usecase.moderation
 
 import co.edu.uniquindio.apptours.core.common.AppException
-import co.edu.uniquindio.apptours.core.common.FormField
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
 import co.edu.uniquindio.apptours.domain.usecase.notification.SendNotificationUseCase
+import co.edu.uniquindio.apptours.domain.validation.ModerationForms
 import javax.inject.Inject
 
-/** Rechazar (M-03): el motivo es obligatorio y se notifica al autor. */
+/** Rechazar (M-03): el motivo es obligatorio (15–300 caracteres) y se notifica al autor con él. */
 class RejectPlaceUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
     private val sendNotification: SendNotificationUseCase
 ) {
     suspend operator fun invoke(placeId: String, reason: String): Result<Unit> {
-        if (reason.isBlank()) {
-            return Result.failure(AppException.InvalidFields(setOf(FormField.REJECTION_REASON)))
-        }
+        val errors = ModerationForms.rejection(reason)
+        if (errors.isNotEmpty()) return Result.failure(AppException.InvalidFields(errors))
         val moderator = getSession.requireModerator().getOrElse { return Result.failure(it) }
         val place = placeRepository.getPlace(placeId)
             ?: return Result.failure(AppException.PlaceNotFound)
+        if (place.status == PlaceStatus.RECHAZADA) return Result.success(Unit)
         val cleanReason = reason.trim()
 
         return placeRepository.updateStatus(

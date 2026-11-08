@@ -1,54 +1,38 @@
 package co.edu.uniquindio.apptours.features.moderator.review
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.edu.uniquindio.apptours.R
+import co.edu.uniquindio.apptours.core.common.FormField
 import co.edu.uniquindio.apptours.core.designsystem.components.*
-import co.edu.uniquindio.apptours.core.map.*
+import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequesters
+import co.edu.uniquindio.apptours.core.designsystem.form.rememberFieldRequesters
 import co.edu.uniquindio.apptours.core.theme.*
-import co.edu.uniquindio.apptours.core.util.*
-import co.edu.uniquindio.apptours.domain.model.*
+import co.edu.uniquindio.apptours.core.util.labelRes
+import co.edu.uniquindio.apptours.core.util.messageOf
+import co.edu.uniquindio.apptours.domain.model.Place
+import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.features.moderator.review.components.*
+import co.edu.uniquindio.apptours.features.user.placedetail.components.CommentCard
 
 @Composable
 fun ModeratorReviewRoute(
@@ -56,49 +40,59 @@ fun ModeratorReviewRoute(
     viewModel: ModeratorReviewViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val requesters = rememberFieldRequesters()
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
                 ModeratorReviewEvent.Done -> onNavigateBack()
+                is ModeratorReviewEvent.ScrollToField -> requesters.reveal(event.field)
             }
         }
     }
 
     ModeratorReviewScreen(
         state = state,
-        onNavigateBack = onNavigateBack,
-        onCheckLocationChange = viewModel::onCheckLocationChange,
-        onCheckScheduleChange = viewModel::onCheckScheduleChange,
-        onCheckPhotosChange = viewModel::onCheckPhotosChange,
-        onVerify = viewModel::onVerify,
-        onMarkResolved = viewModel::onMarkResolved,
-        onOpenReject = viewModel::onOpenReject,
-        onDismissReject = viewModel::onDismissReject,
-        onReasonChange = viewModel::onReasonChange,
-        onConfirmReject = viewModel::onConfirmReject,
-        onRetry = viewModel::onRetry
+        requesters = requesters,
+        actions = ModeratorReviewActions(
+            onNavigateBack = onNavigateBack,
+            onToggleCheck = viewModel::onToggleCheck,
+            onVerify = viewModel::onVerify,
+            onMarkResolved = viewModel::onMarkResolved,
+            onOpenReject = viewModel::onOpenReject,
+            onDismissReject = viewModel::onDismissReject,
+            onReasonChange = viewModel::onReasonChange,
+            onQuickReason = viewModel::onQuickReason,
+            onReasonFocusLost = viewModel::onReasonFocusLost,
+            onConfirmReject = viewModel::onConfirmReject,
+            onRetry = viewModel::onRetry
+        )
     )
 }
+
+data class ModeratorReviewActions(
+    val onNavigateBack: () -> Unit,
+    val onToggleCheck: (ChecklistItem) -> Unit,
+    val onVerify: () -> Unit,
+    val onMarkResolved: () -> Unit,
+    val onOpenReject: () -> Unit,
+    val onDismissReject: () -> Unit,
+    val onReasonChange: (String) -> Unit,
+    val onQuickReason: (String) -> Unit,
+    val onReasonFocusLost: () -> Unit,
+    val onConfirmReject: () -> Unit,
+    val onRetry: () -> Unit
+)
 
 @Composable
 fun ModeratorReviewScreen(
     state: ModeratorReviewUiState,
-    onNavigateBack: () -> Unit,
-    onCheckLocationChange: (Boolean) -> Unit,
-    onCheckScheduleChange: (Boolean) -> Unit,
-    onCheckPhotosChange: (Boolean) -> Unit,
-    onVerify: () -> Unit,
-    onMarkResolved: () -> Unit,
-    onOpenReject: () -> Unit,
-    onDismissReject: () -> Unit,
-    onReasonChange: (String) -> Unit,
-    onConfirmReject: () -> Unit,
-    onRetry: () -> Unit
+    requesters: FieldRequesters,
+    actions: ModeratorReviewActions
 ) {
     val place = state.place
     if (state.loadErrorRes != null) {
-        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = actions.onRetry, modifier = Modifier.background(ColabBackground))
         return
     }
     if (place == null) {
@@ -112,96 +106,125 @@ fun ModeratorReviewScreen(
         return
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ColabBackground)
-            .verticalScroll(rememberScrollState())
-    ) {
-        ReviewPlaceHeader(onNavigateBack = onNavigateBack)
+    // Qué acciones tienen sentido según el estado actual (M-02, M-03, M-04).
+    val canBeVerified = place.status == PlaceStatus.PENDIENTE || place.status == PlaceStatus.RECHAZADA
+    val canBeResolved = place.status != PlaceStatus.RESUELTA
+    val canBeRejected = place.status != PlaceStatus.RECHAZADA
 
-        Column(modifier = Modifier.padding(20.dp)) {
-            ReviewPlaceInfo(place = place)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(ColabBackground)
+                .verticalScroll(rememberScrollState())
+        ) {
+            ReviewPlaceHeader(onNavigateBack = actions.onNavigateBack)
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Column(modifier = Modifier.padding(20.dp)) {
+                ReviewPlaceInfo(place = place)
 
-            // Lista de verificación del moderador
-            Text(
-                text = "Lista de verificación",
-                fontWeight = FontWeight.Bold,
-                fontSize = 17.sp,
-                color = ColabDarkGreen
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            ChecklistItemRow(
-                text = "El lugar existe en la ubicación indicada",
-                checked = state.checkLocationExists,
-                onCheckedChange = onCheckLocationChange
-            )
-            ChecklistItemRow(
-                text = "Horario y precio son plausibles",
-                checked = state.checkSchedulePlausible,
-                onCheckedChange = onCheckScheduleChange
-            )
-            ChecklistItemRow(
-                text = "Las fotos corresponden al sitio",
-                checked = state.checkPhotosMatch,
-                onCheckedChange = onCheckPhotosChange
-            )
+                Spacer(modifier = Modifier.height(14.dp))
+                CurrentStatusBanner(place = place)
 
-            Spacer(modifier = Modifier.height(14.dp))
+                if (canBeVerified) {
+                    Spacer(modifier = Modifier.height(18.dp))
+                    Text(
+                        text = stringResource(R.string.review_checklist_title),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 17.sp,
+                        color = ColabDarkGreen
+                    )
+                    Text(
+                        text = stringResource(R.string.review_checklist_hint),
+                        fontSize = 12.sp,
+                        color = ColabTextSecondary
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    ChecklistItem.entries.forEach { item ->
+                        ChecklistItemRow(
+                            text = stringResource(item.labelRes),
+                            checked = item in state.checkedItems,
+                            onCheckedChange = { actions.onToggleCheck(item) },
+                            enabled = !state.isProcessing
+                        )
+                    }
+                }
 
-            Text(
-                text = "Comentarios (${state.comments.size})",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = ColabDarkGreen
-            )
-            if (state.comments.isEmpty()) {
+                Spacer(modifier = Modifier.height(14.dp))
+
                 Text(
-                    text = "Aún no hay comentarios en esta publicación.",
-                    fontSize = 13.sp,
-                    color = ColabTextSecondary,
-                    modifier = Modifier.padding(top = 4.dp)
+                    text = stringResource(R.string.review_comments_title, state.comments.size),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = ColabDarkGreen
                 )
+                if (state.comments.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.review_no_comments),
+                        fontSize = 13.sp,
+                        color = ColabTextSecondary,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(22.dp))
+            state.comments.forEach { comment -> CommentCard(comment = comment) }
 
-            // Botones de acción de Moderación (Página 17 del PDF)
-            ColabPrimaryButton(
-                text = "Verificar / Aprobar",
-                leadingIcon = Icons.Filled.Check,
-                onClick = onVerify
-            )
+            Column(modifier = Modifier.padding(20.dp)) {
+                if (canBeVerified) {
+                    ColabPrimaryButton(
+                        text = stringResource(R.string.review_verify),
+                        leadingIcon = Icons.Filled.Check,
+                        enabled = state.canVerify,
+                        onClick = actions.onVerify
+                    )
+                    if (!state.canVerify && !state.isProcessing) {
+                        val missing = ChecklistItem.entries.size - state.checkedItems.size
+                        Text(
+                            text = pluralStringResource(R.plurals.review_verify_missing, missing, missing),
+                            fontSize = 12.sp,
+                            color = ColabTextSecondary,
+                            modifier = Modifier.padding(top = 4.dp, start = 6.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    if (canBeResolved) {
+                        ColabOutlinedButton(
+                            text = stringResource(R.string.review_resolve),
+                            leadingIcon = Icons.Outlined.TaskAlt,
+                            onClick = actions.onMarkResolved,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (canBeRejected) {
+                        ColabOutlinedButton(
+                            text = stringResource(R.string.review_reject),
+                            borderColor = ColabError,
+                            contentColor = ColabError,
+                            leadingIcon = Icons.Filled.Close,
+                            onClick = actions.onOpenReject,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                ColabOutlinedButton(
-                    text = "Marcar como resuelto",
-                    onClick = onMarkResolved,
-                    modifier = Modifier.weight(1f)
-                )
-                ColabOutlinedButton(
-                    text = "Rechazar",
-                    borderColor = ColabError,
-                    contentColor = ColabError,
-                    leadingIcon = Icons.Filled.Close,
-                    onClick = onOpenReject,
-                    modifier = Modifier.weight(1f)
-                )
+                if (state.errorRes != null && !state.showRejectSheet) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
+                }
+
+                Spacer(modifier = Modifier.height(28.dp))
             }
+        }
 
-            if (state.errorRes != null && !state.showRejectSheet) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
-            }
-
-            Spacer(modifier = Modifier.height(28.dp))
+        if (state.isProcessing && !state.showRejectSheet) {
+            LoadingOverlay(dimBackground = true)
         }
     }
 
@@ -209,11 +232,45 @@ fun ModeratorReviewScreen(
         RejectReasonSheet(
             place = place,
             reason = state.rejectionReason,
-            errorRes = state.errorRes,
+            reasonError = state.rejectForm.messageOf(FormField.REJECTION_REASON),
+            generalError = state.errorRes?.let { stringResource(it) },
             enabled = !state.isProcessing,
-            onReasonChange = onReasonChange,
-            onDismiss = onDismissReject,
-            onConfirm = onConfirmReject
+            requester = requesters[FormField.REJECTION_REASON],
+            onReasonChange = actions.onReasonChange,
+            onQuickReason = actions.onQuickReason,
+            onReasonFocusLost = actions.onReasonFocusLost,
+            onDismiss = actions.onDismissReject,
+            onConfirm = actions.onConfirmReject
         )
+    }
+}
+
+/** Estado actual de la publicación y, si fue rechazada, el motivo que ya se le dio al autor. */
+@Composable
+private fun CurrentStatusBanner(place: Place) {
+    val (color, background) = when (place.status) {
+        PlaceStatus.PENDIENTE -> ColabBrown to ColabAmberBg
+        PlaceStatus.VERIFICADA -> ColabMediumGreen to ColabSageBg
+        PlaceStatus.RECHAZADA -> ColabError to ColabErrorBg
+        PlaceStatus.RESUELTA -> ColabDarkGreen to ColabCardSurface
+    }
+    Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp), color = background) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = stringResource(R.string.review_current_status, stringResource(place.status.labelRes())),
+                color = color,
+                fontWeight = FontWeight.Bold,
+                fontSize = 13.sp
+            )
+            val reason = place.rejectionReason
+            if (place.status == PlaceStatus.RECHAZADA && !reason.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.review_previous_reason, reason),
+                    color = ColabTextPrimary,
+                    fontSize = 13.sp
+                )
+            }
+        }
     }
 }

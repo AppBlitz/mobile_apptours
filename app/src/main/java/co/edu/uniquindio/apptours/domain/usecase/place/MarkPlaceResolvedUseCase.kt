@@ -11,7 +11,11 @@ import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.notification.SendNotificationUseCase
 import javax.inject.Inject
 
-/** El autor (U-09) o cualquier moderador (M-04) marca la publicación como resuelta. */
+/**
+ * El autor (U-09) o cualquier moderador (M-04) marca la publicación como resuelta.
+ * El autor solo puede finalizar algo ya verificado: si pudiera finalizar una pendiente o rechazada,
+ * aparecería en el feed público sin pasar por moderación.
+ */
 class MarkPlaceResolvedUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
@@ -27,6 +31,9 @@ class MarkPlaceResolvedUseCase @Inject constructor(
             return Result.failure(AppException.NotAllowed)
         }
         if (place.status == PlaceStatus.RESUELTA) return Result.success(Unit)
+        if (!isModerator && place.status != PlaceStatus.VERIFICADA) {
+            return Result.failure(AppException.NotAllowed)
+        }
 
         return placeRepository.updateStatus(
             id = placeId,

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.domain.usecase.moderation
 
+import co.edu.uniquindio.apptours.domain.model.ModerationFilter
 import co.edu.uniquindio.apptours.domain.model.ModerationStats
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
@@ -8,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import java.util.Calendar
 import javax.inject.Inject
 
-/** Contadores del panel: pendientes y verificadas/rechazadas hoy (según `reviewedAt`). */
+/** Contadores del panel: total por filtro y verificadas/rechazadas/resueltas hoy (según `reviewedAt`). */
 class GetModerationStatsUseCase @Inject constructor(
     private val placeRepository: PlaceRepository
 ) {
@@ -17,9 +18,12 @@ class GetModerationStatsUseCase @Inject constructor(
             val startOfToday = startOfToday()
             val reviewedToday = places.filter { (it.reviewedAt ?: 0L) >= startOfToday }
             ModerationStats(
-                pendingCount = places.count { it.status == PlaceStatus.PENDIENTE },
+                totals = ModerationFilter.entries.associateWith { filter ->
+                    places.count { it.status in filter.statuses }
+                },
                 verifiedToday = reviewedToday.count { it.status == PlaceStatus.VERIFICADA },
-                rejectedToday = reviewedToday.count { it.status == PlaceStatus.RECHAZADA }
+                rejectedToday = reviewedToday.count { it.status == PlaceStatus.RECHAZADA },
+                resolvedToday = reviewedToday.count { it.status == PlaceStatus.RESUELTA }
             )
         }
 

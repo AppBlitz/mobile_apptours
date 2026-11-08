@@ -1,19 +1,21 @@
 package co.edu.uniquindio.apptours.features.moderator.review
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.edu.uniquindio.apptours.core.common.FieldError
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.common.FormState
 import co.edu.uniquindio.apptours.core.common.RetryTrigger
+import co.edu.uniquindio.apptours.core.util.fieldErrors
 import co.edu.uniquindio.apptours.core.util.toMessageRes
-import co.edu.uniquindio.apptours.domain.model.Comment
-import co.edu.uniquindio.apptours.domain.model.Place
 import co.edu.uniquindio.apptours.domain.usecase.comment.GetCommentsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.moderation.RejectPlaceUseCase
 import co.edu.uniquindio.apptours.domain.usecase.moderation.VerifyPlaceUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.GetPlaceByIdUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.MarkPlaceResolvedUseCase
+import co.edu.uniquindio.apptours.domain.validation.ModerationForms
 import co.edu.uniquindio.apptours.navigation.ModeratorReview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -28,29 +30,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class ModeratorReviewUiState(
-    val isLoading: Boolean = true,
-    val place: Place? = null,
-    val comments: List<Comment> = emptyList(),
-    val checkLocationExists: Boolean = true,
-    val checkSchedulePlausible: Boolean = true,
-    val checkPhotosMatch: Boolean = true,
-    val showRejectSheet: Boolean = false,
-    val rejectionReason: String = DEFAULT_REJECTION_REASON,
-    @StringRes val errorRes: Int? = null,
-    @StringRes val loadErrorRes: Int? = null,
-    val isProcessing: Boolean = false
-) {
-    companion object {
-        const val DEFAULT_REJECTION_REASON =
-            "No pudimos verificar que el lugar exista en la ubicación indicada. Agrega una foto de la fachada y corrige las coordenadas."
-    }
-}
-
-sealed interface ModeratorReviewEvent {
-    data object Done : ModeratorReviewEvent
-}
 
 @HiltViewModel
 class ModeratorReviewViewModel @Inject constructor(
@@ -78,35 +57,75 @@ class ModeratorReviewViewModel @Inject constructor(
 
     fun onRetry() = retryTrigger.retry()
 
-    fun onCheckLocationChange(checked: Boolean) = local.update { it.copy(checkLocationExists = checked) }
-
-    fun onCheckScheduleChange(checked: Boolean) = local.update { it.copy(checkSchedulePlausible = checked) }
-
-    fun onCheckPhotosChange(checked: Boolean) = local.update { it.copy(checkPhotosMatch = checked) }
+    fun onToggleCheck(item: ChecklistItem) = local.update {
+        val checked = if (item in it.checkedItems) it.checkedItems - item else it.checkedItems + item
+        it.copy(checkedItems = checked, errorRes = null)
+    }
 
     fun onOpenReject() = local.update { it.copy(showRejectSheet = true, errorRes = null) }
 
-    fun onDismissReject() = local.update { it.copy(showRejectSheet = false, errorRes = null) }
+    fun onDismissReject() = local.update {
+        it.copy(showRejectSheet = false, rejectionReason = "", rejectForm = FormState(), errorRes = null)
+    }
 
-    fun onReasonChange(reason: String) = local.update { it.copy(rejectionReason = reason, errorRes = null) }
+    fun onReasonChange(reason: String) = local.update {
+        val value = reason.take(ModerationForms.MAX_REASON_LENGTH)
+        it.copy(
+            rejectionReason = value,
+            rejectForm = it.rejectForm.touch(FormField.REJECTION_REASON, ModerationForms.rejection(value)),
+            errorRes = null
+        )
+    }
 
-    fun onVerify() = process { verifyPlace(placeId) }
+    /** Un motivo rápido se agrega al texto para que el moderador lo complete, no lo reemplaza. */
+    fun onQuickReason(text: String) {
+        val current = local.value.rejectionReason.trim()
+        onReasonChange(if (current.isEmpty()) "$text: " else "$current $text.")
+    }
+
+    fun onReasonFocusLost() = local.update {
+        it.copy(rejectForm = it.rejectForm.touch(FormField.REJECTION_REASON, ModerationForms.rejection(it.rejectionReason)))
+    }
+
+    fun onVerify() {
+        if (!local.value.canVerify) return
+        process { verifyPlace(placeId) }
+    }
 
     fun onMarkResolved() = process { markPlaceResolved(placeId) }
 
-    fun onConfirmReject() = process { rejectPlace(placeId, local.value.rejectionReason) }
+    fun onConfirmReject() {
+        val errors = ModerationForms.rejection(local.value.rejectionReason)
+        if (errors.isNotEmpty()) {
+            showReasonErrors(errors)
+            return
+        }
+        process { rejectPlace(placeId, local.value.rejectionReason) }
+    }
+
+    private fun showReasonErrors(errors: Map<FormField, FieldError>) {
+        local.update { it.copy(rejectForm = it.rejectForm.touchAll(errors)) }
+        _events.trySend(ModeratorReviewEvent.ScrollToField(FormField.REJECTION_REASON))
+    }
 
     private fun process(action: suspend () -> Result<Unit>) {
         if (local.value.isProcessing) return
         viewModelScope.launch {
-            local.update { it.copy(isProcessing = true) }
-            action()
+            local.update { it.copy(isProcessing = true, errorRes = null) }
+            val result = action()
+            local.update { it.copy(isProcessing = false) }
+            result
                 .onSuccess {
-                    local.update { it.copy(isProcessing = false, showRejectSheet = false) }
+                    local.update { it.copy(showRejectSheet = false) }
                     _events.send(ModeratorReviewEvent.Done)
                 }
                 .onFailure { error ->
-                    local.update { it.copy(isProcessing = false, errorRes = error.toMessageRes()) }
+                    val fieldErrors = error.fieldErrors
+                    if (fieldErrors.isNotEmpty()) {
+                        showReasonErrors(fieldErrors)
+                    } else {
+                        local.update { it.copy(errorRes = error.toMessageRes()) }
+                    }
                 }
         }
     }

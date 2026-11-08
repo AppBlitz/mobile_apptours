@@ -21,6 +21,8 @@ class VerifyPlaceUseCase @Inject constructor(
         val moderator = getSession.requireModerator().getOrElse { return Result.failure(it) }
         val place = placeRepository.getPlace(placeId)
             ?: return Result.failure(AppException.PlaceNotFound)
+        // Verificar dos veces no puede dar puntos dos veces.
+        if (place.status == PlaceStatus.VERIFICADA) return Result.success(Unit)
 
         return placeRepository.updateStatus(
             id = placeId,

@@ -1,75 +1,64 @@
 package co.edu.uniquindio.apptours.features.moderator.review.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.edu.uniquindio.apptours.R
-import co.edu.uniquindio.apptours.core.designsystem.components.*
-import co.edu.uniquindio.apptours.core.map.*
+import co.edu.uniquindio.apptours.core.designsystem.components.ColabPrimaryButton
+import co.edu.uniquindio.apptours.core.designsystem.components.ColabTextField
+import co.edu.uniquindio.apptours.core.designsystem.components.fieldLabelColor
+import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequester
 import co.edu.uniquindio.apptours.core.theme.*
-import co.edu.uniquindio.apptours.core.util.*
-import co.edu.uniquindio.apptours.domain.model.*
-import androidx.annotation.StringRes
+import co.edu.uniquindio.apptours.domain.model.Place
+import co.edu.uniquindio.apptours.domain.validation.ModerationForms
 
-/** Hoja para rechazar con motivo obligatorio (M-03). */
+/** Motivos rápidos: se agregan al texto para que el moderador los complete. */
+private val QUICK_REASONS = listOf(
+    R.string.reject_quick_location,
+    R.string.reject_quick_not_exists,
+    R.string.reject_quick_inaccurate,
+    R.string.reject_quick_inappropriate
+)
+
+/** Hoja para rechazar con motivo obligatorio (M-03) y validación en vivo (4.3). */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RejectReasonSheet(
     place: Place,
     reason: String,
-    @StringRes errorRes: Int?,
+    reasonError: String?,
+    generalError: String?,
     enabled: Boolean,
+    requester: FieldRequester,
     onReasonChange: (String) -> Unit,
+    onQuickReason: (String) -> Unit,
+    onReasonFocusLost: () -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (enabled) onDismiss() },
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = ColabSurface
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 12.dp)
         ) {
             Row(
@@ -78,25 +67,25 @@ internal fun RejectReasonSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Rechazar publicación",
+                    text = stringResource(R.string.reject_title),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = ColabDarkGreen
                 )
-                IconButton(onClick = onDismiss) {
-                    Icon(Icons.Filled.Close, contentDescription = "Cerrar")
+                IconButton(onClick = onDismiss, enabled = enabled) {
+                    Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.action_close))
                 }
             }
 
             Text(
-                text = "${place.title} · por ${place.authorName}",
+                text = stringResource(R.string.reject_place_by, place.title, place.authorName),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
                 color = ColabTextPrimary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "La publicación dejará de mostrarse en el feed público y el autor verá tu motivo en sus notificaciones.",
+                text = stringResource(R.string.reject_body),
                 fontSize = 13.sp,
                 color = ColabTextSecondary
             )
@@ -108,15 +97,19 @@ internal fun RejectReasonSheet(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Motivo del rechazo *",
+                    text = stringResource(R.string.reject_reason_label),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
-                    color = ColabTextPrimary
+                    color = fieldLabelColor(reasonError)
                 )
                 Text(
-                    text = "Obligatorio · ${reason.length} / 300",
+                    text = stringResource(
+                        R.string.reject_reason_counter,
+                        reason.trim().length,
+                        ModerationForms.MAX_REASON_LENGTH
+                    ),
                     fontSize = 12.sp,
-                    color = ColabTextSecondary
+                    color = if (reasonError != null) ColabError else ColabTextSecondary
                 )
             }
 
@@ -124,37 +117,32 @@ internal fun RejectReasonSheet(
 
             ColabTextField(
                 value = reason,
-                onValueChange = { if (it.length <= 300) onReasonChange(it) },
+                onValueChange = onReasonChange,
                 label = "",
-                placeholder = "Explica el motivo del rechazo...",
+                placeholder = stringResource(R.string.reject_reason_placeholder),
                 singleLine = false,
                 minLines = 3,
-                errorMessage = errorRes?.let { stringResource(it) }
+                enabled = enabled,
+                errorMessage = reasonError,
+                fieldRequester = requester,
+                onFocusLost = onReasonFocusLost
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Chips rápidos de motivo de rechazo (Página 18 del PDF)
-            val quickReasons = listOf(
-                "Ubicación incorrecta",
-                "No existe",
-                "Información imprecisa",
-                "Contenido inapropiado"
-            )
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                quickReasons.chunked(2).forEach { pair ->
+                QUICK_REASONS.chunked(2).forEach { pair ->
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        pair.forEach { reasonChip ->
+                        pair.forEach { reasonRes ->
+                            val text = stringResource(reasonRes)
                             Surface(
                                 shape = RoundedCornerShape(18.dp),
                                 color = ColabCardSurface,
                                 border = BorderStroke(1.dp, ColabGrayBorder),
-                                modifier = Modifier.clickable {
-                                    onReasonChange("$reasonChip: no pudimos verificar la información enviada.")
-                                }
+                                modifier = Modifier.clickable(enabled = enabled) { onQuickReason(text) }
                             ) {
                                 Text(
-                                    text = reasonChip,
+                                    text = text,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = ColabTextPrimary,
@@ -166,10 +154,15 @@ internal fun RejectReasonSheet(
                 }
             }
 
+            if (generalError != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(text = generalError, color = ColabError, fontSize = 13.sp)
+            }
+
             Spacer(modifier = Modifier.height(20.dp))
 
             ColabPrimaryButton(
-                text = "Confirmar rechazo",
+                text = stringResource(R.string.reject_confirm),
                 containerColor = ColabError,
                 contentColor = Color.White,
                 enabled = enabled,
@@ -180,13 +173,13 @@ internal fun RejectReasonSheet(
 
             TextButton(
                 onClick = onDismiss,
+                enabled = enabled,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Cancelar", color = ColabTextSecondary, fontWeight = FontWeight.SemiBold)
+                Text(stringResource(R.string.action_cancel), color = ColabTextSecondary, fontWeight = FontWeight.SemiBold)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
-
 }

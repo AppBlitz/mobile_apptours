@@ -95,21 +95,17 @@ fun ModerationQueueScreen(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ModeratorFilterChip(
-                    text = "Pendientes ${state.stats.pendingCount}",
-                    selected = state.filter == ModerationFilter.PENDIENTES,
-                    onClick = { onFilterSelected(ModerationFilter.PENDIENTES) }
-                )
-                ModeratorFilterChip(
-                    text = "Verificadas",
-                    selected = state.filter == ModerationFilter.VERIFICADAS,
-                    onClick = { onFilterSelected(ModerationFilter.VERIFICADAS) }
-                )
-                ModeratorFilterChip(
-                    text = "Rechazadas",
-                    selected = state.filter == ModerationFilter.RECHAZADAS,
-                    onClick = { onFilterSelected(ModerationFilter.RECHAZADAS) }
-                )
+                ModerationFilter.entries.forEach { filter ->
+                    ModeratorFilterChip(
+                        text = stringResource(
+                            R.string.moderation_filter_format,
+                            stringResource(filter.labelRes()),
+                            state.stats.countOf(filter)
+                        ),
+                        selected = state.filter == filter,
+                        onClick = { onFilterSelected(filter) }
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -119,13 +115,13 @@ fun ModerationQueueScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Cola de revisión",
+                    text = stringResource(R.string.moderation_queue_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 17.sp,
                     color = ColabDarkGreen
                 )
                 Text(
-                    text = "Más antiguas primero",
+                    text = stringResource(R.string.moderation_queue_order),
                     fontSize = 12.sp,
                     color = ColabTextSecondary
                 )
@@ -133,7 +129,17 @@ fun ModerationQueueScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            LazyColumn(
+            if (state.places.isEmpty()) {
+                Text(
+                    text = stringResource(state.filter.emptyRes()),
+                    fontSize = 14.sp,
+                    color = ColabTextSecondary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 40.dp)
+                )
+            } else LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 20.dp)
             ) {
@@ -146,4 +152,18 @@ fun ModerationQueueScreen(
             }
         }
     }
+}
+
+private fun ModerationFilter.labelRes(): Int = when (this) {
+    ModerationFilter.PENDIENTES -> R.string.moderation_filter_pending
+    ModerationFilter.VERIFICADAS -> R.string.moderation_filter_verified
+    ModerationFilter.RECHAZADAS -> R.string.moderation_filter_rejected
+    ModerationFilter.RESUELTAS -> R.string.moderation_filter_resolved
+}
+
+private fun ModerationFilter.emptyRes(): Int = when (this) {
+    ModerationFilter.PENDIENTES -> R.string.moderation_empty_pending
+    ModerationFilter.VERIFICADAS -> R.string.moderation_empty_verified
+    ModerationFilter.RECHAZADAS -> R.string.moderation_empty_rejected
+    ModerationFilter.RESUELTAS -> R.string.moderation_empty_resolved
 }

@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Reglas de coLab tour (IT-3). Sin Cloud Functions, algunas escrituras sobre datos ajenos
+// Reglas de coLab tour (IT-3, ajustadas en IT-4 e IT-5). Sin Cloud Functions, algunas escrituras sobre datos ajenos
 // se permiten de forma acotada: sumar puntos al autor, mover contadores y crear notificaciones.
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -69,13 +69,21 @@ service cloud.firestore {
         && request.resource.data.status == 'PENDIENTE'
         && request.resource.data.votesCount == 0
         && request.resource.data.get('visitsCount', 0) == 0;
-      // Autor: edita su publicación (vuelve a revisión o la marca resuelta), sin tocar contadores ni autor.
-      // Moderador: verifica o rechaza. Cualquiera: solo el contador de votos o el de visitas (T-05).
+      // Autor (IT-5): edita su publicación sin tocar contadores, autor ni datos de moderación.
+      //   - Editar la devuelve a PENDIENTE y borra el motivo de rechazo (no puede editar
+      //     algo verificado y dejarlo verificado: cualquier cambio vuelve a revisión).
+      //   - Solo puede marcarla RESUELTA si ya estaba VERIFICADA (si no, saltaría la moderación).
+      //   - Nunca puede ponerla VERIFICADA ni RECHAZADA ni escribir moderatorId / reviewedAt.
+      // Moderador: verifica, rechaza o resuelve. Cualquiera: solo el contador de votos o el de visitas (T-05).
       allow update: if (isOwner(resource.data.authorId)
           && request.resource.data.authorId == resource.data.authorId
           && request.resource.data.votesCount == resource.data.votesCount
           && request.resource.data.get('visitsCount', 0) == resource.data.get('visitsCount', 0)
-          && request.resource.data.status in [resource.data.status, 'PENDIENTE', 'RESUELTA'])
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['moderatorId', 'reviewedAt'])
+          && (request.resource.data.get('rejectionReason', null) == null
+              || request.resource.data.get('rejectionReason', null) == resource.data.get('rejectionReason', null))
+          && (request.resource.data.status == 'PENDIENTE'
+              || (request.resource.data.status == 'RESUELTA' && resource.data.status == 'VERIFICADA')))
         || isModerator()
         || (signedIn() && onlyChanges(['votesCount']))
         || (signedIn() && onlyChanges(['visitsCount']));

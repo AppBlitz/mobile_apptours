@@ -111,17 +111,22 @@ internal fun ModerationPanelHeader(stats: ModerationStats) {
         ) {
             ModeratorCounterCard(
                 count = stats.pendingCount.toString(),
-                label = "Pendientes",
+                label = stringResource(R.string.moderation_filter_pending),
                 modifier = Modifier.weight(1f)
             )
             ModeratorCounterCard(
                 count = stats.verifiedToday.toString(),
-                label = "Verificadas hoy",
+                label = stringResource(R.string.moderation_verified_today),
                 modifier = Modifier.weight(1f)
             )
             ModeratorCounterCard(
                 count = stats.rejectedToday.toString(),
-                label = "Rechazadas hoy",
+                label = stringResource(R.string.moderation_rejected_today),
+                modifier = Modifier.weight(1f)
+            )
+            ModeratorCounterCard(
+                count = stats.resolvedToday.toString(),
+                label = stringResource(R.string.moderation_resolved_today),
                 modifier = Modifier.weight(1f)
             )
         }

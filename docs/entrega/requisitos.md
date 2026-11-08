@@ -10,12 +10,12 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | T-03 | Horario de atención sugerido | ❌ Pendiente | | |
 | T-04 | Rango de precio: gratuito, económico, moderado, costoso | ❌ Pendiente | | |
 | T-05 | Marcar como "Visitado" y compartir la experiencia | 🟡 Implementado (IT-4), falta probar en dispositivo | | Al marcar "Visitado" se abre "Comparte tu experiencia" (calificación 1–5 obligatoria, texto opcional); el texto se publica como comentario con la etiqueta "Visitó este lugar". Contador de visitas en el detalle. |
-| T-06 | Moderadores verifican existencia y precisión de la información | ❌ Pendiente | | |
+| T-06 | Moderadores verifican existencia y precisión de la información | 🟡 Implementado (IT-5), falta probar en dispositivo | | Lista de verificación de 4 puntos (existe, ubicación correcta, horario y precio coherentes, fotos reales); el botón Verificar solo se activa con todos marcados. |
 | T-07 | Niveles: Turista, Explorador, Aventurero, Embajador Local | ❌ Pendiente | | |
 | M-01 | Login de moderadores precargados | ❌ Pendiente | | |
-| M-02 | Verificar o rechazar publicaciones | ❌ Pendiente | | |
-| M-03 | Motivo obligatorio al rechazar; la rechazada no aparece en el feed | ❌ Pendiente | | |
-| M-04 | Marcar cualquier publicación como resuelta | ❌ Pendiente | | |
+| M-02 | Verificar o rechazar publicaciones | 🟡 Implementado, falta probar en dispositivo | | Verificar da puntos y notifica al autor una sola vez (verificar dos veces no suma de nuevo). Cola con filtros Pendientes / Verificadas / Rechazadas / Resueltas y contadores del día. |
+| M-03 | Motivo obligatorio al rechazar; la rechazada no aparece en el feed | 🟡 Implementado, falta probar en dispositivo | | Motivo de 15 a 300 caracteres con error en vivo y foco en el campo; motivos rápidos que se completan. El autor recibe el motivo en la notificación y en Mis publicaciones. |
+| M-04 | Marcar cualquier publicación como resuelta | 🟡 Implementado, falta probar en dispositivo | | Se notifica al autor. El autor, en cambio, solo puede finalizar lo ya verificado. |
 | M-05 | Recuperación de contraseña para moderadores | ❌ Pendiente | | |
 | M-06 | (Nuevo, del equipo) Perfil del moderador: estadísticas, XP y trofeos | ❌ Pendiente | | |
 | U-01 | Registro con correo y contraseña | ❌ Pendiente | | |
