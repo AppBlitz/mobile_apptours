@@ -81,7 +81,8 @@ fun PlaceFormRoute(
         onRemovePhoto = viewModel::onRemovePhoto,
         onLocationChange = viewModel::onLocationChange,
         onSubmit = viewModel::onSubmit,
-        onDelete = viewModel::onDelete
+        onDelete = viewModel::onDelete,
+        onRetry = viewModel::onRetry
     )
 }
 
@@ -100,90 +101,102 @@ fun PlaceFormScreen(
     onRemovePhoto: () -> Unit,
     onLocationChange: (Double, Double) -> Unit,
     onSubmit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onRetry: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ColabBackground)
-            .verticalScroll(rememberScrollState())
-            .padding(20.dp)
-    ) {
-        PlaceFormHeader(isEditing = state.isEditing, onClose = onClose)
+    if (state.loadErrorRes != null) {
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        return
+    }
 
-        Spacer(modifier = Modifier.height(18.dp))
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(ColabBackground)
+                .verticalScroll(rememberScrollState())
+                .padding(20.dp)
+        ) {
+            PlaceFormHeader(isEditing = state.isEditing, onClose = onClose)
 
-        ColabTextField(
-            value = state.title,
-            onValueChange = onTitleChange,
-            label = "Título",
-            placeholder = "Ej. Café con terraza y vista"
-        )
+            Spacer(modifier = Modifier.height(18.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CategorySelector(category = state.category, onCategorySelected = onCategorySelected)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        DescriptionField(description = state.description, onDescriptionChange = onDescriptionChange)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        PriceRangeSelector(priceRange = state.priceRange, onPriceRangeSelected = onPriceRangeSelected)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ScheduleSelector(
-            selectedDays = state.selectedDays,
-            onToggleDay = onToggleDay,
-            openTime = state.openTime,
-            onOpenTimeChange = onOpenTimeChange,
-            closeTime = state.closeTime,
-            onCloseTimeChange = onCloseTimeChange
-        )
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        PhotoPickerSection(
-            photosCount = state.photosCount,
-            onAddPhoto = onAddPhoto,
-            onRemovePhoto = onRemovePhoto
-        )
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        LocationPickerSection(
-            latitude = state.latitude,
-            longitude = state.longitude,
-            onLocationChange = onLocationChange
-        )
-
-        if (state.errorRes != null) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        ColabPrimaryButton(
-            text = "Enviar a verificación",
-            leadingIcon = Icons.AutoMirrored.Filled.Send,
-            enabled = !state.isSaving,
-            onClick = onSubmit
-        )
-
-        if (state.isEditing) {
-            Spacer(modifier = Modifier.height(12.dp))
-            ColabOutlinedButton(
-                text = "Eliminar publicación",
-                borderColor = ColabError,
-                contentColor = ColabError,
-                leadingIcon = Icons.Outlined.Delete,
-                onClick = onDelete
+            ColabTextField(
+                value = state.title,
+                onValueChange = onTitleChange,
+                label = "Título",
+                placeholder = "Ej. Café con terraza y vista"
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CategorySelector(category = state.category, onCategorySelected = onCategorySelected)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            DescriptionField(description = state.description, onDescriptionChange = onDescriptionChange)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            PriceRangeSelector(priceRange = state.priceRange, onPriceRangeSelected = onPriceRangeSelected)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ScheduleSelector(
+                selectedDays = state.selectedDays,
+                onToggleDay = onToggleDay,
+                openTime = state.openTime,
+                onOpenTimeChange = onOpenTimeChange,
+                closeTime = state.closeTime,
+                onCloseTimeChange = onCloseTimeChange
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            PhotoPickerSection(
+                photosCount = state.photosCount,
+                onAddPhoto = onAddPhoto,
+                onRemovePhoto = onRemovePhoto
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            LocationPickerSection(
+                latitude = state.latitude,
+                longitude = state.longitude,
+                onLocationChange = onLocationChange
+            )
+
+            if (state.errorRes != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ColabPrimaryButton(
+                text = "Enviar a verificación",
+                leadingIcon = Icons.AutoMirrored.Filled.Send,
+                enabled = !state.isSaving,
+                onClick = onSubmit
+            )
+
+            if (state.isEditing) {
+                Spacer(modifier = Modifier.height(12.dp))
+                ColabOutlinedButton(
+                    text = "Eliminar publicación",
+                    borderColor = ColabError,
+                    contentColor = ColabError,
+                    leadingIcon = Icons.Outlined.Delete,
+                    onClick = onDelete
+                )
+            }
+
+            Spacer(modifier = Modifier.height(28.dp))
         }
 
-        Spacer(modifier = Modifier.height(28.dp))
+        if (state.isLoading || state.isSaving) {
+            LoadingOverlay(dimBackground = true)
+        }
     }
 }

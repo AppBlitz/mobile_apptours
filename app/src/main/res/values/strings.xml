@@ -32,6 +32,9 @@
     <string name="schedule_mon_sat">Lun–Sáb</string>
     <string name="schedule_format">%1$s %2$s – %3$s</string>
 
+    <!-- Fechas -->
+    <string name="time_just_now">Ahora</string>
+
     <!-- Errores -->
     <string name="error_invalid_email">Ingresa un correo electrónico válido</string>
     <string name="error_password_required">La contraseña es obligatoria</string>
@@ -48,6 +51,10 @@
     <string name="error_not_allowed">No tienes permiso para realizar esta acción.</string>
     <string name="error_place_not_found">Publicación no encontrada</string>
     <string name="error_user_not_found">No encontramos tu perfil de usuario.</string>
+    <string name="error_network">No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="error_load_failed">No pudimos cargar la información.</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="loading">Cargando…</string>
     <string name="error_unknown">Ocurrió un error inesperado. Inténtalo de nuevo.</string>
 
     <!-- Fotos de la publicación -->

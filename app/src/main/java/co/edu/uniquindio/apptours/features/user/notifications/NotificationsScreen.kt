@@ -63,7 +63,8 @@ fun NotificationsRoute(
             viewModel.onNotificationClick(notification)
             notification.relatedPlaceId?.let(onOpenPlaceDetail)
         },
-        onMarkAllRead = viewModel::onMarkAllRead
+        onMarkAllRead = viewModel::onMarkAllRead,
+        onRetry = viewModel::onRetry
     )
 }
 
@@ -72,11 +73,20 @@ fun NotificationsScreen(
     state: NotificationsUiState,
     onFilterSelected: (NotificationFilter) -> Unit,
     onNotificationClick: (AppNotification) -> Unit,
-    onMarkAllRead: () -> Unit
+    onMarkAllRead: () -> Unit,
+    onRetry: () -> Unit
 ) {
+    if (state.loadErrorRes != null) {
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        return
+    }
+    if (state.isLoading) {
+        LoadingOverlay(modifier = Modifier.background(ColabBackground))
+        return
+    }
     val unreadCount = state.unreadCount
-    val todayList = state.notifications.filter { it.isToday }
-    val earlierList = state.notifications.filter { !it.isToday }
+    val todayList = state.notifications.filter { DateFormatter.isToday(it.createdAt) }
+    val earlierList = state.notifications.filter { !DateFormatter.isToday(it.createdAt) }
 
     Column(
         modifier = Modifier

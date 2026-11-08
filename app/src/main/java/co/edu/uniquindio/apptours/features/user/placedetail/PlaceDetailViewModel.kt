@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.edu.uniquindio.apptours.core.common.RetryTrigger
 import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
 import co.edu.uniquindio.apptours.domain.usecase.comment.AddCommentUseCase
@@ -20,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -45,29 +47,34 @@ class PlaceDetailViewModel @Inject constructor(
     private data class LocalState(val commentText: String = "", val errorRes: Int? = null)
 
     private val local = MutableStateFlow(LocalState())
+    private val retryTrigger = RetryTrigger()
 
-    private val remote = combine(
-        getPlaceById(placeId),
-        getComments(placeId),
-        getCurrentUser(),
-        getMyVotes(),
-        getMyVisits()
-    ) { place, comments, user, votes, visits ->
-        PlaceDetailUiState(
-            isLoading = false,
-            place = place,
-            comments = comments,
-            currentUserId = user?.id,
-            userLatitude = user?.latitude ?: DefaultLocation.LATITUDE,
-            userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE,
-            isInterested = placeId in votes,
-            isVisited = visits.any { it.placeId == placeId }
-        )
+    private val remote = retryTrigger.restartable {
+        combine(
+            getPlaceById(placeId),
+            getComments(placeId),
+            getCurrentUser(),
+            getMyVotes(),
+            getMyVisits()
+        ) { place, comments, user, votes, visits ->
+            PlaceDetailUiState(
+                isLoading = false,
+                place = place,
+                comments = comments,
+                currentUserId = user?.id,
+                userLatitude = user?.latitude ?: DefaultLocation.LATITUDE,
+                userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE,
+                isInterested = placeId in votes,
+                isVisited = visits.any { it.placeId == placeId }
+            )
+        }.catch { emit(PlaceDetailUiState(isLoading = false, loadErrorRes = it.toMessageRes())) }
     }
 
     val uiState: StateFlow<PlaceDetailUiState> = combine(remote, local) { state, local ->
         state.copy(commentText = local.commentText, errorRes = local.errorRes)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PlaceDetailUiState())
+
+    fun onRetry() = retryTrigger.retry()
 
     fun onCommentTextChange(text: String) = local.update { it.copy(commentText = text, errorRes = null) }
 

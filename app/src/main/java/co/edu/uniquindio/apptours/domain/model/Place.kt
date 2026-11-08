@@ -16,7 +16,6 @@ data class Place(
     val authorName: String,
     val authorLevel: UserLevel = UserLevel.TURISTA,
     val createdAt: Long = System.currentTimeMillis(),
-    val createdAtLabel: String = "",
     val status: PlaceStatus = PlaceStatus.PENDIENTE,
     val votesCount: Int = 0,
     val rejectionReason: String? = null,

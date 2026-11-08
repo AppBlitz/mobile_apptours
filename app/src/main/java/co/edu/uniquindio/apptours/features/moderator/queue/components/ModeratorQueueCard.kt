@@ -70,7 +70,7 @@ internal fun ModeratorQueueCard(
             ) {
                 CategoryBadgeChip(category = place.category)
                 Text(
-                    text = place.createdAtLabel,
+                    text = relativeTimeLabel(place.createdAt),
                     fontSize = 12.sp,
                     color = ColabTextSecondary
                 )

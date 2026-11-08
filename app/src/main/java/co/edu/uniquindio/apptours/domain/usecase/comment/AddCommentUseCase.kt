@@ -34,8 +34,7 @@ class AddCommentUseCase @Inject constructor(
             authorId = user.id,
             authorName = user.fullName,
             authorLevel = user.level,
-            text = text.trim(),
-            timeAgo = "hace un momento"
+            text = text.trim()
         )
         return commentRepository.add(comment).map {
             awardPoints(user.id, PointAction.COMMENT)

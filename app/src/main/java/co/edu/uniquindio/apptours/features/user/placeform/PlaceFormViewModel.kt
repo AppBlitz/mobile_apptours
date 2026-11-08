@@ -3,6 +3,7 @@ package co.edu.uniquindio.apptours.features.user.placeform
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.edu.uniquindio.apptours.R
 import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
 import co.edu.uniquindio.apptours.domain.model.PlaceDraft
@@ -27,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaceFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getPlaceById: GetPlaceByIdUseCase,
+    private val getPlaceById: GetPlaceByIdUseCase,
     private val createPlace: CreatePlaceUseCase,
     private val updatePlace: UpdatePlaceUseCase,
     private val deletePlace: DeletePlaceUseCase
@@ -35,18 +36,31 @@ class PlaceFormViewModel @Inject constructor(
 
     private val placeId: String? = savedStateHandle["placeId"]
 
-    private val _uiState = MutableStateFlow(PlaceFormUiState(isEditing = placeId != null))
+    private val _uiState = MutableStateFlow(PlaceFormUiState(isEditing = placeId != null, isLoading = placeId != null))
     val uiState: StateFlow<PlaceFormUiState> = _uiState.asStateFlow()
 
     private val _events = Channel<PlaceFormEvent>(Channel.BUFFERED)
     val events: Flow<PlaceFormEvent> = _events.receiveAsFlow()
 
     init {
-        if (placeId != null) {
-            viewModelScope.launch {
-                getPlaceById(placeId).first()?.let { place ->
+        loadPlace()
+    }
+
+    fun onRetry() = loadPlace()
+
+    private fun loadPlace() {
+        val id = placeId ?: return
+        _uiState.update { it.copy(isLoading = true, loadErrorRes = null) }
+        viewModelScope.launch {
+            runCatching { getPlaceById(id).first() }
+                .onSuccess { place ->
+                    if (place == null) {
+                        _uiState.update { it.copy(isLoading = false, loadErrorRes = R.string.error_place_not_found) }
+                        return@onSuccess
+                    }
                     _uiState.update {
                         it.copy(
+                            isLoading = false,
                             title = place.title,
                             category = place.category,
                             description = place.description,
@@ -60,7 +74,9 @@ class PlaceFormViewModel @Inject constructor(
                         )
                     }
                 }
-            }
+                .onFailure { error ->
+                    _uiState.update { it.copy(isLoading = false, loadErrorRes = error.toMessageRes()) }
+                }
         }
     }
 

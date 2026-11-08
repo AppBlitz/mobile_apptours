@@ -15,7 +15,8 @@ data class PlaceDetailUiState(
     val isInterested: Boolean = false,
     val isVisited: Boolean = false,
     val commentText: String = "",
-    @StringRes val errorRes: Int? = null
+    @StringRes val errorRes: Int? = null,
+    @StringRes val loadErrorRes: Int? = null
 ) {
     val isOwner: Boolean
         get() = place != null && place.authorId == currentUserId

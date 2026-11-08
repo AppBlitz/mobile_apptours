@@ -107,7 +107,7 @@ internal fun NotificationItemCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = notification.timeAgo,
+                    text = relativeTimeLabel(notification.createdAt),
                     fontSize = 11.sp,
                     color = ColabTextSecondary
                 )

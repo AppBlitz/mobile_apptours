@@ -2,6 +2,8 @@ package co.edu.uniquindio.apptours.features.user.feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.edu.uniquindio.apptours.core.common.RetryTrigger
+import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
 import co.edu.uniquindio.apptours.domain.model.FeedFilter
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
@@ -16,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -44,6 +47,7 @@ class FeedViewModel @Inject constructor(
     )
 
     private val controls = MutableStateFlow(Controls())
+    private val retryTrigger = RetryTrigger()
     private val currentUser = getCurrentUser()
 
     private val places = combine(controls, currentUser) { c, user ->
@@ -56,26 +60,31 @@ class FeedViewModel @Inject constructor(
         )
     }.distinctUntilChanged().flatMapLatest { filter -> getPublicFeed(filter) }
 
-    val uiState: StateFlow<FeedUiState> = combine(
-        controls,
-        currentUser,
-        places,
-        getMyVotes(),
-        getMyVisits().map { visits -> visits.map { it.placeId }.toSet() }
-    ) { c, user, places, votes, visits ->
-        FeedUiState(
-            firstName = user?.firstName.orEmpty(),
-            userLatitude = user?.latitude ?: DefaultLocation.LATITUDE,
-            userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE,
-            query = c.query,
-            selectedCategory = c.category,
-            onlyNearby = c.onlyNearby,
-            places = places,
-            selectedMapPlaceId = c.selectedMapPlaceId,
-            votedPlaceIds = votes,
-            visitedPlaceIds = visits
-        )
+    val uiState: StateFlow<FeedUiState> = retryTrigger.restartable {
+        combine(
+            controls,
+            currentUser,
+            places,
+            getMyVotes(),
+            getMyVisits().map { visits -> visits.map { it.placeId }.toSet() }
+        ) { c, user, places, votes, visits ->
+            FeedUiState(
+                isLoading = false,
+                firstName = user?.firstName.orEmpty(),
+                userLatitude = user?.latitude ?: DefaultLocation.LATITUDE,
+                userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE,
+                query = c.query,
+                selectedCategory = c.category,
+                onlyNearby = c.onlyNearby,
+                places = places,
+                selectedMapPlaceId = c.selectedMapPlaceId,
+                votedPlaceIds = votes,
+                visitedPlaceIds = visits
+            )
+        }.catch { emit(FeedUiState(isLoading = false, loadErrorRes = it.toMessageRes())) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FeedUiState())
+
+    fun onRetry() = retryTrigger.retry()
 
     fun onQueryChange(query: String) = controls.update { it.copy(query = query) }
 

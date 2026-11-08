@@ -65,7 +65,8 @@ fun PlaceDetailRoute(
         onToggleVisited = viewModel::onToggleVisited,
         onMarkResolved = viewModel::onMarkResolved,
         onCommentTextChange = viewModel::onCommentTextChange,
-        onSendComment = viewModel::onSendComment
+        onSendComment = viewModel::onSendComment,
+        onRetry = viewModel::onRetry
     )
 }
 
@@ -78,14 +79,19 @@ fun PlaceDetailScreen(
     onToggleVisited: () -> Unit,
     onMarkResolved: () -> Unit,
     onCommentTextChange: (String) -> Unit,
-    onSendComment: () -> Unit
+    onSendComment: () -> Unit,
+    onRetry: () -> Unit
 ) {
     val place = state.place
+    if (state.loadErrorRes != null) {
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        return
+    }
     if (place == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (state.isLoading) {
-                CircularProgressIndicator(color = ColabDarkGreen)
-            } else {
+        if (state.isLoading) {
+            LoadingOverlay(modifier = Modifier.background(ColabBackground))
+        } else {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(stringResource(R.string.error_place_not_found))
             }
         }

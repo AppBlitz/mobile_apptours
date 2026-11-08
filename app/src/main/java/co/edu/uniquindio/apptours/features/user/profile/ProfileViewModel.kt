@@ -1,7 +1,10 @@
 package co.edu.uniquindio.apptours.features.user.profile
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.edu.uniquindio.apptours.core.common.RetryTrigger
+import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.Badge
 import co.edu.uniquindio.apptours.domain.model.User
 import co.edu.uniquindio.apptours.domain.model.UserStats
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -25,7 +29,9 @@ data class ProfileUiState(
     val user: User? = null,
     val stats: UserStats = UserStats(),
     val badges: List<Badge> = emptyList(),
-    val selectedBadgeId: String? = null
+    val selectedBadgeId: String? = null,
+    val isLoading: Boolean = true,
+    @StringRes val loadErrorRes: Int? = null
 ) {
     val selectedBadge: Badge?
         get() = badges.find { it.id == selectedBadgeId } ?: badges.firstOrNull()
@@ -44,19 +50,24 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val selectedBadgeId = MutableStateFlow<String?>(null)
+    private val retryTrigger = RetryTrigger()
 
     private val _events = Channel<ProfileEvent>(Channel.BUFFERED)
     val events: Flow<ProfileEvent> = _events.receiveAsFlow()
 
-    val uiState: StateFlow<ProfileUiState> =
+    val uiState: StateFlow<ProfileUiState> = retryTrigger.restartable {
         combine(getCurrentUser(), getUserStats(), selectedBadgeId) { user, stats, selected ->
             ProfileUiState(
+                isLoading = false,
                 user = user,
                 stats = stats,
                 badges = getUserBadges(points = user?.points ?: 0, verifiedCount = stats.verifiedCount),
                 selectedBadgeId = selected
             )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileUiState())
+        }.catch { emit(ProfileUiState(isLoading = false, loadErrorRes = it.toMessageRes())) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileUiState())
+
+    fun onRetry() = retryTrigger.retry()
 
     fun onSelectBadge(badgeId: String) {
         selectedBadgeId.value = badgeId

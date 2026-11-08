@@ -34,7 +34,6 @@ class CreatePlaceUseCase @Inject constructor(
             authorId = author.id,
             authorName = author.fullName,
             authorLevel = author.level,
-            createdAtLabel = "hace un momento",
             status = PlaceStatus.PENDIENTE
         )
         return placeRepository.create(place).onSuccess {

@@ -72,7 +72,8 @@ fun FeedRoute(
         onShowList = onShowList,
         onShowMap = onShowMap,
         onOpenNotifications = onOpenNotifications,
-        onOpenPlaceDetail = onOpenPlaceDetail
+        onOpenPlaceDetail = onOpenPlaceDetail,
+        onRetry = viewModel::onRetry
     )
 }
 
@@ -89,8 +90,17 @@ fun FeedScreen(
     onShowList: () -> Unit,
     onShowMap: () -> Unit,
     onOpenNotifications: () -> Unit,
-    onOpenPlaceDetail: (String) -> Unit
+    onOpenPlaceDetail: (String) -> Unit,
+    onRetry: () -> Unit
 ) {
+    if (state.loadErrorRes != null) {
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        return
+    }
+    if (state.isLoading) {
+        LoadingOverlay(modifier = Modifier.background(ColabBackground))
+        return
+    }
     Column(modifier = Modifier.fillMaxSize()) {
         // Cabecera verde oscuro solo en modo Lista
         if (!isMapMode) {

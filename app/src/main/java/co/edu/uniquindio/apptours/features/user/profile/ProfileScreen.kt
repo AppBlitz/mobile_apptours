@@ -70,7 +70,8 @@ fun ProfileRoute(
         state = state,
         onOpenAccountSettings = onOpenAccountSettings,
         onLogout = viewModel::onLogout,
-        onSelectBadge = viewModel::onSelectBadge
+        onSelectBadge = viewModel::onSelectBadge,
+        onRetry = viewModel::onRetry
     )
 }
 
@@ -79,8 +80,17 @@ fun ProfileScreen(
     state: ProfileUiState,
     onOpenAccountSettings: () -> Unit,
     onLogout: () -> Unit,
-    onSelectBadge: (String) -> Unit
+    onSelectBadge: (String) -> Unit,
+    onRetry: () -> Unit
 ) {
+    if (state.loadErrorRes != null) {
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        return
+    }
+    if (state.isLoading) {
+        LoadingOverlay(modifier = Modifier.background(ColabBackground))
+        return
+    }
     val user = state.user
     val selectedBadge = state.selectedBadge
 

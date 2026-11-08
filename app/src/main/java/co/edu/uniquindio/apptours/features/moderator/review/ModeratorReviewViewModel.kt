@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.edu.uniquindio.apptours.core.common.RetryTrigger
 import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.Comment
 import co.edu.uniquindio.apptours.domain.model.Place
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -37,6 +39,7 @@ data class ModeratorReviewUiState(
     val showRejectSheet: Boolean = false,
     val rejectionReason: String = DEFAULT_REJECTION_REASON,
     @StringRes val errorRes: Int? = null,
+    @StringRes val loadErrorRes: Int? = null,
     val isProcessing: Boolean = false
 ) {
     companion object {
@@ -62,14 +65,18 @@ class ModeratorReviewViewModel @Inject constructor(
     private val placeId = savedStateHandle.toRoute<ModeratorReview>().placeId
 
     private val local = MutableStateFlow(ModeratorReviewUiState())
+    private val retryTrigger = RetryTrigger()
 
-    val uiState: StateFlow<ModeratorReviewUiState> =
+    val uiState: StateFlow<ModeratorReviewUiState> = retryTrigger.restartable {
         combine(local, getPlaceById(placeId), getComments(placeId)) { state, place, comments ->
             state.copy(isLoading = false, place = place, comments = comments)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ModeratorReviewUiState())
+        }.catch { emit(ModeratorReviewUiState(isLoading = false, loadErrorRes = it.toMessageRes())) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ModeratorReviewUiState())
 
     private val _events = Channel<ModeratorReviewEvent>(Channel.BUFFERED)
     val events: Flow<ModeratorReviewEvent> = _events.receiveAsFlow()
+
+    fun onRetry() = retryTrigger.retry()
 
     fun onCheckLocationChange(checked: Boolean) = local.update { it.copy(checkLocationExists = checked) }
 

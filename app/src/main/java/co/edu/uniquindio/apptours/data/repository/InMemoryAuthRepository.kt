@@ -1,8 +1,8 @@
 package co.edu.uniquindio.apptours.data.repository
 
 import co.edu.uniquindio.apptours.core.common.AppException
-import co.edu.uniquindio.apptours.data.local.InMemoryDataSource
-import co.edu.uniquindio.apptours.data.local.InMemoryDataSource.Credential
+import co.edu.uniquindio.apptours.data.remote.firebase.seed.SeedData
+import co.edu.uniquindio.apptours.data.remote.firebase.seed.SeedData.Credential
 import co.edu.uniquindio.apptours.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class InMemoryAuthRepository @Inject constructor() : AuthRepository {
 
-    private val credentials = MutableStateFlow(InMemoryDataSource.credentials)
+    private val credentials = MutableStateFlow(SeedData.credentials)
     private val session = MutableStateFlow<String?>(null)
 
     override fun observeSession(): Flow<String?> = session.asStateFlow()

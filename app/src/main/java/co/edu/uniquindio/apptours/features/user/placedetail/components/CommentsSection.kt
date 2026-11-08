@@ -157,7 +157,7 @@ internal fun CommentCard(comment: Comment) {
                         }
                     }
                     Text(
-                        text = comment.timeAgo,
+                        text = relativeTimeLabel(comment.createdAt),
                         fontSize = 11.sp,
                         color = ColabTextSecondary
                     )

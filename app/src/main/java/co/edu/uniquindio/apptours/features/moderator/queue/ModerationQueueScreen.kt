@@ -66,6 +66,7 @@ fun ModerationQueueRoute(
         state = state,
         onFilterSelected = viewModel::onFilterSelected,
         onOpenReview = onOpenReview,
+        onRetry = viewModel::onRetry,
         modifier = modifier
     )
 }
@@ -75,8 +76,17 @@ fun ModerationQueueScreen(
     state: ModerationQueueUiState,
     onFilterSelected: (ModerationFilter) -> Unit,
     onOpenReview: (String) -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if (state.loadErrorRes != null) {
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = modifier.background(ColabBackground))
+        return
+    }
+    if (state.isLoading) {
+        LoadingOverlay(modifier = modifier.background(ColabBackground))
+        return
+    }
     Column(modifier = modifier.fillMaxSize()) {
         ModerationPanelHeader(stats = state.stats)
 

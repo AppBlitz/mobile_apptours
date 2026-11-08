@@ -1,11 +1,11 @@
 package co.edu.uniquindio.apptours.di
 
 import co.edu.uniquindio.apptours.data.repository.InMemoryAuthRepository
-import co.edu.uniquindio.apptours.data.repository.InMemoryCommentRepository
-import co.edu.uniquindio.apptours.data.repository.InMemoryNotificationRepository
-import co.edu.uniquindio.apptours.data.repository.InMemoryPlaceRepository
-import co.edu.uniquindio.apptours.data.repository.InMemoryUserRepository
-import co.edu.uniquindio.apptours.data.repository.InMemoryVisitRepository
+import co.edu.uniquindio.apptours.data.repository.FirestoreCommentRepository
+import co.edu.uniquindio.apptours.data.repository.FirestoreNotificationRepository
+import co.edu.uniquindio.apptours.data.repository.FirestorePlaceRepository
+import co.edu.uniquindio.apptours.data.repository.FirestoreUserRepository
+import co.edu.uniquindio.apptours.data.repository.FirestoreVisitRepository
 import co.edu.uniquindio.apptours.domain.repository.AuthRepository
 import co.edu.uniquindio.apptours.domain.repository.CommentRepository
 import co.edu.uniquindio.apptours.domain.repository.NotificationRepository
@@ -18,7 +18,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/** Interfaz de dominio -> implementación. En IT-2/IT-3 se cambian por las de Firebase. */
+/** Interfaz de dominio -> implementación. Datos en Firestore; la sesión sigue en memoria hasta IT-3. */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
@@ -29,21 +29,21 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindUserRepository(impl: InMemoryUserRepository): UserRepository
+    abstract fun bindUserRepository(impl: FirestoreUserRepository): UserRepository
 
     @Binds
     @Singleton
-    abstract fun bindPlaceRepository(impl: InMemoryPlaceRepository): PlaceRepository
+    abstract fun bindPlaceRepository(impl: FirestorePlaceRepository): PlaceRepository
 
     @Binds
     @Singleton
-    abstract fun bindCommentRepository(impl: InMemoryCommentRepository): CommentRepository
+    abstract fun bindCommentRepository(impl: FirestoreCommentRepository): CommentRepository
 
     @Binds
     @Singleton
-    abstract fun bindVisitRepository(impl: InMemoryVisitRepository): VisitRepository
+    abstract fun bindVisitRepository(impl: FirestoreVisitRepository): VisitRepository
 
     @Binds
     @Singleton
-    abstract fun bindNotificationRepository(impl: InMemoryNotificationRepository): NotificationRepository
+    abstract fun bindNotificationRepository(impl: FirestoreNotificationRepository): NotificationRepository
 }

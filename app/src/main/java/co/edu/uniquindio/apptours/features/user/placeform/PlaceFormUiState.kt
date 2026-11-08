@@ -8,6 +8,8 @@ import co.edu.uniquindio.apptours.domain.model.PriceRange
 
 data class PlaceFormUiState(
     val isEditing: Boolean = false,
+    val isLoading: Boolean = false,
+    @StringRes val loadErrorRes: Int? = null,
     val title: String = "",
     val category: PlaceCategory = PlaceCategory.GASTRONOMIA,
     val description: String = "",

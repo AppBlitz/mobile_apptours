@@ -9,11 +9,13 @@ import co.edu.uniquindio.apptours.domain.usecase.auth.DeleteAccountUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.GetCurrentUserUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.UpdateProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -22,6 +24,8 @@ import javax.inject.Inject
 
 data class AccountSettingsUiState(
     val isLoaded: Boolean = false,
+    @StringRes val loadErrorRes: Int? = null,
+    val isSaving: Boolean = false,
     val initials: String = "",
     val fullName: String = "",
     val email: String = "",
@@ -38,7 +42,7 @@ sealed interface AccountSettingsEvent {
 
 @HiltViewModel
 class AccountSettingsViewModel @Inject constructor(
-    getCurrentUser: GetCurrentUserUseCase,
+    private val getCurrentUser: GetCurrentUserUseCase,
     private val updateProfile: UpdateProfileUseCase,
     private val deleteAccount: DeleteAccountUseCase
 ) : ViewModel() {
@@ -49,24 +53,36 @@ class AccountSettingsViewModel @Inject constructor(
     private val _events = Channel<AccountSettingsEvent>(Channel.BUFFERED)
     val events: Flow<AccountSettingsEvent> = _events.receiveAsFlow()
 
+    private var loadJob: Job? = null
+
     init {
-        viewModelScope.launch {
-            getCurrentUser().filterNotNull().collect { user ->
-                _uiState.update { state ->
-                    if (state.isLoaded) {
-                        state.copy(initials = user.initials)
-                    } else {
-                        state.copy(
-                            isLoaded = true,
-                            initials = user.initials,
-                            fullName = user.fullName,
-                            email = user.email,
-                            latitude = user.latitude,
-                            longitude = user.longitude
-                        )
+        loadUser()
+    }
+
+    fun onRetry() = loadUser()
+
+    private fun loadUser() {
+        loadJob?.cancel()
+        _uiState.update { it.copy(loadErrorRes = null) }
+        loadJob = viewModelScope.launch {
+            getCurrentUser().filterNotNull()
+                .catch { error -> _uiState.update { it.copy(loadErrorRes = error.toMessageRes()) } }
+                .collect { user ->
+                    _uiState.update { state ->
+                        if (state.isLoaded) {
+                            state.copy(initials = user.initials)
+                        } else {
+                            state.copy(
+                                isLoaded = true,
+                                initials = user.initials,
+                                fullName = user.fullName,
+                                email = user.email,
+                                latitude = user.latitude,
+                                longitude = user.longitude
+                            )
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -87,10 +103,12 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun onSave() {
         val s = _uiState.value
+        if (s.isSaving) return
         viewModelScope.launch {
+            _uiState.update { it.copy(isSaving = true) }
             updateProfile(s.fullName, s.email, s.latitude, s.longitude)
-                .onSuccess { _uiState.update { it.copy(savedBanner = true) } }
-                .onFailure { error -> _uiState.update { it.copy(errorRes = error.toMessageRes()) } }
+                .onSuccess { _uiState.update { it.copy(isSaving = false, savedBanner = true) } }
+                .onFailure { error -> _uiState.update { it.copy(isSaving = false, errorRes = error.toMessageRes()) } }
         }
     }
 
@@ -99,11 +117,11 @@ class AccountSettingsViewModel @Inject constructor(
     fun onDismissDelete() = _uiState.update { it.copy(showDeleteConfirm = false) }
 
     fun onConfirmDelete() {
-        _uiState.update { it.copy(showDeleteConfirm = false) }
+        _uiState.update { it.copy(showDeleteConfirm = false, isSaving = true) }
         viewModelScope.launch {
             deleteAccount()
                 .onSuccess { _events.send(AccountSettingsEvent.AccountDeleted) }
-                .onFailure { error -> _uiState.update { it.copy(errorRes = error.toMessageRes()) } }
+                .onFailure { error -> _uiState.update { it.copy(isSaving = false, errorRes = error.toMessageRes()) } }
         }
     }
 }

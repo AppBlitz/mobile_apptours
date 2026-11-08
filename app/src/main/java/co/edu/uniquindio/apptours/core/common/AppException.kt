@@ -22,4 +22,5 @@ sealed class AppException : Exception() {
     data object NotAllowed : AppException()
     data object PlaceNotFound : AppException()
     data object UserNotFound : AppException()
+    data object Network : AppException()
 }

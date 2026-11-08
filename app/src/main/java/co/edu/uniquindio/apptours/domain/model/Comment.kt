@@ -8,6 +8,5 @@ data class Comment(
     val authorLevel: UserLevel,
     val text: String,
     val isVisitExperience: Boolean = false,
-    val createdAt: Long = System.currentTimeMillis(),
-    val timeAgo: String = "Ahora"
+    val createdAt: Long = System.currentTimeMillis()
 )

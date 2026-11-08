@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.features.user.feed
 
+import androidx.annotation.StringRes
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
 import co.edu.uniquindio.apptours.domain.model.Place
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
@@ -14,5 +15,7 @@ data class FeedUiState(
     val places: List<Place> = emptyList(),
     val selectedMapPlaceId: String? = null,
     val votedPlaceIds: Set<String> = emptySet(),
-    val visitedPlaceIds: Set<String> = emptySet()
+    val visitedPlaceIds: Set<String> = emptySet(),
+    val isLoading: Boolean = true,
+    @StringRes val loadErrorRes: Int? = null
 )

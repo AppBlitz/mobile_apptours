@@ -1,12 +1,12 @@
-package co.edu.uniquindio.apptours.data.local
+package co.edu.uniquindio.apptours.data.remote.firebase.seed
 
 import co.edu.uniquindio.apptours.domain.model.*
 
 /**
- * Datos semilla de la Fase 2, usados por los repositorios en memoria mientras se migra a Firestore.
- * TODO(IT-2): eliminar junto con los repositorios en memoria.
+ * Datos semilla que [FirestoreSeeder] carga en Firestore la primera vez (las 5 categorías).
+ * Las fechas son relativas al momento de la carga.
  */
-object InMemoryDataSource {
+object SeedData {
 
     private const val MINUTE = 60_000L
     private const val HOUR = 60 * MINUTE
@@ -15,6 +15,7 @@ object InMemoryDataSource {
 
     data class Credential(val uid: String, val email: String, val password: String)
 
+    /** TODO(IT-3): cuentas reales en Firebase Auth; mientras tanto las usa InMemoryAuthRepository. */
     val credentials = listOf(
         Credential("user_valentina", "valentina@correo.com", "12345678"),
         Credential("user_camila", "camila@correo.com", "12345678"),
@@ -74,7 +75,6 @@ object InMemoryDataSource {
             authorName = "Camila R.",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - 20 * MINUTE,
-            createdAtLabel = "hace 20 min",
             status = PlaceStatus.VERIFICADA,
             votesCount = 48
         ),
@@ -94,7 +94,6 @@ object InMemoryDataSource {
             authorName = "Valentina Ríos",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - DAY,
-            createdAtLabel = "ayer",
             status = PlaceStatus.VERIFICADA,
             votesCount = 132
         ),
@@ -114,7 +113,6 @@ object InMemoryDataSource {
             authorName = "Camila R.",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - HOUR,
-            createdAtLabel = "hace 1 h",
             status = PlaceStatus.PENDIENTE,
             votesCount = 19
         ),
@@ -134,7 +132,6 @@ object InMemoryDataSource {
             authorName = "Valentina Ríos",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - 2 * HOUR,
-            createdAtLabel = "hace 2 h",
             status = PlaceStatus.PENDIENTE,
             votesCount = 27
         ),
@@ -154,7 +151,6 @@ object InMemoryDataSource {
             authorName = "Camila R.",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - 5 * HOUR,
-            createdAtLabel = "hace 5 h",
             status = PlaceStatus.PENDIENTE,
             votesCount = 14
         ),
@@ -174,7 +170,6 @@ object InMemoryDataSource {
             authorName = "Valentina Ríos",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - 3 * DAY,
-            createdAtLabel = "hace 3 días",
             status = PlaceStatus.RESUELTA,
             votesCount = 34
         ),
@@ -190,7 +185,6 @@ object InMemoryDataSource {
             authorName = "Valentina Ríos",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - 2 * DAY,
-            createdAtLabel = "hace 2 días",
             status = PlaceStatus.RECHAZADA,
             votesCount = 0,
             rejectionReason = "No pudimos verificar que el lugar exista en la ubicación indicada.",
@@ -213,7 +207,6 @@ object InMemoryDataSource {
             authorName = "Camila R.",
             authorLevel = UserLevel.EXPLORADOR,
             createdAt = now - 4 * DAY,
-            createdAtLabel = "hace 4 días",
             status = PlaceStatus.VERIFICADA,
             votesCount = 41,
             moderatorId = "mod_1",
@@ -242,8 +235,7 @@ object InMemoryDataSource {
             authorName = "Camila R.",
             authorLevel = UserLevel.EXPLORADOR,
             text = "Fui el sábado y conviene llegar temprano: el pan sale caliente a las 8 y la terraza se llena rápido.",
-            createdAt = now - 2 * HOUR,
-            timeAgo = "hace 2 h"
+            createdAt = now - 2 * HOUR
         ),
         Comment(
             id = "comm_2",
@@ -252,8 +244,7 @@ object InMemoryDataSource {
             authorName = "Andrés P.",
             authorLevel = UserLevel.AVENTURERO,
             text = "El precio es justo, pero los domingos cierran más temprano. Lo confirmé con el encargado.",
-            createdAt = now - DAY,
-            timeAgo = "ayer"
+            createdAt = now - DAY
         )
     )
 
@@ -264,7 +255,6 @@ object InMemoryDataSource {
             type = NotificationType.VOTE,
             title = "Camila R. marcó «Me interesa» en tu publicación «Mirador Alto del Águila»",
             body = "Tu publicación sigue sumando relevancia en la comunidad.",
-            timeAgo = "hace 5 min",
             relatedPlaceId = "place_2",
             createdAt = now - 5 * MINUTE
         ),
@@ -274,7 +264,6 @@ object InMemoryDataSource {
             type = NotificationType.COMMENT,
             title = "Andrés P. comentó en «Mirador Alto del Águila»",
             body = "Excelente para ver el amanecer, lleven abrigo...",
-            timeAgo = "hace 1 h",
             relatedPlaceId = "place_2",
             createdAt = now - HOUR
         ),
@@ -284,7 +273,6 @@ object InMemoryDataSource {
             type = NotificationType.VERIFIED,
             title = "Un moderador verificó tu publicación «Mirador Alto del Águila»",
             body = "Ya es visible en el feed público.",
-            timeAgo = "hace 3 h",
             relatedPlaceId = "place_2",
             createdAt = now - 3 * HOUR
         ),
@@ -294,8 +282,6 @@ object InMemoryDataSource {
             type = NotificationType.BADGE,
             title = "¡Ganaste la insignia Explorador!",
             body = "Alcanzaste más de 300 puntos compartiendo lugares con la comunidad.",
-            timeAgo = "ayer",
-            isToday = false,
             isRead = true,
             createdAt = now - DAY
         ),
@@ -305,8 +291,6 @@ object InMemoryDataSource {
             type = NotificationType.REJECTED,
             title = "Un moderador rechazó tu publicación «Local sin nombre»",
             body = "Motivo: no pudimos verificar la ubicación indicada.",
-            timeAgo = "hace 2 días",
-            isToday = false,
             isRead = true,
             relatedPlaceId = "place_7",
             createdAt = now - 2 * DAY

@@ -76,7 +76,8 @@ fun ModeratorReviewRoute(
         onOpenReject = viewModel::onOpenReject,
         onDismissReject = viewModel::onDismissReject,
         onReasonChange = viewModel::onReasonChange,
-        onConfirmReject = viewModel::onConfirmReject
+        onConfirmReject = viewModel::onConfirmReject,
+        onRetry = viewModel::onRetry
     )
 }
 
@@ -92,14 +93,19 @@ fun ModeratorReviewScreen(
     onOpenReject: () -> Unit,
     onDismissReject: () -> Unit,
     onReasonChange: (String) -> Unit,
-    onConfirmReject: () -> Unit
+    onConfirmReject: () -> Unit,
+    onRetry: () -> Unit
 ) {
     val place = state.place
+    if (state.loadErrorRes != null) {
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        return
+    }
     if (place == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (state.isLoading) {
-                CircularProgressIndicator(color = ColabDarkGreen)
-            } else {
+        if (state.isLoading) {
+            LoadingOverlay(modifier = Modifier.background(ColabBackground))
+        } else {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(stringResource(R.string.error_place_not_found))
             }
         }

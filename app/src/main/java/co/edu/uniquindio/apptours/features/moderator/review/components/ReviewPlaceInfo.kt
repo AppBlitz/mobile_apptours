@@ -112,7 +112,7 @@ internal fun ReviewPlaceInfo(place: Place) {
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Enviada ${place.createdAtLabel}",
+                        text = "Enviada ${relativeTimeLabel(place.createdAt)}",
                         fontSize = 12.sp,
                         color = ColabTextSecondary
                     )

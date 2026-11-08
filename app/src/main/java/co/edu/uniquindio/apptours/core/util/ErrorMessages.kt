@@ -28,6 +28,7 @@ fun Throwable.toMessageRes(): Int = when (this) {
     AppException.NotAllowed -> R.string.error_not_allowed
     AppException.PlaceNotFound -> R.string.error_place_not_found
     AppException.UserNotFound -> R.string.error_user_not_found
+    AppException.Network -> R.string.error_network
     else -> R.string.error_unknown
 }
 
