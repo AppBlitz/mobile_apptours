@@ -1,6 +1,7 @@
 package co.edu.uniquindio.apptours.domain.usecase.place
 
 import co.edu.uniquindio.apptours.core.common.AppException
+import co.edu.uniquindio.apptours.domain.model.ModerationAction
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.model.PointAction
@@ -8,6 +9,7 @@ import co.edu.uniquindio.apptours.domain.model.UserRole
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
+import co.edu.uniquindio.apptours.domain.usecase.moderation.RecordModerationDecisionUseCase
 import co.edu.uniquindio.apptours.domain.usecase.notification.SendNotificationUseCase
 import javax.inject.Inject
 
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class MarkPlaceResolvedUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
+    private val recordDecision: RecordModerationDecisionUseCase,
     private val awardPoints: AwardPointsUseCase,
     private val sendNotification: SendNotificationUseCase
 ) {
@@ -35,11 +38,13 @@ class MarkPlaceResolvedUseCase @Inject constructor(
             return Result.failure(AppException.NotAllowed)
         }
 
-        return placeRepository.updateStatus(
-            id = placeId,
-            status = PlaceStatus.RESUELTA,
-            moderatorId = if (isModerator) user.id else null
-        ).onSuccess {
+        // El moderador deja registro, XP y trofeos (M-06); el autor solo cambia el estado.
+        val result = if (isModerator) {
+            recordDecision(user, place, ModerationAction.RESOLVED)
+        } else {
+            placeRepository.updateStatus(id = placeId, status = PlaceStatus.RESUELTA)
+        }
+        return result.onSuccess {
             awardPoints(place.authorId, PointAction.PLACE_RESOLVED)
             if (place.authorId != user.id) {
                 sendNotification(

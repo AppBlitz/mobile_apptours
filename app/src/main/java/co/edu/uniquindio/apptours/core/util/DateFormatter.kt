@@ -20,6 +20,10 @@ object DateFormatter {
         ).toString()
 
     fun isToday(millis: Long): Boolean = DateUtils.isToday(millis)
+
+    /** Fecha completa según el idioma, p. ej. "8 de noviembre de 2026". */
+    fun longDate(millis: Long): String =
+        java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(java.util.Date(millis))
 }
 
 /** Etiqueta "Ahora" para lo creado hace menos de un minuto; si no, la fecha relativa. */

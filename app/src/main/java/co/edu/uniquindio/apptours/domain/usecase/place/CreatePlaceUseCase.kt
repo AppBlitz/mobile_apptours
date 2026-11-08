@@ -7,6 +7,7 @@ import co.edu.uniquindio.apptours.domain.model.PointAction
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
+import co.edu.uniquindio.apptours.domain.usecase.gamification.EvaluateBadgesUseCase
 import co.edu.uniquindio.apptours.domain.validation.PlaceForms
 import javax.inject.Inject
 
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class CreatePlaceUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
-    private val awardPoints: AwardPointsUseCase
+    private val awardPoints: AwardPointsUseCase,
+    private val evaluateBadges: EvaluateBadgesUseCase
 ) {
     suspend operator fun invoke(draft: PlaceDraft): Result<String> {
         draft.validate()?.let { return Result.failure(it) }
@@ -40,6 +42,7 @@ class CreatePlaceUseCase @Inject constructor(
         )
         return placeRepository.create(place).onSuccess {
             awardPoints(author.id, PointAction.CREATE_PLACE)
+            evaluateBadges()
         }
     }
 }

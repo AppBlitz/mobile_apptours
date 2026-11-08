@@ -1,6 +1,7 @@
 package co.edu.uniquindio.apptours.domain.usecase.moderation
 
 import co.edu.uniquindio.apptours.core.common.AppException
+import co.edu.uniquindio.apptours.domain.model.ModerationAction
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.model.PointAction
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class VerifyPlaceUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
+    private val recordDecision: RecordModerationDecisionUseCase,
     private val awardPoints: AwardPointsUseCase,
     private val sendNotification: SendNotificationUseCase
 ) {
@@ -24,11 +26,7 @@ class VerifyPlaceUseCase @Inject constructor(
         // Verificar dos veces no puede dar puntos dos veces.
         if (place.status == PlaceStatus.VERIFICADA) return Result.success(Unit)
 
-        return placeRepository.updateStatus(
-            id = placeId,
-            status = PlaceStatus.VERIFICADA,
-            moderatorId = moderator.id
-        ).onSuccess {
+        return recordDecision(moderator, place, ModerationAction.VERIFIED).onSuccess {
             awardPoints(place.authorId, PointAction.PLACE_VERIFIED)
             sendNotification(
                 userId = place.authorId,

@@ -55,6 +55,7 @@ internal fun ProfileHeader(
     fullName: String,
     initials: String,
     points: Int,
+    levelProgress: Float,
     onOpenAccountSettings: () -> Unit,
     onLogout: () -> Unit
 ) {
@@ -147,20 +148,25 @@ internal fun ProfileHeader(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "$points puntos",
+                text = stringResource(R.string.profile_points, points),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp
             )
             Text(
-                text = "$pointsToNextLevel para $nextLevelName",
+                text = if (nextLevel != null) {
+                    stringResource(R.string.profile_points_to_next, pointsToNextLevel, nextLevelName)
+                } else {
+                    nextLevelName
+                },
                 color = ColabSageBg,
                 fontSize = 13.sp
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
+        // Avance real dentro del nivel actual (de su mínimo al mínimo del siguiente).
         LinearProgressIndicator(
-            progress = { (points / 1000f).coerceIn(0.1f, 1f) },
+            progress = { levelProgress },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)

@@ -2,10 +2,15 @@ package co.edu.uniquindio.apptours.data.remote.firebase.dto
 
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
 import co.edu.uniquindio.apptours.domain.model.User
+import co.edu.uniquindio.apptours.domain.model.UserLevel
 import co.edu.uniquindio.apptours.domain.model.UserRole
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 
-/** Documento `users/{uid}`. */
+/**
+ * Documento `users/{uid}`. `badges` es un mapa id → fecha real de obtención;
+ * `level` se guarda junto con los puntos (lo calcula [UserLevel.fromPoints]).
+ */
 data class UserDto(
     val id: String = "",
     val fullName: String = "",
@@ -14,7 +19,9 @@ data class UserDto(
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
     val addressLabel: String = "",
-    val points: Int = 0
+    val points: Int = 0,
+    val commentsCount: Int = 0,
+    val badges: Map<String, Timestamp> = emptyMap()
 ) {
     /** Campos que el usuario cambia desde su perfil: nunca el rol ni los puntos. */
     fun profileFields(): Map<String, Any?> = mapOf(
@@ -27,7 +34,10 @@ data class UserDto(
 
     fun toMap(): Map<String, Any?> = profileFields() + mapOf(
         "role" to role,
-        "points" to points
+        "points" to points,
+        "level" to UserLevel.fromPoints(points).name,
+        "commentsCount" to commentsCount,
+        "badges" to badges
     )
 
     fun toDomain(): User = User(
@@ -38,7 +48,9 @@ data class UserDto(
         latitude = latitude,
         longitude = longitude,
         addressLabel = addressLabel,
-        points = points
+        points = points,
+        commentsCount = commentsCount,
+        earnedBadges = badges.mapValues { it.value.toMillis() }
     )
 
     companion object {
@@ -50,7 +62,11 @@ data class UserDto(
             latitude = doc.getDouble("latitude") ?: DefaultLocation.LATITUDE,
             longitude = doc.getDouble("longitude") ?: DefaultLocation.LONGITUDE,
             addressLabel = doc.getString("addressLabel").orEmpty(),
-            points = doc.getLong("points")?.toInt() ?: 0
+            points = doc.getLong("points")?.toInt() ?: 0,
+            commentsCount = doc.getLong("commentsCount")?.toInt() ?: 0,
+            badges = (doc.get("badges") as? Map<*, *>).orEmpty()
+                .mapNotNull { (key, value) -> (key as? String)?.let { k -> (value as? Timestamp)?.let { k to it } } }
+                .toMap()
         )
     }
 }
@@ -63,5 +79,7 @@ fun User.toDto(): UserDto = UserDto(
     latitude = latitude,
     longitude = longitude,
     addressLabel = addressLabel,
-    points = points
+    points = points,
+    commentsCount = commentsCount,
+    badges = earnedBadges.mapValues { it.value.toTimestamp() }
 )

@@ -86,6 +86,11 @@ internal fun StatsDashboard(stats: UserStats) {
             value = stats.votesReceived.toString(),
             modifier = Modifier.weight(1f)
         )
+        StatBox(
+            label = stringResource(R.string.stats_rejected),
+            value = stats.rejectedCount.toString(),
+            modifier = Modifier.weight(1f)
+        )
     }
 
 }

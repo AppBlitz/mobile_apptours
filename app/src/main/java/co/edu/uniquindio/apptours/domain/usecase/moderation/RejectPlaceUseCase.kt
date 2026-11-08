@@ -1,6 +1,7 @@
 package co.edu.uniquindio.apptours.domain.usecase.moderation
 
 import co.edu.uniquindio.apptours.core.common.AppException
+import co.edu.uniquindio.apptours.domain.model.ModerationAction
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
@@ -13,6 +14,7 @@ import javax.inject.Inject
 class RejectPlaceUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
+    private val recordDecision: RecordModerationDecisionUseCase,
     private val sendNotification: SendNotificationUseCase
 ) {
     suspend operator fun invoke(placeId: String, reason: String): Result<Unit> {
@@ -24,12 +26,7 @@ class RejectPlaceUseCase @Inject constructor(
         if (place.status == PlaceStatus.RECHAZADA) return Result.success(Unit)
         val cleanReason = reason.trim()
 
-        return placeRepository.updateStatus(
-            id = placeId,
-            status = PlaceStatus.RECHAZADA,
-            reason = cleanReason,
-            moderatorId = moderator.id
-        ).onSuccess {
+        return recordDecision(moderator, place, ModerationAction.REJECTED, cleanReason).onSuccess {
             sendNotification(
                 userId = place.authorId,
                 type = NotificationType.REJECTED,

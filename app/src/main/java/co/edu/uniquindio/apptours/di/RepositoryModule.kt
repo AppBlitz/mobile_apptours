@@ -2,12 +2,14 @@ package co.edu.uniquindio.apptours.di
 
 import co.edu.uniquindio.apptours.data.repository.FirebaseAuthRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreCommentRepository
+import co.edu.uniquindio.apptours.data.repository.FirestoreModerationRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreNotificationRepository
 import co.edu.uniquindio.apptours.data.repository.FirestorePlaceRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreUserRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreVisitRepository
 import co.edu.uniquindio.apptours.domain.repository.AuthRepository
 import co.edu.uniquindio.apptours.domain.repository.CommentRepository
+import co.edu.uniquindio.apptours.domain.repository.ModerationRepository
 import co.edu.uniquindio.apptours.domain.repository.NotificationRepository
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.repository.UserRepository
@@ -46,4 +48,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindNotificationRepository(impl: FirestoreNotificationRepository): NotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindModerationRepository(impl: FirestoreModerationRepository): ModerationRepository
 }

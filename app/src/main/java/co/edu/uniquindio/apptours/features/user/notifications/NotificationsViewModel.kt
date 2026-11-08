@@ -67,6 +67,11 @@ class NotificationsViewModel @Inject constructor(
         viewModelScope.launch { setNotificationRead(notification.id, isRead = true) }
     }
 
+    /** Desde el menú de la tarjeta: alterna leída / no leída sin abrir el detalle. */
+    fun onToggleRead(notification: AppNotification) {
+        viewModelScope.launch { setNotificationRead(notification.id, isRead = !notification.isRead) }
+    }
+
     fun onMarkAllRead() {
         viewModelScope.launch { markAllNotificationsRead() }
     }

@@ -11,13 +11,13 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | T-04 | Rango de precio: gratuito, económico, moderado, costoso | ❌ Pendiente | | |
 | T-05 | Marcar como "Visitado" y compartir la experiencia | 🟡 Implementado (IT-4), falta probar en dispositivo | | Al marcar "Visitado" se abre "Comparte tu experiencia" (calificación 1–5 obligatoria, texto opcional); el texto se publica como comentario con la etiqueta "Visitó este lugar". Contador de visitas en el detalle. |
 | T-06 | Moderadores verifican existencia y precisión de la información | 🟡 Implementado (IT-5), falta probar en dispositivo | | Lista de verificación de 4 puntos (existe, ubicación correcta, horario y precio coherentes, fotos reales); el botón Verificar solo se activa con todos marcados. |
-| T-07 | Niveles: Turista, Explorador, Aventurero, Embajador Local | ❌ Pendiente | | |
+| T-07 | Niveles: Turista, Explorador, Aventurero, Embajador Local | 🟡 Implementado (IT-6), falta probar en dispositivo | | El nivel se calcula de los puntos, se guarda en `users.level` y al subir llega una notificación de logro. |
 | M-01 | Login de moderadores precargados | ❌ Pendiente | | |
 | M-02 | Verificar o rechazar publicaciones | 🟡 Implementado, falta probar en dispositivo | | Verificar da puntos y notifica al autor una sola vez (verificar dos veces no suma de nuevo). Cola con filtros Pendientes / Verificadas / Rechazadas / Resueltas y contadores del día. |
 | M-03 | Motivo obligatorio al rechazar; la rechazada no aparece en el feed | 🟡 Implementado, falta probar en dispositivo | | Motivo de 15 a 300 caracteres con error en vivo y foco en el campo; motivos rápidos que se completan. El autor recibe el motivo en la notificación y en Mis publicaciones. |
 | M-04 | Marcar cualquier publicación como resuelta | 🟡 Implementado, falta probar en dispositivo | | Se notifica al autor. El autor, en cambio, solo puede finalizar lo ya verificado. |
 | M-05 | Recuperación de contraseña para moderadores | ❌ Pendiente | | |
-| M-06 | (Nuevo, del equipo) Perfil del moderador: estadísticas, XP y trofeos | ❌ Pendiente | | |
+| M-06 | (Nuevo, del equipo) Perfil del moderador: estadísticas, XP y trofeos | 🟡 Implementado (IT-6), falta probar en dispositivo | | Pestaña Perfil del moderador: revisadas, verificadas, rechazadas, resueltas, tasa de rechazo, hoy/semana, XP con rango (Revisor → Moderador Experto), 9 trofeos con progreso y fecha, y últimas 10 acciones. Se guarda en `moderationLog` y `moderatorStats` en el mismo lote que la decisión. Las revisiones anteriores a IT-6 no cuentan. |
 | U-01 | Registro con correo y contraseña | ❌ Pendiente | | |
 | U-02 | Login con correo y contraseña | ❌ Pendiente | | |
 | U-03 | Recuperación de contraseña por correo | ❌ Pendiente | | |
@@ -30,14 +30,14 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | U-10 | "Me interesa" con votos que determinan relevancia | 🟡 Implementado, falta probar en dispositivo | | Un voto por usuario con transacción; el feed se ordena por votos y el detalle muestra la etiqueta de relevancia. |
 | U-11 | Comentarios | 🟡 Implementado, falta probar en dispositivo | | Lista en tiempo real; el campo valida en vivo (vacío o más de 500 caracteres). |
 | U-12 | Detalle completo: comentarios, ubicación, fotos, información | 🟡 Información, comentarios y visitas listos; fotos (IT-8) y mapa real (IT-7) pendientes | | |
-| U-13 | Notificaciones guardadas en BD | ❌ Pendiente | | |
-| U-14 | Notificaciones leídas/no leídas que navegan al detalle | ❌ Pendiente | | |
-| U-15 | Notificación al autor por cada comentario | ❌ Pendiente | | |
+| U-13 | Notificaciones guardadas en BD | 🟡 Implementado, falta probar en dispositivo | | Guardadas en la nube y en tiempo real: comentario, voto, verificada, rechazada, resuelta, insignia, subida de nivel (y trofeo para moderadores). |
+| U-14 | Notificaciones leídas/no leídas que navegan al detalle | 🟡 Implementado, falta probar en dispositivo | | Menú ⋮ en cada tarjeta para leída / no leída, "marcar todas", filtros Todas / No leídas / Logros. Tocarla la marca leída y abre el detalle. |
+| U-15 | Notificación al autor por cada comentario | 🟡 Implementado, falta probar en dispositivo | | Cada comentario notifica al autor salvo que se comente a sí mismo. |
 | U-16 | Editar datos personales y eliminar cuenta | ❌ Pendiente | | |
-| U-17 | Dashboard: activas, finalizadas y pendientes | ❌ Pendiente | | |
-| U-18 | Puntos por participación | ❌ Pendiente | | |
-| U-19 | 4 niveles | ❌ Pendiente | | |
-| U-20 | Insignias reales por logros | ❌ Pendiente | | |
+| U-17 | Dashboard: activas, finalizadas y pendientes | 🟡 Implementado, falta probar en dispositivo | | Activas, finalizadas, pendientes y rechazadas, más visitados y votos recibidos. |
+| U-18 | Puntos por participación | 🟡 Implementado, falta probar en dispositivo | | Tabla única (`PointAction`) que se muestra en el perfil; ahora también suma "Marcar visitado y compartir experiencia" (+10, una vez por visita). |
+| U-19 | 4 niveles | 🟡 Implementado, falta probar en dispositivo | | Barra de avance real dentro del nivel actual. |
+| U-20 | Insignias reales por logros | 🟡 Implementado, falta probar en dispositivo | | 14 insignias con progreso calculado y fecha real (sin datos inventados). Las que dependen de otros (votos, verificaciones, destacado del mes) se recogen al abrir la app, porque solo el dueño escribe sus insignias. |
 | N-01 | Necesidad adicional: recomendaciones por historial de visitas | ❌ Pendiente | | |
 | IA-01 | Detección de duplicados con LLM (Google Gemini) | ❌ Pendiente | | |
 | R-01 | 100 % Jetpack Compose + Kotlin | ❌ Pendiente | | |

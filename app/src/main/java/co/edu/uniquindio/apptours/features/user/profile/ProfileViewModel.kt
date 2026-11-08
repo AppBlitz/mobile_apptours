@@ -6,9 +6,12 @@ import androidx.lifecycle.viewModelScope
 import co.edu.uniquindio.apptours.core.common.RetryTrigger
 import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.Badge
+import co.edu.uniquindio.apptours.domain.model.BadgeId
 import co.edu.uniquindio.apptours.domain.model.User
 import co.edu.uniquindio.apptours.domain.model.UserStats
 import co.edu.uniquindio.apptours.domain.usecase.auth.LogoutUseCase
+import co.edu.uniquindio.apptours.domain.usecase.gamification.CalculateLevelUseCase
+import co.edu.uniquindio.apptours.domain.usecase.gamification.EvaluateBadgesUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.GetUserBadgesUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.GetCurrentUserUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.GetUserStatsUseCase
@@ -28,8 +31,10 @@ import javax.inject.Inject
 data class ProfileUiState(
     val user: User? = null,
     val stats: UserStats = UserStats(),
+    /** Avance (0..1) hacia el siguiente nivel. */
+    val levelProgress: Float = 0f,
     val badges: List<Badge> = emptyList(),
-    val selectedBadgeId: String? = null,
+    val selectedBadgeId: BadgeId? = null,
     val isLoading: Boolean = true,
     @StringRes val loadErrorRes: Int? = null
 ) {
@@ -45,31 +50,43 @@ sealed interface ProfileEvent {
 class ProfileViewModel @Inject constructor(
     getCurrentUser: GetCurrentUserUseCase,
     getUserStats: GetUserStatsUseCase,
-    private val getUserBadges: GetUserBadgesUseCase,
+    getUserBadges: GetUserBadgesUseCase,
+    private val calculateLevel: CalculateLevelUseCase,
+    evaluateBadges: EvaluateBadgesUseCase,
     private val logout: LogoutUseCase
 ) : ViewModel() {
 
-    private val selectedBadgeId = MutableStateFlow<String?>(null)
+    private val selectedBadgeId = MutableStateFlow<BadgeId?>(null)
     private val retryTrigger = RetryTrigger()
 
     private val _events = Channel<ProfileEvent>(Channel.BUFFERED)
     val events: Flow<ProfileEvent> = _events.receiveAsFlow()
 
     val uiState: StateFlow<ProfileUiState> = retryTrigger.restartable {
-        combine(getCurrentUser(), getUserStats(), selectedBadgeId) { user, stats, selected ->
+        combine(getCurrentUser(), getUserStats(), getUserBadges(), selectedBadgeId) { user, stats, badges, selected ->
             ProfileUiState(
                 isLoading = false,
                 user = user,
                 stats = stats,
-                badges = getUserBadges(points = user?.points ?: 0, verifiedCount = stats.verifiedCount),
+                levelProgress = calculateLevel.progressToNext(user?.points ?: 0),
+                // Las ganadas primero (las más recientes arriba), luego las que faltan por progreso.
+                badges = badges.sortedWith(
+                    compareByDescending<Badge> { it.unlocked }
+                        .thenByDescending { it.earnedAt ?: 0L }
+                        .thenByDescending { it.progressFraction }
+                ),
                 selectedBadgeId = selected
             )
         }.catch { emit(ProfileUiState(isLoading = false, loadErrorRes = it.toMessageRes())) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileUiState())
 
+    init {
+        viewModelScope.launch { evaluateBadges() }
+    }
+
     fun onRetry() = retryTrigger.retry()
 
-    fun onSelectBadge(badgeId: String) {
+    fun onSelectBadge(badgeId: BadgeId) {
         selectedBadgeId.value = badgeId
     }
 

@@ -83,7 +83,7 @@ fun ProfileScreen(
     onOpenMyPlaces: () -> Unit,
     onOpenAccountSettings: () -> Unit,
     onLogout: () -> Unit,
-    onSelectBadge: (String) -> Unit,
+    onSelectBadge: (BadgeId) -> Unit,
     onRetry: () -> Unit
 ) {
     if (state.loadErrorRes != null) {
@@ -107,6 +107,7 @@ fun ProfileScreen(
             fullName = user?.fullName.orEmpty(),
             initials = user?.initials.orEmpty(),
             points = user?.points ?: 0,
+            levelProgress = state.levelProgress,
             onOpenAccountSettings = onOpenAccountSettings,
             onLogout = onLogout
         )

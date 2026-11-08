@@ -8,7 +8,11 @@ data class User(
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
     val addressLabel: String = "",
-    val points: Int = 0
+    val points: Int = 0,
+    /** Comentarios escritos (para las insignias de comentarista). */
+    val commentsCount: Int = 0,
+    /** Insignias ganadas: id de [BadgeId] → fecha real en que se obtuvo (millis). */
+    val earnedBadges: Map<String, Long> = emptyMap()
 ) {
     val level: UserLevel
         get() = UserLevel.fromPoints(points)

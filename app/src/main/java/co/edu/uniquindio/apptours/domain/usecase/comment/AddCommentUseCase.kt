@@ -6,6 +6,8 @@ import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PointAction
 import co.edu.uniquindio.apptours.domain.repository.CommentRepository
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
+import co.edu.uniquindio.apptours.domain.repository.UserRepository
+import co.edu.uniquindio.apptours.domain.usecase.gamification.EvaluateBadgesUseCase
 import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.notification.SendNotificationUseCase
@@ -20,7 +22,9 @@ class AddCommentUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
     private val commentRepository: CommentRepository,
+    private val userRepository: UserRepository,
     private val awardPoints: AwardPointsUseCase,
+    private val evaluateBadges: EvaluateBadgesUseCase,
     private val sendNotification: SendNotificationUseCase
 ) {
     suspend operator fun invoke(placeId: String, text: String, visitRating: Int? = null): Result<Unit> {
@@ -41,7 +45,10 @@ class AddCommentUseCase @Inject constructor(
             rating = visitRating
         )
         return commentRepository.add(comment).map {
-            awardPoints(user.id, PointAction.COMMENT)
+            userRepository.incrementCommentsCount(user.id)
+            // La experiencia de visita tiene su propio puntaje (ShareVisitExperienceUseCase).
+            if (visitRating == null) awardPoints(user.id, PointAction.COMMENT)
+            evaluateBadges()
             if (place.authorId != user.id) {
                 sendNotification(
                     userId = place.authorId,

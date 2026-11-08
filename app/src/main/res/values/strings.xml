@@ -181,6 +181,114 @@
     <string name="my_places_no_reason">El moderador no dejó un motivo.</string>
     <string name="my_places_rejected_hint">Puedes editarla para corregirla: volverá a revisión.</string>
 
+    <!-- Notificaciones -->
+    <string name="notifications_title">Notificaciones</string>
+    <plurals name="notifications_unread">
+        <item quantity="one">%1$d sin leer</item>
+        <item quantity="other">%1$d sin leer</item>
+    </plurals>
+    <string name="notifications_mark_all_read">Marcar todas\ncomo leídas</string>
+    <string name="notifications_filter_all">Todas</string>
+    <string name="notifications_filter_unread">No leídas · %1$d</string>
+    <string name="notifications_filter_achievements">Logros</string>
+    <string name="notifications_today">HOY</string>
+    <string name="notifications_earlier">ANTERIORES</string>
+    <string name="notifications_empty">No tienes notificaciones aquí.</string>
+    <string name="notifications_options">Opciones de la notificación</string>
+    <string name="notifications_mark_read">Marcar como leída</string>
+    <string name="notifications_mark_unread">Marcar como no leída</string>
+
+    <!-- Perfil, puntos e insignias -->
+    <string name="profile_points">%1$d puntos</string>
+    <string name="profile_points_to_next">%1$d para %2$s</string>
+    <string name="stats_rejected">Rechazadas</string>
+    <string name="points_rules_title">Cómo sumar puntos</string>
+    <string name="points_value">+%1$d</string>
+    <string name="points_create_place">Crear publicación</string>
+    <string name="points_place_verified">Publicación verificada</string>
+    <string name="points_comment">Comentar</string>
+    <string name="points_vote_received">Recibir un «Me interesa»</string>
+    <string name="points_visit_experience">Marcar visitado y compartir experiencia</string>
+    <string name="points_place_resolved">Publicación resuelta</string>
+    <string name="badges_title">Insignias</string>
+    <string name="badges_count">%1$d de %2$d ganadas</string>
+    <string name="badges_progress">%1$d/%2$d</string>
+    <string name="badges_progress_detail">Progreso: %1$d de %2$d</string>
+    <string name="badges_earned_on">Obtenida el %1$s</string>
+    <string name="badges_just_earned">¡Recién obtenida!</string>
+    <string name="badge_first_place">Primera publicación</string>
+    <string name="badge_first_place_desc">Comparte tu primer lugar con la comunidad.</string>
+    <string name="badge_first_comment">Primer comentario</string>
+    <string name="badge_first_comment_desc">Escribe tu primer comentario en una publicación.</string>
+    <string name="badge_commentator">Comentarista</string>
+    <string name="badge_commentator_desc">Escribe %1$d comentarios en publicaciones.</string>
+    <string name="badge_ten_verified">10 verificadas</string>
+    <string name="badge_ten_verified_desc">Consigue que los moderadores verifiquen %1$d de tus publicaciones.</string>
+    <string name="badge_level_desc">Alcanza %1$d puntos de reputación.</string>
+    <string name="badge_featured_month">Destacado del mes</string>
+    <string name="badge_featured_month_desc">Ten la publicación con más «Me interesa» entre las creadas este mes.</string>
+    <string name="badge_traveler">Viajero</string>
+    <string name="badge_traveler_desc">Marca %1$d lugares como visitados.</string>
+    <string name="badge_gastronomy_lover">Amante de la gastronomía</string>
+    <string name="badge_gastronomy_lover_desc">Visita %1$d lugares de Gastronomía.</string>
+    <string name="badge_culture_lover">Amante de la cultura</string>
+    <string name="badge_culture_lover_desc">Visita %1$d lugares de Cultura.</string>
+    <string name="badge_nature_lover">Amante de la naturaleza</string>
+    <string name="badge_nature_lover_desc">Visita %1$d lugares de Naturaleza.</string>
+    <string name="badge_entertainment_lover">Amante del entretenimiento</string>
+    <string name="badge_entertainment_lover_desc">Visita %1$d lugares de Entretenimiento.</string>
+    <string name="badge_history_lover">Amante de la historia</string>
+    <string name="badge_history_lover_desc">Visita %1$d lugares de Historia.</string>
+
+    <!-- Perfil del moderador (M-06) -->
+    <string name="moderator_tab_queue">Por revisar</string>
+    <string name="moderator_tab_history">Historial</string>
+    <string name="moderator_tab_alerts">Alertas</string>
+    <string name="moderator_tab_profile">Perfil</string>
+    <string name="moderator_profile_title">Mi perfil de moderador</string>
+    <string name="moderator_logout">Cerrar sesión de moderador</string>
+    <string name="moderator_xp">%1$d XP</string>
+    <string name="moderator_xp_to_next">%1$d XP para %2$s</string>
+    <string name="moderator_max_rank">Rango máximo</string>
+    <string name="rank_reviewer">Revisor</string>
+    <string name="rank_guardian">Guardián</string>
+    <string name="rank_curator">Curador</string>
+    <string name="rank_expert">Moderador Experto</string>
+    <string name="moderator_stats_title">Mis estadísticas</string>
+    <string name="moderator_stats_reviewed">Revisadas</string>
+    <string name="moderator_stats_verified">Verificadas</string>
+    <string name="moderator_stats_rejected">Rechazadas</string>
+    <string name="moderator_stats_resolved">Resueltas</string>
+    <string name="moderator_stats_rejection_rate">Tasa de rechazo</string>
+    <string name="moderator_stats_percent">%1$d %%</string>
+    <string name="moderator_stats_today_week">Hoy / semana</string>
+    <string name="moderator_stats_today_week_value">%1$d / %2$d</string>
+    <string name="xp_rules_title">Cómo ganar XP</string>
+    <string name="xp_value">+%1$d XP</string>
+    <string name="xp_verify">Verificar publicación</string>
+    <string name="xp_reject">Rechazar publicación con motivo</string>
+    <string name="xp_resolve">Marcar como resuelta</string>
+    <string name="xp_daily_bonus">Revisar %1$d publicaciones en un día (bonificación)</string>
+    <string name="trophies_title">Trofeos</string>
+    <string name="trophy_first_review">Primera revisión</string>
+    <string name="trophy_reviews_10">10 revisiones</string>
+    <string name="trophy_reviews_50">50 revisiones</string>
+    <string name="trophy_reviews_100">100 revisiones</string>
+    <string name="trophy_reviews_desc">Revisa %1$d publicaciones (verificar, rechazar o resolver).</string>
+    <string name="trophy_first_rejection">Primer rechazo</string>
+    <string name="trophy_first_rejection_desc">Rechaza tu primera publicación con su motivo.</string>
+    <string name="trophy_critical_eye">Ojo crítico</string>
+    <string name="trophy_critical_eye_desc">Rechaza %1$d publicaciones explicando el motivo.</string>
+    <string name="trophy_quality_seal">Sello de calidad</string>
+    <string name="trophy_quality_seal_desc">Verifica %1$d publicaciones.</string>
+    <string name="trophy_intense_day">Jornada intensa</string>
+    <string name="trophy_intense_day_desc">Revisa %1$d publicaciones en un mismo día.</string>
+    <string name="trophy_closer">Cerrador</string>
+    <string name="trophy_closer_desc">Marca %1$d publicaciones como resueltas.</string>
+    <string name="moderator_recent_title">Últimas acciones</string>
+    <string name="moderator_recent_empty">Aún no hay acciones registradas. Cada revisión aparecerá aquí con la XP que te dio.</string>
+    <string name="moderator_recent_reason">Motivo: %1$s</string>
+
     <!-- Autenticación -->
     <string name="recovery_link_sent">Hemos enviado un enlace de recuperación a %1$s</string>
 

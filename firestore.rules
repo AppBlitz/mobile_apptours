@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Reglas de coLab tour (IT-3, ajustadas en IT-4 e IT-5). Sin Cloud Functions, algunas escrituras sobre datos ajenos
+// Reglas de coLab tour (IT-3, ajustadas en IT-4, IT-5 e IT-6). Sin Cloud Functions, algunas escrituras sobre datos ajenos
 // se permiten de forma acotada: sumar puntos al autor, mover contadores y crear notificaciones.
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -46,9 +46,16 @@ service cloud.firestore {
       allow create: if isOwner(uid)
         && request.resource.data.role == 'USER'
         && request.resource.data.points == 0;
-      // El dueño edita su perfil pero no su rol ni sus puntos; cualquiera puede sumarle puntos.
-      allow update: if (isOwner(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'points']))
-        || (signedIn() && onlyChanges(['points']));
+      // El dueño edita su perfil, su contador de comentarios y sus insignias, pero no su rol, sus puntos
+      // ni su nivel. Cualquiera puede sumarle puntos (lo que da una acción: entre 1 y 50) y el nivel
+      // que resulta, en la misma escritura (IT-6).
+      allow update: if (isOwner(uid)
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'points', 'level']))
+        || (signedIn()
+          && onlyChanges(['points', 'level'])
+          && request.resource.data.points > resource.data.get('points', 0)
+          && request.resource.data.points - resource.data.get('points', 0) <= 50
+          && request.resource.data.level in ['TURISTA', 'EXPLORADOR', 'AVENTURERO', 'EMBAJADOR_LOCAL']);
       allow delete: if isOwner(uid);
 
       match /visits/{placeId} {
@@ -100,6 +107,38 @@ service cloud.firestore {
         allow create: if signedIn() && request.resource.data.authorId == request.auth.uid;
         allow delete: if isOwner(resource.data.authorId) || isOwner(placeAuthor(placeId)) || isModerator();
       }
+    }
+
+    // Historial permanente de moderación (M-06): lo crea el moderador por sus propias acciones,
+    // solo él lo lee y nadie lo modifica ni lo borra.
+    match /moderationLog/{logId} {
+      allow read: if isOwner(resource.data.moderatorId);
+      allow create: if isModerator()
+        && request.resource.data.moderatorId == request.auth.uid
+        && request.resource.data.action in ['VERIFIED', 'REJECTED', 'RESOLVED']
+        && request.resource.data.xpAwarded is int
+        && request.resource.data.xpAwarded <= 65;
+    }
+
+    // Contadores, XP y trofeos del moderador (M-06). Solo él los lee, y solo cambian si en el mismo
+    // lote se crea una entrada nueva de su historial (lastLogId): así no se puede sumar XP sin revisar.
+    function previous(field) {
+      return resource == null ? 0 : resource.data.get(field, 0);
+    }
+
+    function validModerationWrite(uid) {
+      let logPath = /databases/$(database)/documents/moderationLog/$(request.resource.data.lastLogId);
+      return isModerator() && isOwner(uid)
+        && !exists(logPath)
+        && existsAfter(logPath)
+        && getAfter(logPath).data.moderatorId == uid
+        && request.resource.data.reviewedCount == previous('reviewedCount') + 1
+        && request.resource.data.xp - previous('xp') == getAfter(logPath).data.xpAwarded;
+    }
+
+    match /moderatorStats/{uid} {
+      allow read: if isOwner(uid);
+      allow create, update: if validModerationWrite(uid);
     }
 
     // Cada usuario lee y marca como leídas solo sus notificaciones; cualquiera puede enviarle una.

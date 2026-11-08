@@ -6,7 +6,10 @@ import co.edu.uniquindio.apptours.data.remote.firebase.dto.UserDto
 import co.edu.uniquindio.apptours.data.remote.firebase.dto.toDto
 import co.edu.uniquindio.apptours.data.remote.firebase.firestoreCall
 import co.edu.uniquindio.apptours.data.remote.firebase.observe
+import co.edu.uniquindio.apptours.data.remote.firebase.dto.toTimestamp
 import co.edu.uniquindio.apptours.domain.model.User
+import co.edu.uniquindio.apptours.domain.model.UserLevel
+import co.edu.uniquindio.apptours.domain.repository.PointsChange
 import co.edu.uniquindio.apptours.domain.repository.UserRepository
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,7 +20,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FirestoreUserRepository @Inject constructor(
-    db: FirebaseFirestore
+    private val db: FirebaseFirestore
 ) : UserRepository {
 
     private val users = db.collection(FirestoreCollections.USERS)
@@ -47,11 +50,28 @@ class FirestoreUserRepository @Inject constructor(
         Unit
     }
 
-    /** Incremento atómico: dos sumas simultáneas no se pisan. */
-    override suspend fun addPoints(userId: String, points: Int): Result<Unit> = firestoreCall {
+    /** Transacción: dos sumas simultáneas no se pisan y el nivel guardado siempre coincide con los puntos. */
+    override suspend fun addPoints(userId: String, points: Int): Result<PointsChange> = firestoreCall {
         val ref = users.document(userId)
-        if (!ref.get().await().exists()) throw AppException.UserNotFound
-        ref.update("points", FieldValue.increment(points.toLong())).await()
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(ref)
+            if (!snapshot.exists()) throw AppException.UserNotFound
+            val before = snapshot.getLong("points")?.toInt() ?: 0
+            val after = before + points
+            transaction.update(ref, mapOf("points" to after, "level" to UserLevel.fromPoints(after).name))
+            PointsChange(before, after)
+        }.await()
+    }
+
+    override suspend fun incrementCommentsCount(userId: String): Result<Unit> = firestoreCall {
+        users.document(userId).update("commentsCount", FieldValue.increment(1)).await()
         Unit
+    }
+
+    override suspend fun addBadges(userId: String, badges: Map<String, Long>): Result<Unit> = firestoreCall {
+        if (badges.isEmpty()) return@firestoreCall
+        // Notación con punto: agrega claves al mapa sin borrar las insignias que ya tenía.
+        val fields = badges.map { (id, earnedAt) -> "badges.$id" to earnedAt.toTimestamp() }.toMap()
+        users.document(userId).update(fields).await()
     }
 }
