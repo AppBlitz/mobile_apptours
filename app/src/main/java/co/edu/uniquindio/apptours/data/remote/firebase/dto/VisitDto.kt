@@ -12,13 +12,18 @@ data class VisitDto(
     val category: String = "",
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
-    val visitedAt: Timestamp? = null
+    val visitedAt: Timestamp? = null,
+    val experience: String? = null,
+    val rating: Int? = null
 ) {
     fun toMap(): Map<String, Any?> = mapOf(
+        "placeId" to placeId,
         "category" to category,
         "latitude" to latitude,
         "longitude" to longitude,
-        "visitedAt" to visitedAt
+        "visitedAt" to visitedAt,
+        "experience" to experience,
+        "rating" to rating
     )
 
     fun toDomain(): Visit = Visit(
@@ -26,7 +31,9 @@ data class VisitDto(
         category = category.toEnumOr(PlaceCategory.CULTURA),
         latitude = latitude,
         longitude = longitude,
-        visitedAt = visitedAt?.toMillis() ?: System.currentTimeMillis()
+        visitedAt = visitedAt?.toMillis() ?: System.currentTimeMillis(),
+        experience = experience,
+        rating = rating
     )
 
     companion object {
@@ -35,7 +42,9 @@ data class VisitDto(
             category = doc.getString("category").orEmpty(),
             latitude = doc.getDouble("latitude") ?: DefaultLocation.LATITUDE,
             longitude = doc.getDouble("longitude") ?: DefaultLocation.LONGITUDE,
-            visitedAt = doc.getTimestamp("visitedAt")
+            visitedAt = doc.getTimestamp("visitedAt"),
+            experience = doc.getString("experience"),
+            rating = doc.getLong("rating")?.toInt()
         )
     }
 }
@@ -45,5 +54,7 @@ fun Visit.toDto(): VisitDto = VisitDto(
     category = category.name,
     latitude = latitude,
     longitude = longitude,
-    visitedAt = visitedAt.toTimestamp()
+    visitedAt = visitedAt.toTimestamp(),
+    experience = experience,
+    rating = rating
 )

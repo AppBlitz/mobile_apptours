@@ -14,6 +14,7 @@ data class CommentDto(
     val authorLevel: String = "",
     val text: String = "",
     val isVisitExperience: Boolean = false,
+    val rating: Int? = null,
     val createdAt: Timestamp? = null
 ) {
     fun toMap(): Map<String, Any?> = mapOf(
@@ -23,6 +24,7 @@ data class CommentDto(
         "authorLevel" to authorLevel,
         "text" to text,
         "isVisitExperience" to isVisitExperience,
+        "rating" to rating,
         "createdAt" to createdAt
     )
 
@@ -34,6 +36,7 @@ data class CommentDto(
         authorLevel = authorLevel.toEnumOr(UserLevel.TURISTA),
         text = text,
         isVisitExperience = isVisitExperience,
+        rating = rating,
         createdAt = createdAt?.toMillis() ?: System.currentTimeMillis()
     )
 
@@ -46,6 +49,7 @@ data class CommentDto(
             authorLevel = doc.getString("authorLevel").orEmpty(),
             text = doc.getString("text").orEmpty(),
             isVisitExperience = doc.getBoolean("isVisitExperience") ?: false,
+            rating = doc.getLong("rating")?.toInt(),
             createdAt = doc.getTimestamp("createdAt")
         )
     }
@@ -59,5 +63,6 @@ fun Comment.toDto(): CommentDto = CommentDto(
     authorLevel = authorLevel.name,
     text = text,
     isVisitExperience = isVisitExperience,
+    rating = rating,
     createdAt = createdAt.toTimestamp()
 )

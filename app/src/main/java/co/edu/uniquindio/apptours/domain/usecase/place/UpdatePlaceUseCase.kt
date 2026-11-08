@@ -1,11 +1,11 @@
 package co.edu.uniquindio.apptours.domain.usecase.place
 
 import co.edu.uniquindio.apptours.core.common.AppException
-import co.edu.uniquindio.apptours.domain.model.Place
 import co.edu.uniquindio.apptours.domain.model.PlaceDraft
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
+import co.edu.uniquindio.apptours.domain.validation.PlaceForms
 import javax.inject.Inject
 
 /** Solo el autor edita; cualquier edición vuelve la publicación a PENDIENTE. */
@@ -23,19 +23,17 @@ class UpdatePlaceUseCase @Inject constructor(
         return placeRepository.update(
             place.copy(
                 title = draft.title.trim(),
-                category = draft.category,
+                category = requireNotNull(draft.category),
                 description = draft.description.trim(),
-                priceRange = draft.priceRange,
-                daysActive = draft.daysActive.ifEmpty { Place.DEFAULT_DAYS },
-                openTime = draft.openTime,
-                closeTime = draft.closeTime,
-                latitude = draft.latitude,
-                longitude = draft.longitude,
-                photosCount = draft.photosCount.coerceIn(1, MAX_PHOTOS),
+                priceRange = requireNotNull(draft.priceRange),
+                daysActive = draft.daysActive,
+                openTime = draft.openTime.trim(),
+                closeTime = draft.closeTime.trim(),
+                latitude = requireNotNull(draft.latitude),
+                longitude = requireNotNull(draft.longitude),
+                photosCount = draft.photosCount.coerceIn(1, PlaceForms.MAX_PHOTOS),
                 status = PlaceStatus.PENDIENTE,
-                rejectionReason = null,
-                moderatorId = null,
-                reviewedAt = null
+                rejectionReason = null
             )
         )
     }

@@ -2,6 +2,7 @@ package co.edu.uniquindio.apptours.features.user.feed
 
 import androidx.annotation.StringRes
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
+import co.edu.uniquindio.apptours.domain.model.LocationFilter
 import co.edu.uniquindio.apptours.domain.model.Place
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
 
@@ -11,7 +12,7 @@ data class FeedUiState(
     val userLongitude: Double = DefaultLocation.LONGITUDE,
     val query: String = "",
     val selectedCategory: PlaceCategory? = null,
-    val onlyNearby: Boolean = true,
+    val location: LocationFilter = LocationFilter.TODAS,
     val places: List<Place> = emptyList(),
     val selectedMapPlaceId: String? = null,
     val votedPlaceIds: Set<String> = emptySet(),

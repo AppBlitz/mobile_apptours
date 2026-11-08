@@ -57,6 +57,7 @@ import co.edu.uniquindio.apptours.features.user.profile.ProfileRoute
 fun UserHomeRoute(
     onOpenPlaceDetail: (String) -> Unit,
     onOpenCreatePlace: () -> Unit,
+    onOpenMyPlaces: () -> Unit,
     onOpenAccountSettings: () -> Unit,
     onLoggedOut: () -> Unit,
     viewModel: UserHomeViewModel = hiltViewModel()
@@ -90,6 +91,7 @@ fun UserHomeRoute(
                 )
                 UserBottomTab.ALERTAS -> NotificationsRoute(onOpenPlaceDetail = onOpenPlaceDetail)
                 UserBottomTab.PERFIL -> ProfileRoute(
+                    onOpenMyPlaces = onOpenMyPlaces,
                     onOpenAccountSettings = onOpenAccountSettings,
                     onLoggedOut = onLoggedOut
                 )

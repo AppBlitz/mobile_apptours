@@ -36,4 +36,49 @@ object Validators {
     }
 
     fun accepted(value: Boolean): FieldError? = if (value) null else FieldError.Required
+
+    /** Texto obligatorio con longitud mínima y máxima (cuenta sin espacios al inicio ni al final). */
+    fun text(value: String, min: Int, max: Int): FieldError? {
+        val length = value.trim().length
+        return when {
+            length == 0 -> FieldError.Required
+            length < min -> FieldError.TooShort(missing = min - length, min = min)
+            length > max -> FieldError.TooLong(max)
+            else -> null
+        }
+    }
+
+    fun time(value: String): FieldError? = when {
+        value.isBlank() -> FieldError.Required
+        minutesOfDay(value) == null -> FieldError.InvalidTime
+        else -> null
+    }
+
+    /** La hora de cierre debe ser posterior a la de apertura (solo si ambas son válidas). */
+    fun closeTime(open: String, close: String): FieldError? {
+        time(close)?.let { return it }
+        val openMinutes = minutesOfDay(open) ?: return null
+        val closeMinutes = minutesOfDay(close) ?: return null
+        return if (closeMinutes <= openMinutes) FieldError.CloseBeforeOpen else null
+    }
+
+    private val TIME_REGEX = Regex("""^(\d{1,2}):(\d{2})\s*(?:([ap])\.?\s*m\.?)?$""", RegexOption.IGNORE_CASE)
+
+    /**
+     * Minutos desde la medianoche para "7:00 a. m.", "7:30 pm" o "19:00"; null si el formato no es válido.
+     * Con a. m. / p. m. la hora va de 1 a 12; sin ellos, de 0 a 23.
+     */
+    fun minutesOfDay(value: String): Int? {
+        val match = TIME_REGEX.matchEntire(value.trim()) ?: return null
+        val hour = match.groupValues[1].toInt()
+        val minute = match.groupValues[2].toInt()
+        if (minute > 59) return null
+        val meridiem = match.groupValues[3].lowercase()
+        val hour24 = when (meridiem) {
+            "" -> hour.takeIf { it in 0..23 }
+            "a" -> hour.takeIf { it in 1..12 }?.let { if (it == 12) 0 else it }
+            else -> hour.takeIf { it in 1..12 }?.let { if (it == 12) 12 else it + 12 }
+        } ?: return null
+        return hour24 * 60 + minute
+    }
 }

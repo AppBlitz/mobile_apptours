@@ -8,8 +8,16 @@ enum class FormField {
     PASSWORD_CONFIRMATION,
     TERMS,
     TITLE,
+    CATEGORY,
     DESCRIPTION,
+    PRICE_RANGE,
+    DAYS,
+    OPEN_TIME,
+    CLOSE_TIME,
+    PHOTOS,
+    LOCATION,
     COMMENT,
+    RATING,
     REJECTION_REASON
 }
 

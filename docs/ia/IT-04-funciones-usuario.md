@@ -2,6 +2,10 @@
 
 - Herramienta: Claude Code (Anthropic)
 - Integrante(s): <nombre>
-- Periodo: DD/MM/AAAA – DD/MM/AAAA
+- Periodo: 08/11/2026 – DD/MM/AAAA
 
 ---
+
+Prompt escrito el 08/11/2026 : "listo, ahora si, siguiente iteración."
+
+Respuesta de la Inteligencia Artificial Generativa: "Se tomó IT-4. Primero se revisó qué ya existía: el feed ya filtraba verificadas/resueltas y ordenaba por votos, el voto 'Me interesa' ya era una transacción y los comentarios ya eran en tiempo real. Lo que faltaba se implementó así. (1) Filtro de ubicación: LocationFilter con Cercanos (≤ 5 km), En mi ciudad (≤ 15 km) y Todas, en un menú desde el botón de filtros y el chip del feed; 'En mi ciudad' es un radio porque los lugares no guardan ciudad todavía (se puede afinar en IT-7). (2) Formulario de publicación con la sección 4.3: reglas únicas en domain/validation/PlaceForms.kt (título 3–80, categoría y precio obligatorios, descripción 20–500 con contador, al menos un día, horas con formato válido y cierre posterior a la apertura, ≥ 1 foto y punto en el mapa) usadas por el ViewModel y por Create/UpdatePlaceUseCase; error debajo de cada campo, campos sin tocar no salen en rojo, y al enviar con errores se hace scroll y foco al primero. Se quitó el mensaje genérico del final. Al editar algo ya revisado, el aviso superior dice que vuelve a 'Pendiente de verificación'. (3) Eliminar con diálogo de confirmación desde el detalle y desde la edición. (4) 'Visitado': la visita y el contador visitsCount del lugar cambian en una transacción; al marcarlo se abre 'Comparte tu experiencia' (calificación 1–5 obligatoria y texto opcional, ShareVisitExperienceUseCase); si hay texto se publica como comentario isVisitExperience con la etiqueta 'Visitó este lugar' y las estrellas. El campo de comentario también valida en vivo. (5) Pantalla Mis publicaciones (features/user/myplaces) con pestañas Activas / Pendientes / Finalizadas / Rechazadas con contador, motivo de rechazo y acceso desde el perfil. (6) firestore.rules permiten mover solo visitsCount y el autor no puede tocarlo. También se corrigió scheduleLabel, que mostraba 'Lun–Sáb' para cualquier combinación de días. Textos nuevos en strings.xml. Compiló sin errores; no se probó en el dispositivo. Fotos y mapa siguen simulados hasta IT-8 e IT-7."

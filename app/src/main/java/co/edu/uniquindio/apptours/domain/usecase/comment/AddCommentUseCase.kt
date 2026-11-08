@@ -1,7 +1,6 @@
 package co.edu.uniquindio.apptours.domain.usecase.comment
 
 import co.edu.uniquindio.apptours.core.common.AppException
-import co.edu.uniquindio.apptours.core.common.FormField
 import co.edu.uniquindio.apptours.domain.model.Comment
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PointAction
@@ -10,9 +9,13 @@ import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.notification.SendNotificationUseCase
+import co.edu.uniquindio.apptours.domain.validation.PlaceForms
 import javax.inject.Inject
 
-/** Comentar (U-11): suma puntos y notifica al autor cada vez (U-15), salvo que se comente a sí mismo. */
+/**
+ * Comentar (U-11): suma puntos y notifica al autor cada vez (U-15), salvo que se comente a sí mismo.
+ * Con [visitRating] el comentario es una experiencia de visita ("Visitó este lugar", T-05).
+ */
 class AddCommentUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
@@ -20,10 +23,9 @@ class AddCommentUseCase @Inject constructor(
     private val awardPoints: AwardPointsUseCase,
     private val sendNotification: SendNotificationUseCase
 ) {
-    suspend operator fun invoke(placeId: String, text: String): Result<Unit> {
-        if (text.isBlank()) {
-            return Result.failure(AppException.InvalidFields(setOf(FormField.COMMENT)))
-        }
+    suspend operator fun invoke(placeId: String, text: String, visitRating: Int? = null): Result<Unit> {
+        val errors = if (visitRating == null) PlaceForms.comment(text) else PlaceForms.experience(visitRating, text)
+        if (errors.isNotEmpty()) return Result.failure(AppException.InvalidFields(errors))
         val user = getSession.require().getOrElse { return Result.failure(it) }
         val place = placeRepository.getPlace(placeId)
             ?: return Result.failure(AppException.PlaceNotFound)
@@ -34,7 +36,9 @@ class AddCommentUseCase @Inject constructor(
             authorId = user.id,
             authorName = user.fullName,
             authorLevel = user.level,
-            text = text.trim()
+            text = text.trim(),
+            isVisitExperience = visitRating != null,
+            rating = visitRating
         )
         return commentRepository.add(comment).map {
             awardPoints(user.id, PointAction.COMMENT)

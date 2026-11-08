@@ -1,55 +1,31 @@
 package co.edu.uniquindio.apptours.features.user.placedetail.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CheckCircleOutline
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.RateReview
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.edu.uniquindio.apptours.R
-import co.edu.uniquindio.apptours.core.designsystem.components.*
-import co.edu.uniquindio.apptours.core.map.*
 import co.edu.uniquindio.apptours.core.theme.*
-import co.edu.uniquindio.apptours.core.util.*
-import co.edu.uniquindio.apptours.domain.model.*
+import co.edu.uniquindio.apptours.domain.model.Place
+import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 
-/** "Me interesa", "Visitado" y acciones del autor (editar / finalizar). */
+/** "Me interesa", "Visitado", contar la experiencia y acciones del autor (editar / finalizar / eliminar). */
 @Composable
 internal fun PlaceDetailActions(
     place: Place,
@@ -58,13 +34,13 @@ internal fun PlaceDetailActions(
     isOwner: Boolean,
     onToggleInterest: () -> Unit,
     onToggleVisited: () -> Unit,
+    onOpenExperience: () -> Unit,
     onEditPlace: () -> Unit,
-    onMarkResolved: () -> Unit
+    onMarkResolved: () -> Unit,
+    onDeletePlace: () -> Unit
 ) {
-
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Botones de interacción Me interesa y Marcar como visitado
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -87,7 +63,7 @@ internal fun PlaceDetailActions(
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = "Me interesa · ${place.votesCount}",
+                text = stringResource(R.string.place_interest_count, place.votesCount),
                 color = ColabTextPrimary,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 13.sp
@@ -105,49 +81,87 @@ internal fun PlaceDetailActions(
             )
         ) {
             Icon(
-                imageVector = Icons.Filled.CheckCircleOutline,
+                imageVector = if (isVisited) Icons.Filled.CheckCircle else Icons.Filled.CheckCircleOutline,
                 contentDescription = null,
                 tint = ColabDarkGreen,
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = if (isVisited) "Visitado" else "Marcar como visitado",
+                text = stringResource(if (isVisited) R.string.place_visited else R.string.place_mark_visited),
                 color = ColabDarkGreen,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 13.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+
+    if (isVisited) {
+        Spacer(modifier = Modifier.height(8.dp))
+        TextButton(onClick = onOpenExperience) {
+            Icon(Icons.Outlined.RateReview, contentDescription = null, tint = ColabMediumGreen, modifier = Modifier.size(18.dp))
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = stringResource(R.string.place_share_experience),
+                color = ColabMediumGreen,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 13.sp
             )
         }
     }
 
-    // Opciones de gestión para el autor de la publicación (Editar / Finalizar / Eliminar)
     if (isOwner) {
         Spacer(modifier = Modifier.height(12.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedButton(
+            OwnerAction(
+                text = stringResource(R.string.place_action_edit),
+                icon = Icons.Outlined.Edit,
                 onClick = onEditPlace,
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Icon(Icons.Outlined.Edit, contentDescription = null, modifier = Modifier.size(16.dp))
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Editar", fontSize = 12.sp)
-            }
+                modifier = Modifier.weight(1f)
+            )
             if (place.status != PlaceStatus.RESUELTA) {
-                OutlinedButton(
+                OwnerAction(
+                    text = stringResource(R.string.place_action_resolve),
+                    icon = Icons.Outlined.CheckCircle,
                     onClick = onMarkResolved,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Icon(Icons.Outlined.CheckCircle, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Finalizar", fontSize = 12.sp)
-                }
+                    modifier = Modifier.weight(1f)
+                )
             }
+            OwnerAction(
+                text = stringResource(R.string.action_delete),
+                icon = Icons.Outlined.Delete,
+                onClick = onDeletePlace,
+                modifier = Modifier.weight(1f),
+                isDestructive = true
+            )
         }
     }
+}
 
+@Composable
+private fun OwnerAction(
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isDestructive: Boolean = false
+) {
+    val color = if (isDestructive) ColabError else ColabDarkGreen
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, if (isDestructive) ColabError else ColabGrayBorder),
+        colors = ButtonDefaults.outlinedButtonColors(contentColor = color),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+    ) {
+        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(text, fontSize = 12.sp, color = color, maxLines = 1)
+    }
 }

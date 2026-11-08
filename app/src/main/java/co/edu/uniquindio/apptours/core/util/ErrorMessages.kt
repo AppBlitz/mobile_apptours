@@ -18,8 +18,16 @@ fun FormField.errorRes(): Int = when (this) {
     FormField.PASSWORD -> R.string.error_password_required
     FormField.PASSWORD_CONFIRMATION -> R.string.error_password_mismatch
     FormField.TERMS -> R.string.error_terms_required
-    FormField.TITLE, FormField.DESCRIPTION -> R.string.error_place_required_fields
+    FormField.TITLE -> R.string.error_title_required
+    FormField.CATEGORY -> R.string.error_category_required
+    FormField.DESCRIPTION -> R.string.error_description_required
+    FormField.PRICE_RANGE -> R.string.error_price_required
+    FormField.DAYS -> R.string.error_days_required
+    FormField.OPEN_TIME, FormField.CLOSE_TIME -> R.string.error_time_required
+    FormField.PHOTOS -> R.string.error_photos_required
+    FormField.LOCATION -> R.string.error_location_required
     FormField.COMMENT -> R.string.error_comment_required
+    FormField.RATING -> R.string.error_rating_required
     FormField.REJECTION_REASON -> R.string.error_reject_reason_required
 }
 
@@ -66,7 +74,10 @@ fun FieldError.message(field: FormField): String = when (this) {
     )
     FieldError.InvalidEmail -> stringResource(R.string.error_invalid_email)
     is FieldError.TooShort -> pluralStringResource(R.plurals.error_password_too_short, missing, missing, min)
+    is FieldError.TooLong -> stringResource(R.string.error_text_too_long, max)
     FieldError.Mismatch -> stringResource(R.string.error_password_mismatch)
+    FieldError.InvalidTime -> stringResource(R.string.error_time_invalid)
+    FieldError.CloseBeforeOpen -> stringResource(R.string.error_close_before_open)
 }
 
 /** Mensaje visible del campo en el formulario, o null si no está tocado o es válido. */

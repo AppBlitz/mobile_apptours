@@ -28,6 +28,7 @@ data class PlaceDto(
     val createdAt: Timestamp? = null,
     val status: String = "",
     val votesCount: Int = 0,
+    val visitsCount: Int = 0,
     val rejectionReason: String? = null,
     val moderatorId: String? = null,
     val reviewedAt: Timestamp? = null
@@ -54,6 +55,7 @@ data class PlaceDto(
         "authorLevel" to authorLevel,
         "createdAt" to createdAt,
         "votesCount" to votesCount,
+        "visitsCount" to visitsCount,
         "moderatorId" to moderatorId,
         "reviewedAt" to reviewedAt
     )
@@ -76,6 +78,7 @@ data class PlaceDto(
         createdAt = createdAt?.toMillis() ?: System.currentTimeMillis(),
         status = status.toEnumOr(PlaceStatus.PENDIENTE),
         votesCount = votesCount,
+        visitsCount = visitsCount,
         rejectionReason = rejectionReason,
         moderatorId = moderatorId,
         reviewedAt = reviewedAt?.toMillis()
@@ -101,6 +104,7 @@ data class PlaceDto(
             createdAt = doc.getTimestamp("createdAt"),
             status = doc.getString("status").orEmpty(),
             votesCount = doc.getLong("votesCount")?.toInt() ?: 0,
+            visitsCount = doc.getLong("visitsCount")?.toInt() ?: 0,
             rejectionReason = doc.getString("rejectionReason"),
             moderatorId = doc.getString("moderatorId"),
             reviewedAt = doc.getTimestamp("reviewedAt")
@@ -126,6 +130,7 @@ fun Place.toDto(): PlaceDto = PlaceDto(
     createdAt = createdAt.toTimestamp(),
     status = status.name,
     votesCount = votesCount,
+    visitsCount = visitsCount,
     rejectionReason = rejectionReason,
     moderatorId = moderatorId,
     reviewedAt = reviewedAt?.toTimestamp()

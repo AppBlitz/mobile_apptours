@@ -1,94 +1,108 @@
 package co.edu.uniquindio.apptours.features.user.placedetail
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.edu.uniquindio.apptours.R
-import co.edu.uniquindio.apptours.core.designsystem.components.*
-import co.edu.uniquindio.apptours.core.map.*
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.designsystem.components.DeletePlaceDialog
+import co.edu.uniquindio.apptours.core.designsystem.components.ErrorMessage
+import co.edu.uniquindio.apptours.core.designsystem.components.LoadingOverlay
+import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequesters
+import co.edu.uniquindio.apptours.core.designsystem.form.rememberFieldRequesters
 import co.edu.uniquindio.apptours.core.theme.*
-import co.edu.uniquindio.apptours.core.util.*
-import co.edu.uniquindio.apptours.domain.model.*
+import co.edu.uniquindio.apptours.core.util.DistanceCalculator
+import co.edu.uniquindio.apptours.core.util.messageOf
 import co.edu.uniquindio.apptours.features.user.placedetail.components.*
 
 @Composable
 fun PlaceDetailRoute(
     onNavigateBack: () -> Unit,
     onEditPlace: (String) -> Unit,
+    onPlaceDeleted: () -> Unit,
     viewModel: PlaceDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val requesters = rememberFieldRequesters()
+
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                PlaceDetailEvent.Deleted -> onPlaceDeleted()
+                is PlaceDetailEvent.ScrollToField -> requesters.reveal(event.field)
+            }
+        }
+    }
+
     PlaceDetailScreen(
         state = state,
-        onNavigateBack = onNavigateBack,
-        onEditPlace = { state.place?.let { onEditPlace(it.id) } },
-        onToggleInterest = viewModel::onToggleInterest,
-        onToggleVisited = viewModel::onToggleVisited,
-        onMarkResolved = viewModel::onMarkResolved,
-        onCommentTextChange = viewModel::onCommentTextChange,
-        onSendComment = viewModel::onSendComment,
-        onRetry = viewModel::onRetry
+        requesters = requesters,
+        actions = PlaceDetailActionsHandler(
+            onNavigateBack = onNavigateBack,
+            onEditPlace = { state.place?.let { onEditPlace(it.id) } },
+            onToggleInterest = viewModel::onToggleInterest,
+            onToggleVisited = viewModel::onToggleVisited,
+            onOpenExperience = viewModel::onOpenExperience,
+            onMarkResolved = viewModel::onMarkResolved,
+            onDeleteClick = viewModel::onDeleteClick,
+            onConfirmDelete = viewModel::onConfirmDelete,
+            onDismissDelete = viewModel::onDismissDelete,
+            onCommentTextChange = viewModel::onCommentTextChange,
+            onCommentFocusLost = viewModel::onCommentFocusLost,
+            onSendComment = viewModel::onSendComment,
+            onExperienceRatingChange = viewModel::onExperienceRatingChange,
+            onExperienceTextChange = viewModel::onExperienceTextChange,
+            onSubmitExperience = viewModel::onSubmitExperience,
+            onDismissExperience = viewModel::onDismissExperience,
+            onRetry = viewModel::onRetry
+        )
     )
 }
+
+/** Eventos de la pantalla de detalle agrupados. */
+data class PlaceDetailActionsHandler(
+    val onNavigateBack: () -> Unit,
+    val onEditPlace: () -> Unit,
+    val onToggleInterest: () -> Unit,
+    val onToggleVisited: () -> Unit,
+    val onOpenExperience: () -> Unit,
+    val onMarkResolved: () -> Unit,
+    val onDeleteClick: () -> Unit,
+    val onConfirmDelete: () -> Unit,
+    val onDismissDelete: () -> Unit,
+    val onCommentTextChange: (String) -> Unit,
+    val onCommentFocusLost: () -> Unit,
+    val onSendComment: () -> Unit,
+    val onExperienceRatingChange: (Int) -> Unit,
+    val onExperienceTextChange: (String) -> Unit,
+    val onSubmitExperience: () -> Unit,
+    val onDismissExperience: () -> Unit,
+    val onRetry: () -> Unit
+)
 
 @Composable
 fun PlaceDetailScreen(
     state: PlaceDetailUiState,
-    onNavigateBack: () -> Unit,
-    onEditPlace: () -> Unit,
-    onToggleInterest: () -> Unit,
-    onToggleVisited: () -> Unit,
-    onMarkResolved: () -> Unit,
-    onCommentTextChange: (String) -> Unit,
-    onSendComment: () -> Unit,
-    onRetry: () -> Unit
+    requesters: FieldRequesters,
+    actions: PlaceDetailActionsHandler
 ) {
     val place = state.place
     if (state.loadErrorRes != null) {
-        ErrorMessage(messageRes = state.loadErrorRes, onRetry = onRetry, modifier = Modifier.background(ColabBackground))
+        ErrorMessage(messageRes = state.loadErrorRes, onRetry = actions.onRetry, modifier = Modifier.background(ColabBackground))
         return
     }
     if (place == null) {
-        if (state.isLoading) {
+        if (state.isLoading || state.isDeleting) {
             LoadingOverlay(modifier = Modifier.background(ColabBackground))
         } else {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -105,49 +119,75 @@ fun PlaceDetailScreen(
         place.longitude
     )
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ColabBackground),
-        contentPadding = PaddingValues(bottom = 32.dp)
-    ) {
-        item {
-            PlaceDetailHeader(photosCount = place.photosCount, onNavigateBack = onNavigateBack)
-        }
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(ColabBackground),
+            contentPadding = PaddingValues(bottom = 32.dp)
+        ) {
+            item {
+                PlaceDetailHeader(photosCount = place.photosCount, onNavigateBack = actions.onNavigateBack)
+            }
 
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-            ) {
-                PlaceDetailInfo(place = place, distanceKm = distanceKm)
-                PlaceDetailActions(
-                    place = place,
-                    isInterested = state.isInterested,
-                    isVisited = state.isVisited,
-                    isOwner = state.isOwner,
-                    onToggleInterest = onToggleInterest,
-                    onToggleVisited = onToggleVisited,
-                    onEditPlace = onEditPlace,
-                    onMarkResolved = onMarkResolved
-                )
-                PlaceAboutAndLocation(place = place)
-                CommentsHeaderAndInput(
-                    commentsCount = state.comments.size,
-                    commentText = state.commentText,
-                    onCommentTextChange = onCommentTextChange,
-                    onSendComment = onSendComment
-                )
-                if (state.errorRes != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    PlaceDetailInfo(place = place, distanceKm = distanceKm)
+                    PlaceDetailActions(
+                        place = place,
+                        isInterested = state.isInterested,
+                        isVisited = state.isVisited,
+                        isOwner = state.isOwner,
+                        onToggleInterest = actions.onToggleInterest,
+                        onToggleVisited = actions.onToggleVisited,
+                        onOpenExperience = actions.onOpenExperience,
+                        onEditPlace = actions.onEditPlace,
+                        onMarkResolved = actions.onMarkResolved,
+                        onDeletePlace = actions.onDeleteClick
+                    )
+                    PlaceAboutAndLocation(place = place)
+                    CommentsHeaderAndInput(
+                        commentsCount = state.comments.size,
+                        commentText = state.commentText,
+                        errorMessage = state.commentForm.messageOf(FormField.COMMENT),
+                        isSending = state.isSendingComment,
+                        requester = requesters[FormField.COMMENT],
+                        onCommentTextChange = actions.onCommentTextChange,
+                        onCommentFocusLost = actions.onCommentFocusLost,
+                        onSendComment = actions.onSendComment
+                    )
+                    if (state.errorRes != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
+                    }
                 }
+            }
+
+            items(state.comments, key = { it.id }) { comment ->
+                CommentCard(comment = comment)
             }
         }
 
-        items(state.comments, key = { it.id }) { comment ->
-            CommentCard(comment = comment)
+        if (state.isDeleting) {
+            LoadingOverlay(dimBackground = true)
         }
+    }
+
+    state.experience?.let { experience ->
+        VisitExperienceDialog(
+            state = experience,
+            onRatingChange = actions.onExperienceRatingChange,
+            onTextChange = actions.onExperienceTextChange,
+            onSubmit = actions.onSubmitExperience,
+            onDismiss = actions.onDismissExperience
+        )
+    }
+
+    if (state.showDeleteDialog) {
+        DeletePlaceDialog(onConfirm = actions.onConfirmDelete, onDismiss = actions.onDismissDelete)
     }
 }

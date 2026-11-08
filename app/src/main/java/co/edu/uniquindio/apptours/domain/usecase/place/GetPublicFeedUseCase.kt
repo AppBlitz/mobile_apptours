@@ -25,9 +25,10 @@ class GetPublicFeedUseCase @Inject constructor(
                 title.contains(query, ignoreCase = true) ||
                 description.contains(query, ignoreCase = true)
         val matchesCategory = filter.category == null || category == filter.category
-        val matchesDistance = !filter.onlyNearby || DistanceCalculator.distanceKm(
+        val radius = filter.location.radiusKm
+        val matchesDistance = radius == null || DistanceCalculator.distanceKm(
             filter.userLatitude, filter.userLongitude, latitude, longitude
-        ) <= FeedFilter.NEARBY_RADIUS_KM
+        ) <= radius
         return matchesQuery && matchesCategory && matchesDistance
     }
 }

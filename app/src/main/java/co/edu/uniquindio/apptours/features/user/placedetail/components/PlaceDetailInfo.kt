@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -178,5 +179,14 @@ internal fun PlaceDetailInfo(
             modifier = Modifier.weight(1f)
         )
     }
+
+    Spacer(modifier = Modifier.height(12.dp))
+
+    DetailMetricCard(
+        title = stringResource(R.string.place_detail_visits_title),
+        value = pluralStringResource(R.plurals.place_detail_visits_count, place.visitsCount, place.visitsCount),
+        icon = Icons.Outlined.Hiking,
+        modifier = Modifier.fillMaxWidth()
+    )
 
 }

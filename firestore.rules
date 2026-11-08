@@ -67,15 +67,18 @@ service cloud.firestore {
       allow create: if signedIn()
         && request.resource.data.authorId == request.auth.uid
         && request.resource.data.status == 'PENDIENTE'
-        && request.resource.data.votesCount == 0;
-      // Autor: edita su publicación (vuelve a revisión o la marca resuelta), sin tocar votos ni autor.
-      // Moderador: verifica o rechaza. Cualquiera: solo el contador de votos.
+        && request.resource.data.votesCount == 0
+        && request.resource.data.get('visitsCount', 0) == 0;
+      // Autor: edita su publicación (vuelve a revisión o la marca resuelta), sin tocar contadores ni autor.
+      // Moderador: verifica o rechaza. Cualquiera: solo el contador de votos o el de visitas (T-05).
       allow update: if (isOwner(resource.data.authorId)
           && request.resource.data.authorId == resource.data.authorId
           && request.resource.data.votesCount == resource.data.votesCount
+          && request.resource.data.get('visitsCount', 0) == resource.data.get('visitsCount', 0)
           && request.resource.data.status in [resource.data.status, 'PENDIENTE', 'RESUELTA'])
         || isModerator()
-        || (signedIn() && onlyChanges(['votesCount']));
+        || (signedIn() && onlyChanges(['votesCount']))
+        || (signedIn() && onlyChanges(['visitsCount']));
       allow delete: if isOwner(resource.data.authorId) || isModerator();
 
       match /votes/{uid} {

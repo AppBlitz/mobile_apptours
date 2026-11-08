@@ -18,6 +18,7 @@ data class Place(
     val createdAt: Long = System.currentTimeMillis(),
     val status: PlaceStatus = PlaceStatus.PENDIENTE,
     val votesCount: Int = 0,
+    val visitsCount: Int = 0,
     val rejectionReason: String? = null,
     val moderatorId: String? = null,
     val reviewedAt: Long? = null

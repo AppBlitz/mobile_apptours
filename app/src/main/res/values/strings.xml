@@ -54,7 +54,18 @@
     <string name="error_google_sign_in">No pudimos iniciar sesión con Google. Inténtalo de nuevo.</string>
     <string name="error_google_no_account">No hay cuentas de Google en este dispositivo. Agrega una en los ajustes del teléfono.</string>
     <string name="error_terms_required">Debes aceptar los términos y la política de privacidad</string>
-    <string name="error_place_required_fields">Completa el título y la descripción del lugar.</string>
+    <string name="error_title_required">Escribe el título del lugar</string>
+    <string name="error_category_required">Elige una categoría</string>
+    <string name="error_description_required">Escribe una descripción del lugar</string>
+    <string name="error_price_required">Elige un rango de precio</string>
+    <string name="error_days_required">Elige al menos un día de atención</string>
+    <string name="error_time_required">Escribe la hora</string>
+    <string name="error_time_invalid">Usa el formato 7:00 a. m. o 19:00</string>
+    <string name="error_close_before_open">La hora de cierre debe ser posterior a la de apertura</string>
+    <string name="error_photos_required">Agrega al menos una foto</string>
+    <string name="error_location_required">Toca el mapa para fijar la ubicación del lugar</string>
+    <string name="error_rating_required">Elige una calificación de 1 a 5 estrellas</string>
+    <string name="error_text_too_long">Máximo %1$d caracteres</string>
     <string name="error_comment_required">Escribe un comentario antes de enviarlo.</string>
     <string name="error_reject_reason_required">Debes escribir un motivo obligatorio para rechazar la publicación</string>
     <string name="error_invalid_credentials">Credenciales incorrectas. Verifica tu correo y contraseña.</string>
@@ -77,6 +88,98 @@
     <!-- Fotos de la publicación -->
     <string name="photos_upload_button">Cargar foto</string>
     <string name="photos_hint">JPG o PNG · %1$d seleccionadas</string>
+
+    <string name="photos_remove">Quitar foto</string>
+
+    <!-- Acciones comunes -->
+    <string name="action_close">Cerrar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Eliminar</string>
+
+    <!-- Feed -->
+    <string name="feed_search_placeholder">Buscar lugares por nombre o descripción</string>
+    <string name="feed_mode_list">Lista</string>
+    <string name="feed_mode_map">Mapa</string>
+    <string name="feed_category_all">Todos</string>
+    <string name="feed_location_filter">Filtrar por ubicación</string>
+    <string name="feed_location_nearby">Cercanos</string>
+    <string name="feed_location_city">En mi ciudad</string>
+    <string name="feed_location_all">Todas</string>
+    <string name="feed_location_radius">Hasta %1$d km de tu ubicación</string>
+    <string name="feed_location_any">Sin límite de distancia</string>
+
+    <!-- Formulario de publicación -->
+    <string name="place_form_header_create">Publicar un lugar</string>
+    <string name="place_form_header_edit">Editar publicación</string>
+    <string name="place_form_pending_title">Se creará como «Pendiente de verificación»</string>
+    <string name="place_form_edit_pending_title">Sigue «Pendiente de verificación»</string>
+    <string name="place_form_pending_body">Un moderador comprobará que el lugar exista y que los datos sean precisos antes de mostrarlo en el feed público.</string>
+    <string name="place_form_edit_review_title">Al guardar, vuelve a «Pendiente de verificación»</string>
+    <string name="place_form_edit_review_body">Esta publicación ya fue revisada. Si guardas los cambios saldrá del feed público hasta que un moderador la apruebe de nuevo.</string>
+    <string name="place_form_title_label">Título</string>
+    <string name="place_form_title_placeholder">Ej. Café con terraza y vista</string>
+    <string name="place_form_category_label">Categoría</string>
+    <string name="place_form_category_placeholder">Elige una categoría</string>
+    <string name="place_form_description_label">Descripción</string>
+    <string name="place_form_description_counter">%1$d / %2$d</string>
+    <string name="place_form_description_placeholder">Cuenta qué hace especial este lugar, cómo llegar y qué recomiendas.</string>
+    <string name="place_form_price_label">Rango de precio</string>
+    <string name="place_form_schedule_label">Horario de atención sugerido</string>
+    <string name="place_form_open_label">Abre</string>
+    <string name="place_form_close_label">Cierra</string>
+    <string name="place_form_photos_label">Fotos</string>
+    <string name="place_form_photos_limits">Mínimo 1 · máximo %1$d</string>
+    <string name="place_form_location_label">Ubicación en el mapa</string>
+    <string name="place_form_location_hint">Toca para fijar el punto</string>
+    <string name="place_form_location_pending">Aún no has fijado el punto del lugar.</string>
+    <string name="place_form_submit">Enviar a verificación</string>
+    <string name="place_form_delete">Eliminar publicación</string>
+    <string name="place_delete_title">¿Eliminar publicación?</string>
+    <string name="place_delete_body">Se borrarán la publicación, sus comentarios y sus votos. Esta acción no se puede deshacer.</string>
+
+    <!-- Detalle del lugar -->
+    <string name="action_back">Volver</string>
+    <string name="place_interest_count">Me interesa · %1$d</string>
+    <string name="place_mark_visited">Marcar como visitado</string>
+    <string name="place_visited">Visitado</string>
+    <string name="place_share_experience">Contar mi experiencia</string>
+    <string name="place_action_edit">Editar</string>
+    <string name="place_action_resolve">Finalizar</string>
+    <string name="place_detail_visits_title">VISITAS</string>
+    <plurals name="place_detail_visits_count">
+        <item quantity="one">%1$d persona lo visitó</item>
+        <item quantity="other">%1$d personas lo visitaron</item>
+    </plurals>
+    <string name="comments_title">Comentarios y experiencias (%1$d)</string>
+    <string name="comments_placeholder">Escribe un comentario (+5 pts)…</string>
+    <string name="comments_send">Enviar comentario</string>
+    <string name="comments_visit_tag">Visitó este lugar</string>
+    <string name="rating_description">%1$d de %2$d estrellas</string>
+
+    <!-- Comparte tu experiencia (T-05) -->
+    <string name="experience_title">Comparte tu experiencia</string>
+    <string name="experience_body">Marcaste este lugar como visitado. Cuéntale a la comunidad cómo te fue.</string>
+    <string name="experience_rating_label">Tu calificación</string>
+    <string name="experience_text_label">Tu experiencia (opcional)</string>
+    <string name="experience_text_placeholder">¿Qué te gustó? ¿Qué recomiendas a otros viajeros?</string>
+    <string name="experience_submit">Publicar</string>
+    <string name="experience_skip">Ahora no</string>
+
+    <!-- Mis publicaciones -->
+    <string name="my_places_title">Mis publicaciones</string>
+    <string name="my_places_tab_format">%1$s (%2$d)</string>
+    <string name="my_places_tab_active">Activas</string>
+    <string name="my_places_tab_pending">Pendientes</string>
+    <string name="my_places_tab_resolved">Finalizadas</string>
+    <string name="my_places_tab_rejected">Rechazadas</string>
+    <string name="my_places_empty_active">Aún no tienes publicaciones verificadas en el feed.</string>
+    <string name="my_places_empty_pending">No tienes publicaciones esperando revisión.</string>
+    <string name="my_places_empty_resolved">No tienes publicaciones finalizadas.</string>
+    <string name="my_places_empty_rejected">Ninguna de tus publicaciones ha sido rechazada.</string>
+    <string name="my_places_created_at">Publicada %1$s</string>
+    <string name="my_places_pending_hint">Un moderador la revisará pronto. Mientras tanto no aparece en el feed.</string>
+    <string name="my_places_no_reason">El moderador no dejó un motivo.</string>
+    <string name="my_places_rejected_hint">Puedes editarla para corregirla: volverá a revisión.</string>
 
     <!-- Autenticación -->
     <string name="recovery_link_sent">Hemos enviado un enlace de recuperación a %1$s</string>

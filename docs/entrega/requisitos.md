@@ -9,7 +9,7 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | T-02 | Categorías: Gastronomía, Cultura, Naturaleza, Entretenimiento, Historia | ❌ Pendiente | | |
 | T-03 | Horario de atención sugerido | ❌ Pendiente | | |
 | T-04 | Rango de precio: gratuito, económico, moderado, costoso | ❌ Pendiente | | |
-| T-05 | Marcar como "Visitado" y compartir la experiencia | ❌ Pendiente | | |
+| T-05 | Marcar como "Visitado" y compartir la experiencia | 🟡 Implementado (IT-4), falta probar en dispositivo | | Al marcar "Visitado" se abre "Comparte tu experiencia" (calificación 1–5 obligatoria, texto opcional); el texto se publica como comentario con la etiqueta "Visitó este lugar". Contador de visitas en el detalle. |
 | T-06 | Moderadores verifican existencia y precisión de la información | ❌ Pendiente | | |
 | T-07 | Niveles: Turista, Explorador, Aventurero, Embajador Local | ❌ Pendiente | | |
 | M-01 | Login de moderadores precargados | ❌ Pendiente | | |
@@ -21,15 +21,15 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | U-01 | Registro con correo y contraseña | ❌ Pendiente | | |
 | U-02 | Login con correo y contraseña | ❌ Pendiente | | |
 | U-03 | Recuperación de contraseña por correo | ❌ Pendiente | | |
-| U-04 | Feed en modo lista o mapa | ❌ Pendiente | | |
-| U-05 | Filtro por categoría | ❌ Pendiente | | |
-| U-06 | Filtro por ubicación | ❌ Pendiente | | |
-| U-07 | Crear, editar y eliminar publicaciones | ❌ Pendiente | | |
-| U-08 | Publicación creada como no verificada | ❌ Pendiente | | |
-| U-09 | El autor marca su publicación como resuelta | ❌ Pendiente | | |
-| U-10 | "Me interesa" con votos que determinan relevancia | ❌ Pendiente | | |
-| U-11 | Comentarios | ❌ Pendiente | | |
-| U-12 | Detalle completo: comentarios, ubicación, fotos, información | ❌ Pendiente | | |
+| U-04 | Feed en modo lista o mapa | 🟡 Lista lista; el mapa sigue simulado hasta IT-7 | | Solo muestra publicaciones verificadas y resueltas, ordenadas por votos. |
+| U-05 | Filtro por categoría | 🟡 Implementado, falta probar en dispositivo | | Chips "Todos" + 5 categorías. |
+| U-06 | Filtro por ubicación | 🟡 Implementado, falta probar en dispositivo | | Cercanos (≤ 5 km), En mi ciudad (≤ 15 km) y Todas, medido desde la ubicación guardada del usuario. "En mi ciudad" es un radio, no el nombre de la ciudad: se puede afinar cuando el mapa real (IT-7) entregue la ciudad de cada punto. |
+| U-07 | Crear, editar y eliminar publicaciones | 🟡 Implementado, falta probar en dispositivo | | Formulario con validación en vivo por campo (sección 4.3). Eliminar pide confirmación, desde el detalle o desde la edición. |
+| U-08 | Publicación creada como no verificada | 🟡 Implementado, falta probar en dispositivo | | Nace "Pendiente de verificación"; editar algo ya revisado lo devuelve a pendiente y el formulario lo avisa. |
+| U-09 | El autor marca su publicación como resuelta | 🟡 Implementado, falta probar en dispositivo | | Botón "Finalizar" en el detalle (solo el autor). |
+| U-10 | "Me interesa" con votos que determinan relevancia | 🟡 Implementado, falta probar en dispositivo | | Un voto por usuario con transacción; el feed se ordena por votos y el detalle muestra la etiqueta de relevancia. |
+| U-11 | Comentarios | 🟡 Implementado, falta probar en dispositivo | | Lista en tiempo real; el campo valida en vivo (vacío o más de 500 caracteres). |
+| U-12 | Detalle completo: comentarios, ubicación, fotos, información | 🟡 Información, comentarios y visitas listos; fotos (IT-8) y mapa real (IT-7) pendientes | | |
 | U-13 | Notificaciones guardadas en BD | ❌ Pendiente | | |
 | U-14 | Notificaciones leídas/no leídas que navegan al detalle | ❌ Pendiente | | |
 | U-15 | Notificación al autor por cada comentario | ❌ Pendiente | | |
@@ -41,7 +41,7 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | N-01 | Necesidad adicional: recomendaciones por historial de visitas | ❌ Pendiente | | |
 | IA-01 | Detección de duplicados con LLM (Google Gemini) | ❌ Pendiente | | |
 | R-01 | 100 % Jetpack Compose + Kotlin | ❌ Pendiente | | |
-| R-02 | Publicación con título, categoría, descripción, lat/lng y ≥1 imagen | ❌ Pendiente | | |
+| R-02 | Publicación con título, categoría, descripción, lat/lng y ≥1 imagen | 🟡 Validación lista (exige ≥ 1 foto y punto en el mapa); la carga real de fotos llega en IT-8 | | |
 | R-03 | Ubicación desde un mapa (Mapbox) guardada en BD | ❌ Pendiente | | |
 | R-04 | Persistencia en la nube (Firestore) incluidas notificaciones | ❌ Pendiente | | |
 | R-05 | Autenticación con recuperación de contraseña | ❌ Pendiente | | |

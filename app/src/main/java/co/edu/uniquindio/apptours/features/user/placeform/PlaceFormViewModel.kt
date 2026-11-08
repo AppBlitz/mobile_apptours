@@ -4,14 +4,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.edu.uniquindio.apptours.R
+import co.edu.uniquindio.apptours.core.common.FieldError
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.util.fieldErrors
 import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
-import co.edu.uniquindio.apptours.domain.model.PlaceDraft
 import co.edu.uniquindio.apptours.domain.model.PriceRange
 import co.edu.uniquindio.apptours.domain.usecase.place.CreatePlaceUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.DeletePlaceUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.GetPlaceByIdUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.UpdatePlaceUseCase
+import co.edu.uniquindio.apptours.domain.validation.PlaceForms
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -61,6 +64,7 @@ class PlaceFormViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            originalStatus = place.status,
                             title = place.title,
                             category = place.category,
                             description = place.description,
@@ -70,7 +74,8 @@ class PlaceFormViewModel @Inject constructor(
                             closeTime = place.closeTime,
                             photosCount = place.photosCount,
                             latitude = place.latitude,
-                            longitude = place.longitude
+                            longitude = place.longitude,
+                            locationPicked = true
                         )
                     }
                 }
@@ -80,67 +85,98 @@ class PlaceFormViewModel @Inject constructor(
         }
     }
 
-    fun onTitleChange(value: String) = edit { it.copy(title = value) }
+    fun onTitleChange(value: String) = edit(FormField.TITLE) { it.copy(title = value) }
 
-    fun onCategorySelected(value: PlaceCategory) = edit { it.copy(category = value) }
+    fun onCategorySelected(value: PlaceCategory) = edit(FormField.CATEGORY) { it.copy(category = value) }
 
-    fun onDescriptionChange(value: String) = edit { it.copy(description = value) }
+    fun onDescriptionChange(value: String) = edit(FormField.DESCRIPTION) {
+        it.copy(description = value.take(PlaceForms.MAX_DESCRIPTION_LENGTH))
+    }
 
-    fun onPriceRangeSelected(value: PriceRange) = edit { it.copy(priceRange = value) }
+    fun onPriceRangeSelected(value: PriceRange) = edit(FormField.PRICE_RANGE) { it.copy(priceRange = value) }
 
-    fun onToggleDay(day: String) = edit {
+    fun onToggleDay(day: String) = edit(FormField.DAYS) {
         it.copy(selectedDays = if (day in it.selectedDays) it.selectedDays - day else it.selectedDays + day)
     }
 
-    fun onOpenTimeChange(value: String) = edit { it.copy(openTime = value) }
+    fun onOpenTimeChange(value: String) = edit(FormField.OPEN_TIME) { it.copy(openTime = value) }
 
-    fun onCloseTimeChange(value: String) = edit { it.copy(closeTime = value) }
+    fun onCloseTimeChange(value: String) = edit(FormField.CLOSE_TIME) { it.copy(closeTime = value) }
 
-    fun onAddPhoto() = edit { it.copy(photosCount = (it.photosCount + 1).coerceAtMost(MAX_PHOTOS)) }
+    fun onAddPhoto() = edit(FormField.PHOTOS) {
+        it.copy(photosCount = (it.photosCount + 1).coerceAtMost(PlaceForms.MAX_PHOTOS))
+    }
 
-    fun onRemovePhoto() = edit { it.copy(photosCount = (it.photosCount - 1).coerceAtLeast(1)) }
+    fun onRemovePhoto() = edit(FormField.PHOTOS) { it.copy(photosCount = (it.photosCount - 1).coerceAtLeast(0)) }
 
-    fun onLocationChange(lat: Double, lng: Double) = edit { it.copy(latitude = lat, longitude = lng) }
+    fun onLocationChange(lat: Double, lng: Double) = edit(FormField.LOCATION) {
+        it.copy(latitude = lat, longitude = lng, locationPicked = true)
+    }
+
+    fun onFieldFocusLost(field: FormField) {
+        _uiState.update { it.touch(field) }
+    }
 
     fun onSubmit() {
         val s = _uiState.value
         if (s.isSaving) return
-        val draft = PlaceDraft(
-            title = s.title,
-            category = s.category,
-            description = s.description,
-            priceRange = s.priceRange,
-            daysActive = s.selectedDays,
-            openTime = s.openTime,
-            closeTime = s.closeTime,
-            latitude = s.latitude,
-            longitude = s.longitude,
-            photosCount = s.photosCount
-        )
+        val errors = PlaceForms.place(s.draft)
+        if (errors.isNotEmpty()) {
+            showFieldErrors(errors)
+            return
+        }
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
-            val result = if (placeId == null) createPlace(draft).map { } else updatePlace(placeId, draft)
+            _uiState.update { it.copy(isSaving = true, errorRes = null) }
+            val result = if (placeId == null) createPlace(s.draft).map { } else updatePlace(placeId, s.draft)
+            _uiState.update { it.copy(isSaving = false) }
             result
                 .onSuccess { _events.send(PlaceFormEvent.Saved) }
-                .onFailure { error -> _uiState.update { it.copy(errorRes = error.toMessageRes()) } }
-            _uiState.update { it.copy(isSaving = false) }
+                .onFailure { error ->
+                    val fieldErrors = error.fieldErrors
+                    if (fieldErrors.isNotEmpty()) {
+                        showFieldErrors(fieldErrors)
+                    } else {
+                        _uiState.update { it.copy(errorRes = error.toMessageRes()) }
+                    }
+                }
         }
     }
 
-    fun onDelete() {
+    fun onDeleteClick() = _uiState.update { it.copy(showDeleteDialog = true) }
+
+    fun onDismissDelete() = _uiState.update { it.copy(showDeleteDialog = false) }
+
+    fun onConfirmDelete() {
         val id = placeId ?: return
+        _uiState.update { it.copy(showDeleteDialog = false, isSaving = true) }
         viewModelScope.launch {
-            deletePlace(id)
+            val result = deletePlace(id)
+            _uiState.update { it.copy(isSaving = false) }
+            result
                 .onSuccess { _events.send(PlaceFormEvent.Deleted) }
                 .onFailure { error -> _uiState.update { it.copy(errorRes = error.toMessageRes()) } }
         }
     }
 
-    private fun edit(transform: (PlaceFormUiState) -> PlaceFormUiState) {
-        _uiState.update { transform(it).copy(errorRes = null) }
+    private fun edit(field: FormField, transform: (PlaceFormUiState) -> PlaceFormUiState) {
+        _uiState.update { state ->
+            val edited = transform(state).copy(errorRes = null).touch(field)
+            // La hora de cierre se compara con la de apertura: si ya se tocó, se revalida junto con ella.
+            if (field == FormField.OPEN_TIME && FormField.CLOSE_TIME in edited.form.touchedFields) {
+                edited.touch(FormField.CLOSE_TIME)
+            } else {
+                edited
+            }
+        }
     }
 
-    private companion object {
-        const val MAX_PHOTOS = 6
+    private fun showFieldErrors(errors: Map<FormField, FieldError>) {
+        _uiState.update { it.copy(form = it.form.touchAll(PlaceForms.place(it.draft) + errors)) }
+        PlaceForms.PLACE_ORDER.firstOrNull { it in errors }?.let {
+            _events.trySend(PlaceFormEvent.ScrollToField(it))
+        }
     }
+
+    private fun PlaceFormUiState.touch(field: FormField) =
+        copy(form = form.touch(field, PlaceForms.place(draft)))
 }

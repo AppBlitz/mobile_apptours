@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import co.edu.uniquindio.apptours.R
+import co.edu.uniquindio.apptours.domain.model.LocationFilter
 import co.edu.uniquindio.apptours.domain.model.Place
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
@@ -45,11 +46,21 @@ fun UserLevel.labelRes(): Int = when (this) {
     UserLevel.EMBAJADOR_LOCAL -> R.string.level_local_ambassador
 }
 
-/** Horario sugerido, p. ej. "Lun–Sáb 7:00 a. m. – 7:00 p. m.". */
+@StringRes
+fun LocationFilter.labelRes(): Int = when (this) {
+    LocationFilter.CERCANOS -> R.string.feed_location_nearby
+    LocationFilter.CIUDAD -> R.string.feed_location_city
+    LocationFilter.TODAS -> R.string.feed_location_all
+}
+
+/** Horario sugerido, p. ej. "Lun–Sáb 7:00 a. m. – 7:00 p. m." o "L · X · V 9:00 – 17:00". */
 @Composable
 fun Place.scheduleLabel(): String {
-    val days = stringResource(
-        if (daysActive.size == Place.ALL_DAYS.size) R.string.schedule_every_day else R.string.schedule_mon_sat
-    )
+    val ordered = Place.ALL_DAYS.filter { it in daysActive }
+    val days = when (ordered) {
+        Place.ALL_DAYS -> stringResource(R.string.schedule_every_day)
+        Place.DEFAULT_DAYS -> stringResource(R.string.schedule_mon_sat)
+        else -> ordered.joinToString(" · ")
+    }
     return stringResource(R.string.schedule_format, days, openTime, closeTime)
 }

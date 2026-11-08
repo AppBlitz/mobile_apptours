@@ -6,6 +6,7 @@ import co.edu.uniquindio.apptours.core.common.RetryTrigger
 import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
 import co.edu.uniquindio.apptours.domain.model.FeedFilter
+import co.edu.uniquindio.apptours.domain.model.LocationFilter
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
 import co.edu.uniquindio.apptours.domain.usecase.place.GetMyVotesUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.GetPublicFeedUseCase
@@ -42,7 +43,7 @@ class FeedViewModel @Inject constructor(
     private data class Controls(
         val query: String = "",
         val category: PlaceCategory? = null,
-        val onlyNearby: Boolean = true,
+        val location: LocationFilter = LocationFilter.TODAS,
         val selectedMapPlaceId: String? = null
     )
 
@@ -54,7 +55,7 @@ class FeedViewModel @Inject constructor(
         FeedFilter(
             query = c.query,
             category = c.category,
-            onlyNearby = c.onlyNearby,
+            location = c.location,
             userLatitude = user?.latitude ?: DefaultLocation.LATITUDE,
             userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE
         )
@@ -75,7 +76,7 @@ class FeedViewModel @Inject constructor(
                 userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE,
                 query = c.query,
                 selectedCategory = c.category,
-                onlyNearby = c.onlyNearby,
+                location = c.location,
                 places = places,
                 selectedMapPlaceId = c.selectedMapPlaceId,
                 votedPlaceIds = votes,
@@ -90,7 +91,7 @@ class FeedViewModel @Inject constructor(
 
     fun onCategorySelected(category: PlaceCategory?) = controls.update { it.copy(category = category) }
 
-    fun onToggleNearby() = controls.update { it.copy(onlyNearby = !it.onlyNearby) }
+    fun onLocationFilterSelected(location: LocationFilter) = controls.update { it.copy(location = location) }
 
     fun onSelectMapPlace(placeId: String) = controls.update { it.copy(selectedMapPlaceId = placeId) }
 

@@ -52,6 +52,7 @@ import co.edu.uniquindio.apptours.features.user.profile.components.*
 
 @Composable
 fun ProfileRoute(
+    onOpenMyPlaces: () -> Unit,
     onOpenAccountSettings: () -> Unit,
     onLoggedOut: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
@@ -68,6 +69,7 @@ fun ProfileRoute(
 
     ProfileScreen(
         state = state,
+        onOpenMyPlaces = onOpenMyPlaces,
         onOpenAccountSettings = onOpenAccountSettings,
         onLogout = viewModel::onLogout,
         onSelectBadge = viewModel::onSelectBadge,
@@ -78,6 +80,7 @@ fun ProfileRoute(
 @Composable
 fun ProfileScreen(
     state: ProfileUiState,
+    onOpenMyPlaces: () -> Unit,
     onOpenAccountSettings: () -> Unit,
     onLogout: () -> Unit,
     onSelectBadge: (String) -> Unit,
@@ -110,6 +113,14 @@ fun ProfileScreen(
 
         Column(modifier = Modifier.padding(20.dp)) {
             StatsDashboard(stats = state.stats)
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ColabPrimaryButton(
+                text = stringResource(R.string.my_places_title),
+                leadingIcon = Icons.Outlined.Inventory2,
+                onClick = onOpenMyPlaces
+            )
 
             Spacer(modifier = Modifier.height(22.dp))
 
