@@ -49,6 +49,7 @@ import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.core.util.*
 import co.edu.uniquindio.apptours.domain.model.*
 import co.edu.uniquindio.apptours.features.moderator.home.components.ModeratorAccountContent
+import co.edu.uniquindio.apptours.features.moderator.history.ModerationHistoryRoute
 import co.edu.uniquindio.apptours.features.moderator.queue.ModerationQueueRoute
 
 @Composable
@@ -93,20 +94,19 @@ fun ModeratorHomeRoute(
             }
         }
     ) { innerPadding ->
-        if (currentTab == ModeratorBottomTab.CUENTA) {
-            ModeratorAccountContent(
+        when (currentTab) {
+            ModeratorBottomTab.CUENTA -> ModeratorAccountContent(
                 fullName = currentUser?.fullName.orEmpty(),
                 email = currentUser?.email.orEmpty(),
                 onLogout = viewModel::onLogout,
                 modifier = Modifier.padding(innerPadding)
             )
-        } else {
-            ModerationQueueRoute(
-                requestedFilter = if (currentTab == ModeratorBottomTab.HISTORIAL) {
-                    ModerationFilter.VERIFICADAS
-                } else {
-                    ModerationFilter.PENDIENTES
-                },
+            ModeratorBottomTab.HISTORIAL -> ModerationHistoryRoute(
+                onOpenPlace = onOpenReview,
+                modifier = Modifier.padding(innerPadding)
+            )
+            ModeratorBottomTab.POR_REVISAR -> ModerationQueueRoute(
+                requestedFilter = ModerationFilter.PENDIENTES,
                 onOpenReview = onOpenReview,
                 modifier = Modifier.padding(innerPadding)
             )

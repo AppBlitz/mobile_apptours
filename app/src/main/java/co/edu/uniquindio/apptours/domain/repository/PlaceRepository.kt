@@ -10,6 +10,9 @@ interface PlaceRepository {
     fun observePlace(id: String): Flow<Place?>
     fun observePlacesByAuthor(authorId: String): Flow<List<Place>>
     fun observeByStatus(statuses: Set<PlaceStatus>): Flow<List<Place>>
+
+    /** Publicaciones cuya última revisión hizo este moderador. */
+    fun observeReviewedBy(moderatorId: String): Flow<List<Place>>
     suspend fun getPlace(id: String): Place?
     suspend fun create(place: Place): Result<String>
     suspend fun update(place: Place): Result<Unit>

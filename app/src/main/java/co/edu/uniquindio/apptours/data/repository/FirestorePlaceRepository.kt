@@ -48,6 +48,9 @@ class FirestorePlaceRepository @Inject constructor(
             .observe { PlaceDto.from(it).toDomain() }
     }
 
+    override fun observeReviewedBy(moderatorId: String): Flow<List<Place>> =
+        places.whereEqualTo("moderatorId", moderatorId).observe { PlaceDto.from(it).toDomain() }
+
     override suspend fun getPlace(id: String): Place? = firestoreCall {
         places.document(id).get().await().takeIf { it.exists() }?.let { PlaceDto.from(it).toDomain() }
     }.getOrNull()

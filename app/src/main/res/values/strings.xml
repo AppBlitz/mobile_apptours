@@ -83,4 +83,13 @@
 
     <!-- Moderación -->
     <string name="moderator_review_action">Revisar</string>
+    <string name="moderation_history_title">Historial de revisiones</string>
+    <string name="moderation_history_summary">%1$d aprobadas · %2$d rechazadas</string>
+    <string name="moderation_history_empty">Aún no has revisado publicaciones.\nTus decisiones aparecerán aquí.</string>
+    <string name="moderation_decision_approved">Aprobada</string>
+    <string name="moderation_decision_rejected">Rechazada</string>
+    <string name="moderation_decision_resolved">Resuelta</string>
+    <string name="moderation_reviewed_at">Revisada %1$s</string>
+    <string name="moderation_author">por %1$s</string>
+    <string name="moderation_rejection_reason">Motivo del rechazo</string>
 </resources>
