@@ -15,7 +15,7 @@ object SeedData {
 
     data class Credential(val uid: String, val email: String, val password: String)
 
-    /** TODO(IT-3): cuentas reales en Firebase Auth; mientras tanto las usa InMemoryAuthRepository. */
+    /** Cuentas que [FirestoreSeeder] crea en Firebase Auth; `uid` es el id que usan los datos de abajo. */
     val credentials = listOf(
         Credential("user_valentina", "valentina@correo.com", "12345678"),
         Credential("user_camila", "camila@correo.com", "12345678"),

@@ -25,6 +25,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -39,6 +42,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequester
 import co.edu.uniquindio.apptours.core.map.*
 import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.core.util.*
@@ -57,13 +61,22 @@ fun ColabTextField(
     onPasswordVisibilityChange: () -> Unit = {},
     errorMessage: String? = null,
     singleLine: Boolean = true,
-    minLines: Int = 1
+    minLines: Int = 1,
+    enabled: Boolean = true,
+    fieldRequester: FieldRequester? = null,
+    onFocusLost: () -> Unit = {}
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    // Solo cuenta como "perdió el foco" si antes lo tuvo (al componer llega un evento sin foco).
+    var hadFocus by remember { mutableStateOf(false) }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .then(fieldRequester?.let { Modifier.bringIntoViewRequester(it.bringIntoView) } ?: Modifier)
+    ) {
         if (label.isNotEmpty()) {
             Text(
                 text = label,
-                color = ColabTextPrimary,
+                color = if (errorMessage != null) ColabError else ColabTextPrimary,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(bottom = 6.dp)
@@ -86,14 +99,24 @@ fun ColabTextField(
                     }
                 }
             } else null,
-            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(fieldRequester?.let { Modifier.focusRequester(it.focus) } ?: Modifier)
+                .onFocusChanged { state ->
+                    if (hadFocus && !state.isFocused) onFocusLost()
+                    hadFocus = state.isFocused
+                },
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = ColabSurface,
                 unfocusedContainerColor = ColabSurface,
                 unfocusedBorderColor = ColabGrayBorder,
                 focusedBorderColor = ColabDarkGreen,
-                errorBorderColor = ColabError
+                errorBorderColor = ColabError,
+                disabledContainerColor = ColabCardSurface,
+                disabledBorderColor = ColabGrayBorder,
+                disabledTextColor = ColabTextSecondary
             ),
             singleLine = singleLine,
             minLines = minLines

@@ -35,7 +35,10 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 
         composable<Register> {
             RegisterRoute(
-                onRegisterSuccess = { navController.navigateClearingBackStack(UserGraph) },
+                onRegisterSuccess = { role ->
+                    val graph = if (role == UserRole.MODERATOR) ModeratorGraph else UserGraph
+                    navController.navigateClearingBackStack(graph)
+                },
                 onNavigateToLogin = { navController.popBackStack() }
             )
         }

@@ -43,6 +43,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.edu.uniquindio.apptours.R
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequesters
+import co.edu.uniquindio.apptours.core.designsystem.form.rememberFieldRequesters
 import co.edu.uniquindio.apptours.core.designsystem.components.*
 import co.edu.uniquindio.apptours.core.map.*
 import co.edu.uniquindio.apptours.core.theme.*
@@ -56,20 +59,24 @@ fun AccountSettingsRoute(
     viewModel: AccountSettingsViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val requesters = rememberFieldRequesters()
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
                 AccountSettingsEvent.AccountDeleted -> onAccountDeleted()
+                is AccountSettingsEvent.ScrollToField -> requesters.reveal(event.field)
             }
         }
     }
 
     AccountSettingsScreen(
         state = state,
+        requesters = requesters,
         onNavigateBack = onNavigateBack,
         onFullNameChange = viewModel::onFullNameChange,
         onEmailChange = viewModel::onEmailChange,
+        onFieldFocusLost = viewModel::onFieldFocusLost,
         onChangeLocation = viewModel::onChangeLocation,
         onSave = viewModel::onSave,
         onRequestDelete = viewModel::onRequestDelete,
@@ -82,9 +89,11 @@ fun AccountSettingsRoute(
 @Composable
 fun AccountSettingsScreen(
     state: AccountSettingsUiState,
+    requesters: FieldRequesters,
     onNavigateBack: () -> Unit,
     onFullNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
+    onFieldFocusLost: (FormField) -> Unit,
     onChangeLocation: () -> Unit,
     onSave: () -> Unit,
     onRequestDelete: () -> Unit,
@@ -178,7 +187,10 @@ fun AccountSettingsScreen(
                 value = state.fullName,
                 onValueChange = onFullNameChange,
                 label = "Nombre completo",
-                placeholder = "Valentina Ríos"
+                placeholder = "Valentina Ríos",
+                errorMessage = state.form.messageOf(FormField.FULL_NAME),
+                fieldRequester = requesters[FormField.FULL_NAME],
+                onFocusLost = { onFieldFocusLost(FormField.FULL_NAME) }
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -187,8 +199,23 @@ fun AccountSettingsScreen(
                 value = state.email,
                 onValueChange = onEmailChange,
                 label = "Correo electrónico",
-                placeholder = "valentina@correo.com"
+                placeholder = "valentina@correo.com",
+                enabled = state.canChangeEmail,
+                errorMessage = state.form.messageOf(FormField.EMAIL),
+                fieldRequester = requesters[FormField.EMAIL],
+                onFocusLost = { onFieldFocusLost(FormField.EMAIL) }
             )
+
+            if (!state.canChangeEmail) {
+                Text(
+                    text = stringResource(R.string.profile_email_google_hint),
+                    color = ColabTextSecondary,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp, start = 6.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(14.dp))
 
@@ -236,7 +263,18 @@ fun AccountSettingsScreen(
 
             if (state.errorRes != null) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
+                Surface(
+                    color = ColabErrorBg,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(state.errorRes),
+                        color = ColabError,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
             }
 
             if (state.savedBanner) {
@@ -246,13 +284,25 @@ fun AccountSettingsScreen(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = "Cambios guardados correctamente.",
-                        color = ColabDarkGreen,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(12.dp)
-                    )
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            text = "Cambios guardados correctamente.",
+                            color = ColabDarkGreen,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        if (state.emailVerificationSentTo != null) {
+                            Text(
+                                text = stringResource(
+                                    R.string.profile_email_verification_sent,
+                                    state.emailVerificationSentTo
+                                ),
+                                color = ColabDarkGreen,
+                                fontSize = 13.sp,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+                    }
                 }
             }
 
@@ -260,7 +310,8 @@ fun AccountSettingsScreen(
 
             ColabPrimaryButton(
                 text = "Guardar cambios",
-                onClick = onSave
+                onClick = onSave,
+                enabled = !state.isSaving
             )
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -290,7 +341,7 @@ fun AccountSettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Eliminar tu cuenta borra tu perfil, tus puntos e insignias. Esta acción no se puede deshacer.",
+                        text = "Eliminar tu cuenta borra tu perfil, tus publicaciones, puntos e insignias. Esta acción no se puede deshacer.",
                         fontSize = 13.sp,
                         color = ColabTextPrimary
                     )
@@ -317,7 +368,7 @@ fun AccountSettingsScreen(
             onDismissRequest = onDismissDelete,
             title = { Text("¿Eliminar tu cuenta?", fontWeight = FontWeight.Bold) },
             text = {
-                Text("Se borrarán tus datos, puntos e insignias y volverás al inicio de sesión.")
+                Text("Se borrarán tu perfil, tus publicaciones, votos y visitas, y volverás al inicio de sesión.")
             },
             confirmButton = {
                 TextButton(

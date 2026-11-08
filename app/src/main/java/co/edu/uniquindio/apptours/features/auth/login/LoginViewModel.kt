@@ -1,12 +1,16 @@
 package co.edu.uniquindio.apptours.features.auth.login
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.edu.uniquindio.apptours.core.common.FieldError
 import co.edu.uniquindio.apptours.core.common.FormField
-import co.edu.uniquindio.apptours.core.util.errorFor
-import co.edu.uniquindio.apptours.core.util.invalidFields
+import co.edu.uniquindio.apptours.core.util.fieldErrors
 import co.edu.uniquindio.apptours.core.util.toMessageRes
+import co.edu.uniquindio.apptours.domain.model.User
 import co.edu.uniquindio.apptours.domain.usecase.auth.LoginUseCase
+import co.edu.uniquindio.apptours.domain.usecase.auth.SignInWithGoogleUseCase
+import co.edu.uniquindio.apptours.domain.validation.AuthForms
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val login: LoginUseCase
+    private val login: LoginUseCase,
+    private val signInWithGoogle: SignInWithGoogleUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -30,11 +35,15 @@ class LoginViewModel @Inject constructor(
     val events: Flow<LoginEvent> = _events.receiveAsFlow()
 
     fun onEmailChange(value: String) {
-        _uiState.update { it.copy(email = value, emailError = null, authError = null) }
+        _uiState.update { it.copy(email = value, authError = null).touch(FormField.EMAIL) }
     }
 
     fun onPasswordChange(value: String) {
-        _uiState.update { it.copy(password = value, passwordError = null, authError = null) }
+        _uiState.update { it.copy(password = value, authError = null).touch(FormField.PASSWORD) }
+    }
+
+    fun onFieldFocusLost(field: FormField) {
+        _uiState.update { it.touch(field) }
     }
 
     fun onTogglePasswordVisibility() {
@@ -44,24 +53,53 @@ class LoginViewModel @Inject constructor(
     fun onSubmit() {
         val state = _uiState.value
         if (state.isLoading) return
+        val errors = AuthForms.login(state.email, state.password)
+        if (errors.isNotEmpty()) {
+            showFieldErrors(errors)
+            return
+        }
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, authError = null) }
-            login(state.email, state.password)
-                .onSuccess { user ->
-                    _uiState.update { it.copy(isLoading = false) }
-                    _events.send(LoginEvent.LoggedIn(user.role))
-                }
-                .onFailure { error ->
-                    val fields = error.invalidFields
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            emailError = fields.errorFor(FormField.EMAIL),
-                            passwordError = fields.errorFor(FormField.PASSWORD),
-                            authError = if (fields.isEmpty()) error.toMessageRes() else null
-                        )
-                    }
-                }
+            handleResult(login(state.email, state.password))
         }
     }
+
+    fun onGoogleToken(idToken: String) {
+        if (_uiState.value.isLoading) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, authError = null) }
+            handleResult(signInWithGoogle(idToken))
+        }
+    }
+
+    fun onGoogleError(@StringRes messageRes: Int) {
+        _uiState.update { it.copy(authError = messageRes) }
+    }
+
+    private suspend fun handleResult(result: Result<User>) {
+        result
+            .onSuccess { user ->
+                _uiState.update { it.copy(isLoading = false) }
+                _events.send(LoginEvent.LoggedIn(user.role))
+            }
+            .onFailure { error ->
+                _uiState.update { it.copy(isLoading = false) }
+                val fieldErrors = error.fieldErrors
+                if (fieldErrors.isNotEmpty()) {
+                    showFieldErrors(fieldErrors)
+                } else {
+                    _uiState.update { it.copy(authError = error.toMessageRes()) }
+                }
+            }
+    }
+
+    private fun showFieldErrors(errors: Map<FormField, FieldError>) {
+        _uiState.update { it.copy(form = it.form.touchAll(errors)) }
+        _uiState.value.form.firstInvalid(AuthForms.LOGIN_ORDER)?.let {
+            _events.trySend(LoginEvent.ScrollToField(it))
+        }
+    }
+
+    private fun LoginUiState.touch(field: FormField) =
+        copy(form = form.touch(field, AuthForms.login(email, password)))
 }

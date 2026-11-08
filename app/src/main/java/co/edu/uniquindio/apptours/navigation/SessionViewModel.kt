@@ -22,7 +22,7 @@ class SessionViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val user = getSession()
+            val user = getSession.restore()
             _startDestination.value = when (user?.role) {
                 null -> AuthGraph
                 UserRole.MODERATOR -> ModeratorGraph

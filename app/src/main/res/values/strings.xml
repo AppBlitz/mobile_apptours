@@ -36,11 +36,23 @@
     <string name="time_just_now">Ahora</string>
 
     <!-- Errores -->
-    <string name="error_invalid_email">Ingresa un correo electrónico válido</string>
+    <string name="error_invalid_email">El correo debe tener el formato nombre@dominio.com</string>
+    <string name="error_email_required">Escribe tu correo electrónico</string>
+    <string name="error_password_confirmation_required">Repite la contraseña para confirmarla</string>
     <string name="error_password_required">La contraseña es obligatoria</string>
     <string name="error_full_name_required">El nombre completo es obligatorio</string>
     <string name="error_password_min_length">Mínimo 8 caracteres</string>
     <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <plurals name="error_password_too_short">
+        <item quantity="one">Falta %1$d carácter: mínimo %2$d</item>
+        <item quantity="other">Faltan %1$d caracteres: mínimo %2$d</item>
+    </plurals>
+    <string name="error_weak_password">La contraseña es muy débil. Usa al menos 8 caracteres combinando letras y números.</string>
+    <string name="error_recent_login_required">Por seguridad, cierra sesión y vuelve a entrar antes de hacer este cambio.</string>
+    <string name="error_too_many_attempts">Demasiados intentos. Espera unos minutos e inténtalo de nuevo.</string>
+    <string name="error_account_disabled">Esta cuenta está deshabilitada.</string>
+    <string name="error_google_sign_in">No pudimos iniciar sesión con Google. Inténtalo de nuevo.</string>
+    <string name="error_google_no_account">No hay cuentas de Google en este dispositivo. Agrega una en los ajustes del teléfono.</string>
     <string name="error_terms_required">Debes aceptar los términos y la política de privacidad</string>
     <string name="error_place_required_fields">Completa el título y la descripción del lugar.</string>
     <string name="error_comment_required">Escribe un comentario antes de enviarlo.</string>
@@ -54,6 +66,11 @@
     <string name="error_network">No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.</string>
     <string name="error_load_failed">No pudimos cargar la información.</string>
     <string name="action_retry">Reintentar</string>
+    <string name="action_continue_with_google">Continuar con Google</string>
+    <string name="auth_or_continue_with">o continúa con</string>
+    <string name="auth_google_terms_hint">Si usas Google, también debes aceptar los términos.</string>
+    <string name="profile_email_verification_sent">Te enviamos un enlace a %1$s. El correo cambia cuando lo confirmes.</string>
+    <string name="profile_email_google_hint">Tu correo lo administra tu cuenta de Google.</string>
     <string name="loading">Cargando…</string>
     <string name="error_unknown">Ocurrió un error inesperado. Inténtalo de nuevo.</string>
 

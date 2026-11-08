@@ -15,9 +15,18 @@ enum class FormField {
 
 /** Errores de negocio. La UI los traduce a recursos de texto; nunca se muestra `message`. */
 sealed class AppException : Exception() {
-    data class InvalidFields(val fields: Set<FormField>) : AppException()
+    data class InvalidFields(val errors: Map<FormField, FieldError>) : AppException() {
+        /** Para formularios que todavía no detallan el motivo (se migran en IT-4/IT-5). */
+        constructor(fields: Set<FormField>) : this(fields.associateWith { FieldError.Required })
+
+        val fields: Set<FormField> get() = errors.keys
+    }
     data object InvalidCredentials : AppException()
     data object EmailAlreadyInUse : AppException()
+    data object WeakPassword : AppException()
+    data object RecentLoginRequired : AppException()
+    data object TooManyAttempts : AppException()
+    data object AccountDisabled : AppException()
     data object NotAuthenticated : AppException()
     data object NotAllowed : AppException()
     data object PlaceNotFound : AppException()

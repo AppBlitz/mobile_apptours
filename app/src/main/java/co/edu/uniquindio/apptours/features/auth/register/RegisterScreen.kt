@@ -43,6 +43,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.edu.uniquindio.apptours.R
+import co.edu.uniquindio.apptours.core.auth.GoogleTokenResult
+import co.edu.uniquindio.apptours.core.auth.rememberGoogleSignInLauncher
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequesters
+import co.edu.uniquindio.apptours.core.designsystem.form.formField
+import co.edu.uniquindio.apptours.core.designsystem.form.rememberFieldRequesters
 import co.edu.uniquindio.apptours.core.designsystem.components.*
 import co.edu.uniquindio.apptours.core.map.*
 import co.edu.uniquindio.apptours.core.theme.*
@@ -51,30 +57,43 @@ import co.edu.uniquindio.apptours.domain.model.*
 
 @Composable
 fun RegisterRoute(
-    onRegisterSuccess: () -> Unit,
+    onRegisterSuccess: (UserRole) -> Unit,
     onNavigateToLogin: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val requesters = rememberFieldRequesters()
+    val launchGoogleSignIn = rememberGoogleSignInLauncher { result ->
+        when (result) {
+            is GoogleTokenResult.Success -> viewModel.onGoogleToken(result.idToken)
+            is GoogleTokenResult.Failure -> viewModel.onGoogleError(result.messageRes)
+            GoogleTokenResult.Cancelled -> Unit
+        }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                RegisterEvent.Registered -> onRegisterSuccess()
+                is RegisterEvent.Registered -> onRegisterSuccess(event.role)
+                is RegisterEvent.ScrollToField -> requesters.reveal(event.field)
+                RegisterEvent.LaunchGoogleSignIn -> launchGoogleSignIn()
             }
         }
     }
 
     RegisterScreen(
         state = state,
+        requesters = requesters,
         onFullNameChange = viewModel::onFullNameChange,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
+        onFieldFocusLost = viewModel::onFieldFocusLost,
         onTogglePasswordVisibility = viewModel::onTogglePasswordVisibility,
         onPickLocation = viewModel::onPickLocation,
         onTermsChange = viewModel::onTermsChange,
         onSubmit = viewModel::onSubmit,
+        onGoogleSignIn = viewModel::onGoogleClick,
         onNavigateToLogin = onNavigateToLogin
     )
 }
@@ -82,14 +101,17 @@ fun RegisterRoute(
 @Composable
 fun RegisterScreen(
     state: RegisterUiState,
+    requesters: FieldRequesters,
     onFullNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
+    onFieldFocusLost: (FormField) -> Unit,
     onTogglePasswordVisibility: () -> Unit,
     onPickLocation: (Double, Double) -> Unit,
     onTermsChange: (Boolean) -> Unit,
     onSubmit: () -> Unit,
+    onGoogleSignIn: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
     var showMapPickerDialog by remember { mutableStateOf(false) }
@@ -141,7 +163,9 @@ fun RegisterScreen(
                     label = "Nombre completo",
                     placeholder = "Tu nombre",
                     leadingIcon = Icons.Filled.Person,
-                    errorMessage = state.fullNameError?.let { stringResource(it) }
+                    errorMessage = state.form.messageOf(FormField.FULL_NAME),
+                    fieldRequester = requesters[FormField.FULL_NAME],
+                    onFocusLost = { onFieldFocusLost(FormField.FULL_NAME) }
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -152,7 +176,9 @@ fun RegisterScreen(
                     label = "Correo electrónico",
                     placeholder = "tu@correo.com",
                     leadingIcon = Icons.Filled.Email,
-                    errorMessage = state.emailError?.let { stringResource(it) }
+                    errorMessage = state.form.messageOf(FormField.EMAIL),
+                    fieldRequester = requesters[FormField.EMAIL],
+                    onFocusLost = { onFieldFocusLost(FormField.EMAIL) }
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -166,7 +192,9 @@ fun RegisterScreen(
                     isPassword = true,
                     passwordVisible = state.passwordVisible,
                     onPasswordVisibilityChange = onTogglePasswordVisibility,
-                    errorMessage = state.passwordError?.let { stringResource(it) }
+                    errorMessage = state.form.messageOf(FormField.PASSWORD),
+                    fieldRequester = requesters[FormField.PASSWORD],
+                    onFocusLost = { onFieldFocusLost(FormField.PASSWORD) }
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -180,7 +208,9 @@ fun RegisterScreen(
                     isPassword = true,
                     passwordVisible = state.passwordVisible,
                     onPasswordVisibilityChange = onTogglePasswordVisibility,
-                    errorMessage = state.confirmPasswordError?.let { stringResource(it) }
+                    errorMessage = state.form.messageOf(FormField.PASSWORD_CONFIRMATION),
+                    fieldRequester = requesters[FormField.PASSWORD_CONFIRMATION],
+                    onFocusLost = { onFieldFocusLost(FormField.PASSWORD_CONFIRMATION) }
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -260,25 +290,31 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
+                val termsError = state.form.messageOf(FormField.TERMS)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .formField(requesters[FormField.TERMS])
                 ) {
                     Checkbox(
                         checked = state.termsAccepted,
                         onCheckedChange = onTermsChange,
-                        colors = CheckboxDefaults.colors(checkedColor = ColabDarkGreen)
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = ColabDarkGreen,
+                            uncheckedColor = if (termsError != null) ColabError else ColabTextSecondary
+                        )
                     )
                     Text(
                         text = "Acepto los términos y la política de privacidad",
                         fontSize = 13.sp,
-                        color = ColabTextPrimary
+                        color = if (termsError != null) ColabError else ColabTextPrimary
                     )
                 }
 
-                if (state.termsError != null) {
+                if (termsError != null) {
                     Text(
-                        text = stringResource(state.termsError),
+                        text = termsError,
                         color = ColabError,
                         fontSize = 12.sp,
                         modifier = Modifier.padding(start = 12.dp)
@@ -302,7 +338,33 @@ fun RegisterScreen(
                     enabled = !state.isLoading
                 )
 
+                Spacer(modifier = Modifier.height(18.dp))
+
+                AuthAlternativeDivider()
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                GoogleSignInButton(
+                    onClick = onGoogleSignIn,
+                    enabled = !state.isLoading,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+
+                Text(
+                    text = stringResource(R.string.auth_google_terms_hint),
+                    color = ColabTextSecondary,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                )
+
                 Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            if (state.isLoading) {
+                LoadingOverlay(dimBackground = true)
             }
         }
     }

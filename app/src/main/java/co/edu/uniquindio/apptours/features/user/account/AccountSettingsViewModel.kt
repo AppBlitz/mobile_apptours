@@ -3,11 +3,16 @@ package co.edu.uniquindio.apptours.features.user.account
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.edu.uniquindio.apptours.core.common.FieldError
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.common.FormState
+import co.edu.uniquindio.apptours.core.util.fieldErrors
 import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
 import co.edu.uniquindio.apptours.domain.usecase.auth.DeleteAccountUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.GetCurrentUserUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.UpdateProfileUseCase
+import co.edu.uniquindio.apptours.domain.validation.AuthForms
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -29,15 +34,21 @@ data class AccountSettingsUiState(
     val initials: String = "",
     val fullName: String = "",
     val email: String = "",
+    /** Las cuentas de Google no cambian el correo desde la app. */
+    val canChangeEmail: Boolean = true,
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
+    val form: FormState = FormState(),
     val savedBanner: Boolean = false,
+    /** Correo nuevo al que se envió el enlace de confirmación. */
+    val emailVerificationSentTo: String? = null,
     val showDeleteConfirm: Boolean = false,
     @StringRes val errorRes: Int? = null
 )
 
 sealed interface AccountSettingsEvent {
     data object AccountDeleted : AccountSettingsEvent
+    data class ScrollToField(val field: FormField) : AccountSettingsEvent
 }
 
 @HiltViewModel
@@ -77,6 +88,7 @@ class AccountSettingsViewModel @Inject constructor(
                                 initials = user.initials,
                                 fullName = user.fullName,
                                 email = user.email,
+                                canChangeEmail = updateProfile.canChangeEmail(),
                                 latitude = user.latitude,
                                 longitude = user.longitude
                             )
@@ -86,29 +98,49 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
-    fun onFullNameChange(value: String) =
-        _uiState.update { it.copy(fullName = value, savedBanner = false, errorRes = null) }
+    fun onFullNameChange(value: String) = _uiState.update {
+        it.copy(fullName = value).edited().touch(FormField.FULL_NAME)
+    }
 
-    fun onEmailChange(value: String) =
-        _uiState.update { it.copy(email = value, savedBanner = false, errorRes = null) }
+    fun onEmailChange(value: String) = _uiState.update {
+        it.copy(email = value).edited().touch(FormField.EMAIL)
+    }
+
+    fun onFieldFocusLost(field: FormField) = _uiState.update { it.touch(field) }
 
     /** Simula elegir otro punto en el mapa. TODO(IT-7): usar MapLocationPicker con Mapbox. */
     fun onChangeLocation() = _uiState.update {
         it.copy(
             latitude = ((it.latitude + 0.0015) * 10000).toInt() / 10000.0,
-            longitude = ((it.longitude - 0.0012) * 10000).toInt() / 10000.0,
-            savedBanner = false
-        )
+            longitude = ((it.longitude - 0.0012) * 10000).toInt() / 10000.0
+        ).edited()
     }
 
     fun onSave() {
         val s = _uiState.value
         if (s.isSaving) return
+        val errors = s.validate()
+        if (errors.isNotEmpty()) {
+            showFieldErrors(errors)
+            return
+        }
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
+            _uiState.update { it.copy(isSaving = true, errorRes = null) }
             updateProfile(s.fullName, s.email, s.latitude, s.longitude)
-                .onSuccess { _uiState.update { it.copy(isSaving = false, savedBanner = true) } }
-                .onFailure { error -> _uiState.update { it.copy(isSaving = false, errorRes = error.toMessageRes()) } }
+                .onSuccess { sentTo ->
+                    _uiState.update {
+                        it.copy(isSaving = false, savedBanner = true, emailVerificationSentTo = sentTo)
+                    }
+                }
+                .onFailure { error ->
+                    _uiState.update { it.copy(isSaving = false) }
+                    val fieldErrors = error.fieldErrors
+                    if (fieldErrors.isNotEmpty()) {
+                        showFieldErrors(fieldErrors)
+                    } else {
+                        _uiState.update { it.copy(errorRes = error.toMessageRes()) }
+                    }
+                }
         }
     }
 
@@ -117,11 +149,25 @@ class AccountSettingsViewModel @Inject constructor(
     fun onDismissDelete() = _uiState.update { it.copy(showDeleteConfirm = false) }
 
     fun onConfirmDelete() {
-        _uiState.update { it.copy(showDeleteConfirm = false, isSaving = true) }
+        _uiState.update { it.copy(showDeleteConfirm = false, isSaving = true, errorRes = null) }
         viewModelScope.launch {
             deleteAccount()
                 .onSuccess { _events.send(AccountSettingsEvent.AccountDeleted) }
                 .onFailure { error -> _uiState.update { it.copy(isSaving = false, errorRes = error.toMessageRes()) } }
         }
     }
+
+    private fun showFieldErrors(errors: Map<FormField, FieldError>) {
+        _uiState.update { it.copy(form = it.form.touchAll(it.validate() + errors)) }
+        AuthForms.PROFILE_ORDER.firstOrNull { it in errors }?.let {
+            _events.trySend(AccountSettingsEvent.ScrollToField(it))
+        }
+    }
+
+    private fun AccountSettingsUiState.validate() = AuthForms.profile(fullName, email)
+
+    private fun AccountSettingsUiState.touch(field: FormField) = copy(form = form.touch(field, validate()))
+
+    private fun AccountSettingsUiState.edited() =
+        copy(savedBanner = false, emailVerificationSentTo = null, errorRes = null)
 }

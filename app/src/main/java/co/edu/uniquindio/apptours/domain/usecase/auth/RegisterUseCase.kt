@@ -1,12 +1,11 @@
 package co.edu.uniquindio.apptours.domain.usecase.auth
 
 import co.edu.uniquindio.apptours.core.common.AppException
-import co.edu.uniquindio.apptours.core.common.FormField
-import co.edu.uniquindio.apptours.core.util.Validators
 import co.edu.uniquindio.apptours.domain.model.User
 import co.edu.uniquindio.apptours.domain.model.UserRole
 import co.edu.uniquindio.apptours.domain.repository.AuthRepository
 import co.edu.uniquindio.apptours.domain.repository.UserRepository
+import co.edu.uniquindio.apptours.domain.validation.AuthForms
 import javax.inject.Inject
 
 /** Registro de usuarios (los moderadores no se registran: vienen precargados). */
@@ -23,16 +22,8 @@ class RegisterUseCase @Inject constructor(
         latitude: Double,
         longitude: Double
     ): Result<User> {
-        val invalidFields = buildSet {
-            if (fullName.isBlank()) add(FormField.FULL_NAME)
-            if (!Validators.isValidEmail(email)) add(FormField.EMAIL)
-            if (!Validators.isValidPassword(password)) add(FormField.PASSWORD)
-            if (password != passwordConfirmation) add(FormField.PASSWORD_CONFIRMATION)
-            if (!termsAccepted) add(FormField.TERMS)
-        }
-        if (invalidFields.isNotEmpty()) {
-            return Result.failure(AppException.InvalidFields(invalidFields))
-        }
+        val errors = AuthForms.register(fullName, email, password, passwordConfirmation, termsAccepted)
+        if (errors.isNotEmpty()) return Result.failure(AppException.InvalidFields(errors))
 
         val cleanEmail = email.trim().lowercase()
         return authRepository.register(cleanEmail, password).mapCatching { uid ->
@@ -44,7 +35,11 @@ class RegisterUseCase @Inject constructor(
                 latitude = latitude,
                 longitude = longitude
             )
-            userRepository.create(user).getOrThrow()
+            userRepository.create(user).onFailure { error ->
+                // Sin perfil la cuenta no sirve: se borra para que pueda registrarse de nuevo.
+                authRepository.deleteAccount()
+                throw error
+            }
             user
         }
     }

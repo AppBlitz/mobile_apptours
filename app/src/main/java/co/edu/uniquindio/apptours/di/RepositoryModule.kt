@@ -1,6 +1,6 @@
 package co.edu.uniquindio.apptours.di
 
-import co.edu.uniquindio.apptours.data.repository.InMemoryAuthRepository
+import co.edu.uniquindio.apptours.data.repository.FirebaseAuthRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreCommentRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreNotificationRepository
 import co.edu.uniquindio.apptours.data.repository.FirestorePlaceRepository
@@ -18,14 +18,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/** Interfaz de dominio -> implementación. Datos en Firestore; la sesión sigue en memoria hasta IT-3. */
+/** Interfaz de dominio -> implementación: sesión en Firebase Auth y datos en Firestore. */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindAuthRepository(impl: InMemoryAuthRepository): AuthRepository
+    abstract fun bindAuthRepository(impl: FirebaseAuthRepository): AuthRepository
 
     @Binds
     @Singleton

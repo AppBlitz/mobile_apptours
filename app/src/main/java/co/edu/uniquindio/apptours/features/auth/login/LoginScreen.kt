@@ -43,6 +43,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.edu.uniquindio.apptours.R
+import co.edu.uniquindio.apptours.core.auth.GoogleTokenResult
+import co.edu.uniquindio.apptours.core.auth.rememberGoogleSignInLauncher
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequesters
+import co.edu.uniquindio.apptours.core.designsystem.form.rememberFieldRequesters
 import co.edu.uniquindio.apptours.core.designsystem.components.*
 import co.edu.uniquindio.apptours.core.map.*
 import co.edu.uniquindio.apptours.core.theme.*
@@ -57,21 +62,33 @@ fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val requesters = rememberFieldRequesters()
+    val launchGoogleSignIn = rememberGoogleSignInLauncher { result ->
+        when (result) {
+            is GoogleTokenResult.Success -> viewModel.onGoogleToken(result.idToken)
+            is GoogleTokenResult.Failure -> viewModel.onGoogleError(result.messageRes)
+            GoogleTokenResult.Cancelled -> Unit
+        }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
                 is LoginEvent.LoggedIn -> onLoginSuccess(event.role)
+                is LoginEvent.ScrollToField -> requesters.reveal(event.field)
             }
         }
     }
 
     LoginScreen(
         state = state,
+        requesters = requesters,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
+        onFieldFocusLost = viewModel::onFieldFocusLost,
         onTogglePasswordVisibility = viewModel::onTogglePasswordVisibility,
         onSubmit = viewModel::onSubmit,
+        onGoogleSignIn = launchGoogleSignIn,
         onNavigateToRegister = onNavigateToRegister,
         onNavigateToForgotPassword = onNavigateToForgotPassword
     )
@@ -80,10 +97,13 @@ fun LoginRoute(
 @Composable
 fun LoginScreen(
     state: LoginUiState,
+    requesters: FieldRequesters,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onFieldFocusLost: (FormField) -> Unit,
     onTogglePasswordVisibility: () -> Unit,
     onSubmit: () -> Unit,
+    onGoogleSignIn: () -> Unit,
     onNavigateToRegister: () -> Unit,
     onNavigateToForgotPassword: () -> Unit
 ) {
@@ -137,7 +157,9 @@ fun LoginScreen(
                     label = "Correo electrónico",
                     placeholder = "tu@correo.com",
                     leadingIcon = Icons.Filled.Email,
-                    errorMessage = state.emailError?.let { stringResource(it) }
+                    errorMessage = state.form.messageOf(FormField.EMAIL),
+                    fieldRequester = requesters[FormField.EMAIL],
+                    onFocusLost = { onFieldFocusLost(FormField.EMAIL) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -151,7 +173,9 @@ fun LoginScreen(
                     isPassword = true,
                     passwordVisible = state.passwordVisible,
                     onPasswordVisibilityChange = onTogglePasswordVisibility,
-                    errorMessage = state.passwordError?.let { stringResource(it) }
+                    errorMessage = state.form.messageOf(FormField.PASSWORD),
+                    fieldRequester = requesters[FormField.PASSWORD],
+                    onFocusLost = { onFieldFocusLost(FormField.PASSWORD) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -201,6 +225,14 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(18.dp))
 
+                AuthAlternativeDivider()
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                GoogleSignInButton(onClick = onGoogleSignIn, enabled = !state.isLoading)
+
+                Spacer(modifier = Modifier.height(18.dp))
+
                 Text(
                     text = "¿Primera vez en coLab tour?",
                     color = ColabTextSecondary,
@@ -213,6 +245,10 @@ fun LoginScreen(
                     text = "Crear cuenta",
                     onClick = onNavigateToRegister
                 )
+            }
+
+            if (state.isLoading) {
+                LoadingOverlay(dimBackground = true)
             }
         }
     }

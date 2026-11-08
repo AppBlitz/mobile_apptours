@@ -17,4 +17,16 @@ class GetSessionUseCase @Inject constructor(
     /** Igual que [invoke] pero falla con [AppException.NotAuthenticated] si no hay sesión. */
     suspend fun require(): Result<User> =
         invoke()?.let { Result.success(it) } ?: Result.failure(AppException.NotAuthenticated)
+
+    /**
+     * Al abrir la app o al entrar: carga el perfil y, si el usuario confirmó un cambio de correo,
+     * lo copia al documento de `users`.
+     */
+    suspend fun restore(): User? {
+        val user = invoke() ?: return null
+        val authEmail = authRepository.refreshEmail()
+        if (authEmail.isNullOrBlank() || authEmail.equals(user.email, ignoreCase = true)) return user
+        val synced = user.copy(email = authEmail.lowercase())
+        return if (userRepository.update(synced).isSuccess) synced else user
+    }
 }
