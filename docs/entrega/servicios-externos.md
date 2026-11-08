@@ -4,7 +4,7 @@
 
 | Necesidad | Proveedor | Justificación / notas |
 |---|---|---|
-| Autenticación | Firebase Authentication | |
+| Autenticación | Firebase Authentication | Correo/contraseña y cuenta de Google |
 | Recuperación de contraseña | Firebase Authentication (`sendPasswordResetEmail`) | |
 | Base de datos | Cloud Firestore | |
 | Imágenes | Cloudinary | Firebase Storage exige plan Blaze |
@@ -21,6 +21,8 @@
 | firebase-firestore | (BoM) | Base de datos en la nube con caché offline |
 | kotlinx-coroutines-play-services | 1.11.0 | `await()` sobre las tareas de Firebase |
 | Plugin google-services | 4.5.0 | Lee `google-services.json` |
+| androidx.credentials (+ play-services-auth) | 1.5.0 | Selector de cuentas de Google (Credential Manager) |
+| googleid | 1.1.1 | Token de identidad de Google para Firebase Auth |
 
 ## Herramientas
 

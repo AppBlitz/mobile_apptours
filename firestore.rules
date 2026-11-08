@@ -1,13 +1,101 @@
 rules_version = '2';
 
-// IT-2: la sesión todavía no usa Firebase Authentication (llega en IT-3), por eso el
-// acceso queda abierto hasta la fecha indicada, igual que el "modo de prueba" de Firebase.
-// TODO(IT-3): exigir request.auth, que cada usuario solo edite lo suyo y que solo
-// los moderadores cambien el estado de las publicaciones.
+// Reglas de coLab tour (IT-3). Sin Cloud Functions, algunas escrituras sobre datos ajenos
+// se permiten de forma acotada: sumar puntos al autor, mover contadores y crear notificaciones.
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isModerator() {
+      return signedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'MODERATOR';
+    }
+
+    function onlyChanges(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    function placeAuthor(placeId) {
+      return get(/databases/$(database)/documents/places/$(placeId)).data.authorId;
+    }
+
+    // Carga inicial de datos de prueba (FirestoreSeeder): solo mientras no exista meta/seed.
+    // Para volver a cargarlos se borra meta/seed desde la consola.
+    function seeding() {
+      return !exists(/databases/$(database)/documents/meta/seed);
+    }
+
     match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+      allow read, write: if seeding();
+    }
+
+    match /meta/{docId} {
+      allow read: if true;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      // Al registrarse: siempre como USER y sin puntos (los moderadores se precargan).
+      allow create: if isOwner(uid)
+        && request.resource.data.role == 'USER'
+        && request.resource.data.points == 0;
+      // El dueño edita su perfil pero no su rol ni sus puntos; cualquiera puede sumarle puntos.
+      allow update: if (isOwner(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'points']))
+        || (signedIn() && onlyChanges(['points']));
+      allow delete: if isOwner(uid);
+
+      match /visits/{placeId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // Espejo de los votos: lo escribe el dueño; el autor de la publicación lo borra al eliminarla.
+      match /votedPlaces/{placeId} {
+        allow read, create: if isOwner(uid);
+        allow delete: if isOwner(uid) || isOwner(placeAuthor(placeId));
+      }
+    }
+
+    match /places/{placeId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.status == 'PENDIENTE'
+        && request.resource.data.votesCount == 0;
+      // Autor: edita su publicación (vuelve a revisión o la marca resuelta), sin tocar votos ni autor.
+      // Moderador: verifica o rechaza. Cualquiera: solo el contador de votos.
+      allow update: if (isOwner(resource.data.authorId)
+          && request.resource.data.authorId == resource.data.authorId
+          && request.resource.data.votesCount == resource.data.votesCount
+          && request.resource.data.status in [resource.data.status, 'PENDIENTE', 'RESUELTA'])
+        || isModerator()
+        || (signedIn() && onlyChanges(['votesCount']));
+      allow delete: if isOwner(resource.data.authorId) || isModerator();
+
+      match /votes/{uid} {
+        allow read: if signedIn();
+        allow create: if isOwner(uid);
+        allow delete: if isOwner(uid) || isOwner(placeAuthor(placeId)) || isModerator();
+      }
+
+      match /comments/{commentId} {
+        allow read: if signedIn();
+        allow create: if signedIn() && request.resource.data.authorId == request.auth.uid;
+        allow delete: if isOwner(resource.data.authorId) || isOwner(placeAuthor(placeId)) || isModerator();
+      }
+    }
+
+    // Cada usuario lee y marca como leídas solo sus notificaciones; cualquiera puede enviarle una.
+    match /notifications/{notificationId} {
+      allow read, delete: if isOwner(resource.data.userId);
+      allow create: if signedIn();
+      allow update: if isOwner(resource.data.userId) && onlyChanges(['isRead']);
     }
   }
 }
