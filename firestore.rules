@@ -1,0 +1,13 @@
+rules_version = '2';
+
+// IT-2: la sesión todavía no usa Firebase Authentication (llega en IT-3), por eso el
+// acceso queda abierto hasta la fecha indicada, igual que el "modo de prueba" de Firebase.
+// TODO(IT-3): exigir request.auth, que cada usuario solo edite lo suyo y que solo
+// los moderadores cambien el estado de las publicaciones.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+    }
+  }
+}

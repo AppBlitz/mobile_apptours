@@ -16,6 +16,11 @@
 
 | Biblioteca | Versión | Uso |
 |---|---|---|
+| Firebase BoM | 34.19.0 | Versiones alineadas de Firebase (la 35.x exige Kotlin 2.4) |
+| firebase-auth | (BoM) | Autenticación |
+| firebase-firestore | (BoM) | Base de datos en la nube con caché offline |
+| kotlinx-coroutines-play-services | 1.11.0 | `await()` sobre las tareas de Firebase |
+| Plugin google-services | 4.5.0 | Lee `google-services.json` |
 
 ## Herramientas
 

@@ -33,7 +33,9 @@ Las llaves **no** se suben al repositorio.
    - `MAPBOX_ACCESS_TOKEN`: token público de [Mapbox](https://account.mapbox.com/access-tokens/).
    - `GEMINI_API_KEY` y `GEMINI_MODEL`: llave de [Google AI Studio](https://aistudio.google.com/apikey).
    - `CLOUDINARY_CLOUD_NAME` y `CLOUDINARY_UPLOAD_PRESET`: cuenta de [Cloudinary](https://console.cloudinary.com/) con un *upload preset* unsigned.
-3. Coloca `google-services.json` del proyecto Firebase en `app/`.
+3. Descarga `google-services.json` del proyecto Firebase (Configuración del proyecto → Tus apps → Android) y colócalo en `app/`. No se versiona: pídele acceso al proyecto a quien lo administra.
+   - Reglas de Firestore: se versionan en `firestore.rules`; publícalas desde la consola (Firestore → Reglas) o con `firebase deploy --only firestore`.
+   - Datos de prueba: la primera vez que abre la app se cargan solos. Para volver a cargarlos, borra el documento `meta/seed` en Firestore.
 4. Para firmar el release, crea `keystore.properties` y el keystore fuera del control de versiones.
 
 ## Compilar
