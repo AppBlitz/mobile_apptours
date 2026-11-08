@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -112,11 +113,28 @@ internal fun ModeratorQueueCard(
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
                 }
-                TextButton(onClick = onReviewClick) {
+                Button(
+                    onClick = onReviewClick,
+                    modifier = Modifier.height(40.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = ColabDarkGreen,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(horizontal = 18.dp)
+                ) {
                     Text(
-                        text = "Revisar >",
-                        color = ColabDarkGreen,
+                        text = stringResource(R.string.moderator_review_action),
+                        color = Color.White,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }

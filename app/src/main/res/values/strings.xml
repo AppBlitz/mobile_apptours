@@ -80,4 +80,7 @@
 
     <!-- Autenticación -->
     <string name="recovery_link_sent">Hemos enviado un enlace de recuperación a %1$s</string>
+
+    <!-- Moderación -->
+    <string name="moderator_review_action">Revisar</string>
 </resources>

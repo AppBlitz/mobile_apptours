@@ -23,3 +23,17 @@ Respuesta de la Inteligencia Artificial Generativa: "Se documentó el requisito 
 Prompt escrito el 08/11/2026 : "Cuando inicia la aplicación sale como una información, dice que es una información de 3 pasos, pero solo se ve la primera de 3, ni deslizando a la izquierda se mueve, ni dandole click a esos botoncitos, y si le doy a siguiente, simplemente me lleva directo al Login. Corrigelo, solo hay dos casos, o no está funcionando esa pantalla de información porque noo desliza, o solo hay una pantalla. Si solo hay una pantalla, quita, esos botoncitos <<...>> y si hay más, verifica y arregla el porqué no cargan"
 
 Respuesta de la Inteligencia Artificial Generativa: "Se revisó features/auth/welcome/WelcomeScreen.kt: es una única pantalla sin pager ni estado; los tres puntos indicadores eran decorativos (Box fijos). Se eliminaron los indicadores y el botón 'Siguiente' pasó a llamarse 'Comenzar' (sigue navegando al Login, igual que 'Omitir'). Se compiló con :app:compileDebugKotlin sin errores. Antes, en este mismo chat, se arregló el fallo de build (Gradle usaba el JRE de VS Code sin jlink) con org.gradle.java.home en ~/.gradle/gradle.properties apuntando al JBR de Android Studio; no hay cambios de repositorio por eso."
+
+---
+
+Prompt escrito el 08/11/2026 : "cuáles son las credenciales del usuario moderador en la seed?"
+
+Respuesta de la Inteligencia Artificial Generativa: "Se indicaron las credenciales de SeedData.kt: moderador@colabtour.com y admin@colabtour.com, ambas con contraseña 12345678 y role MODERATOR, creadas por FirestoreSeeder en la primera apertura. Se advirtió que el repositorio es público y que el ROADMAP pide documentarlas solo en el PDF; se ofreció moverlas a local.properties."
+
+---
+
+Prompt escrito el 08/11/2026 : "El botón de <<revisar>> no parece un botón actulizalo para que se vea como un botón de acción al igual que los demás .los moderadores también deben de tener  un perfil con insights de lo que hayan hecho, total de solicitudes revisadas, cuántas rechazadas, Nombre, que también tengan xp que
+  incremente con cada revisión y también trofeos por revisar o rechazar. Realmente, puede que sea una integración grande así que, si es
+  necesaria agregarla al ROADMAP, y listar como elemento funcional nuevo, hagamoslo."
+
+Respuesta de la Inteligencia Artificial Generativa: "(1) En features/moderator/queue/components/ModeratorQueueCard.kt el TextButton 'Revisar >' se reemplazó por un Button compacto relleno (ColabDarkGreen, esquinas de 16 dp como ColabPrimaryButton, texto blanco y flecha ArrowForward); el texto pasó a strings.xml (moderator_review_action). No se usó ColabPrimaryButton porque ocupa todo el ancho y 54 dp de alto. (2) El perfil del moderador no se implementó aún: se agregó al ROADMAP como elemento funcional nuevo M-06 (tabla 1.2), con su modelo de datos (moderationLog obligatorio, campos xp/contadores/trophies en users de moderadores), el paquete features/moderator/profile en la arquitectura 4.1 y una subsección '6.x Perfil del moderador' en IT-6 con tareas: ruta ModeratorProfile, insights reales, tabla de XP (verificar +15, rechazar +15, resolver +5, bonificación 10 revisiones/día +50), rangos (Revisor, Guardián, Curador, Moderador Experto), trofeos reales y reglas de Firestore. Los valores de XP, rangos y trofeos son una propuesta de la IA para que el equipo la ajuste. También se agregó M-06 a docs/entrega/requisitos.md. Compiló sin errores con :app:compileDebugKotlin."

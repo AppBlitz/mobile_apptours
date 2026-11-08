@@ -17,6 +17,7 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | M-03 | Motivo obligatorio al rechazar; la rechazada no aparece en el feed | ❌ Pendiente | | |
 | M-04 | Marcar cualquier publicación como resuelta | ❌ Pendiente | | |
 | M-05 | Recuperación de contraseña para moderadores | ❌ Pendiente | | |
+| M-06 | (Nuevo, del equipo) Perfil del moderador: estadísticas, XP y trofeos | ❌ Pendiente | | |
 | U-01 | Registro con correo y contraseña | ❌ Pendiente | | |
 | U-02 | Login con correo y contraseña | ❌ Pendiente | | |
 | U-03 | Recuperación de contraseña por correo | ❌ Pendiente | | |
