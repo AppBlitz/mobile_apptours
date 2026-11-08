@@ -136,36 +136,8 @@ fun WelcomeScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Indicadores de página del onboarding
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(28.dp)
-                    .height(8.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(ColabBrown)
-            )
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(ColabSageBg.copy(alpha = 0.4f))
-            )
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(ColabSageBg.copy(alpha = 0.4f))
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
         ColabPrimaryButton(
-            text = "Siguiente",
+            text = "Comenzar",
             onClick = onNavigateToLogin,
             containerColor = ColabBrown,
             contentColor = Color.White
