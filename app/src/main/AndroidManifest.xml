@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Mapas: tiles por internet y "Mi ubicación" (se pide en tiempo de ejecución). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- "Cómo llegar" abre una app de mapas con un intent geo: (Android 11+ exige declararlo). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="geo" />
+        </intent>
+    </queries>
+
     <application
         android:name=".ApptoursApp"
         android:allowBackup="true"

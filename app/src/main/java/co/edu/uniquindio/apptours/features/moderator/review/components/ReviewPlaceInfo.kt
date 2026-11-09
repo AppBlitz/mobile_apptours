@@ -178,25 +178,25 @@ internal fun ReviewPlaceInfo(place: Place) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Ubicación",
+            text = stringResource(R.string.place_detail_exact_location),
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp,
             color = ColabDarkGreen
         )
         Text(
-            text = "${place.latitude}, ${place.longitude}",
+            text = stringResource(R.string.map_coordinates, place.latitude, place.longitude),
             fontSize = 12.sp,
             color = ColabTextSecondary
         )
     }
     Spacer(modifier = Modifier.height(8.dp))
-    SimulatedInteractiveMap(
-        places = listOf(place),
-        selectedPlace = place,
-        onPlaceSelected = {},
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
+    PlaceLocationMiniMap(
+        latitude = place.latitude,
+        longitude = place.longitude,
+        category = place.category,
+        title = place.title,
+        mapHeight = 160.dp,
+        showDirections = false
     )
 
 }

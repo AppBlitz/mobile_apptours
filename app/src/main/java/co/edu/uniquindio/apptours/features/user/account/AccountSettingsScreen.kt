@@ -94,7 +94,7 @@ fun AccountSettingsScreen(
     onFullNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onFieldFocusLost: (FormField) -> Unit,
-    onChangeLocation: () -> Unit,
+    onChangeLocation: (Double, Double) -> Unit,
     onSave: () -> Unit,
     onRequestDelete: () -> Unit,
     onDismissDelete: () -> Unit,
@@ -109,6 +109,7 @@ fun AccountSettingsScreen(
         LoadingOverlay(modifier = Modifier.background(ColabBackground))
         return
     }
+    var showLocationPicker by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -241,23 +242,37 @@ fun AccountSettingsScreen(
                     ) {
                         Column {
                             Text(
-                                text = "Punto elegido en el mapa",
+                                text = stringResource(R.string.account_location_point),
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 14.sp,
                                 color = ColabTextPrimary
                             )
                             Text(
-                                text = "Lat ${state.latitude} · Lng ${state.longitude}",
+                                text = stringResource(R.string.map_coordinates, state.latitude, state.longitude),
                                 fontSize = 12.sp,
                                 color = ColabTextSecondary
                             )
                         }
-                        TextButton(
-                            onClick = onChangeLocation
-                        ) {
-                            Text("Cambiar", color = ColabDarkGreen, fontWeight = FontWeight.Bold)
+                        TextButton(onClick = { showLocationPicker = true }) {
+                            Text(
+                                stringResource(R.string.map_change_point),
+                                color = ColabDarkGreen,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
+                }
+                if (showLocationPicker) {
+                    MapLocationPickerDialog(
+                        title = stringResource(R.string.map_picker_title_address),
+                        initialLatitude = state.latitude,
+                        initialLongitude = state.longitude,
+                        onConfirm = { lat, lng ->
+                            onChangeLocation(lat, lng)
+                            showLocationPicker = false
+                        },
+                        onDismiss = { showLocationPicker = false }
+                    )
                 }
             }
 

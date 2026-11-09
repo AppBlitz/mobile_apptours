@@ -10,6 +10,8 @@ data class FeedUiState(
     val firstName: String = "",
     val userLatitude: Double = DefaultLocation.LATITUDE,
     val userLongitude: Double = DefaultLocation.LONGITUDE,
+    /** true si las distancias se miden desde donde está el teléfono y no desde la dirección guardada. */
+    val usingDeviceLocation: Boolean = false,
     val query: String = "",
     val selectedCategory: PlaceCategory? = null,
     val location: LocationFilter = LocationFilter.TODAS,

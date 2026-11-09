@@ -345,4 +345,28 @@
     <string name="moderation_reviewed_at">Revisada %1$s</string>
     <string name="moderation_author">por %1$s</string>
     <string name="moderation_rejection_reason">Motivo del rechazo</string>
+
+    <!-- Mapas y ubicación (IT-7) -->
+    <string name="map_unavailable">El mapa no está disponible en este momento.</string>
+    <string name="map_my_location">Mi ubicación</string>
+    <string name="map_coordinates">%1$.5f, %2$.5f</string>
+    <string name="map_picker_hint">Mueve el mapa o tócalo para dejar el pin sobre el punto exacto.</string>
+    <string name="map_picker_confirm">Confirmar punto</string>
+    <string name="map_picker_close">Cerrar</string>
+    <string name="map_picker_title_place">Ubicación del lugar</string>
+    <string name="map_picker_title_address">Tu dirección</string>
+    <string name="map_pick_on_map">Elegir en el mapa</string>
+    <string name="map_change_point">Cambiar punto</string>
+    <string name="map_directions">Cómo llegar</string>
+    <string name="map_directions_unavailable">No hay una aplicación de mapas para abrir la ruta.</string>
+    <string name="location_permission_denied">Sin permiso de ubicación. Puedes elegir el punto moviendo el mapa.</string>
+    <string name="location_unavailable">No pudimos obtener tu ubicación. Revisa que la ubicación del teléfono esté activa.</string>
+    <string name="location_nearby_saved">Mostrando lugares cerca de tu dirección guardada.</string>
+    <string name="location_nearby_device">Mostrando lugares cerca de donde estás.</string>
+    <string name="place_detail_about">Sobre este lugar</string>
+    <string name="place_detail_exact_location">Ubicación exacta</string>
+    <string name="place_see_detail">Ver detalle</string>
+    <string name="account_location_point">Punto elegido en el mapa</string>
+    <string name="register_address_pending">Aún no has fijado tu dirección.</string>
+    <string name="register_address_hint">Guardamos el punto que elijas en el mapa para mostrarte lugares cercanos.</string>
 </resources>

@@ -60,11 +60,18 @@ fun FeedRoute(
     viewModel: FeedViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    // "Cercanos" mide desde donde está el teléfono; sin permiso, desde la dirección guardada.
+    val requestDeviceLocation = rememberDeviceLocationRequester { result ->
+        if (result is DeviceLocationResult.Found) viewModel.onDeviceLocation(result.latitude, result.longitude)
+    }
     FeedScreen(
         state = state,
         isMapMode = isMapMode,
         onQueryChange = viewModel::onQueryChange,
-        onLocationFilterSelected = viewModel::onLocationFilterSelected,
+        onLocationFilterSelected = { filter ->
+            viewModel.onLocationFilterSelected(filter)
+            if (filter == LocationFilter.CERCANOS) requestDeviceLocation()
+        },
         onCategorySelected = viewModel::onCategorySelected,
         onSelectMapPlace = viewModel::onSelectMapPlace,
         onToggleInterest = viewModel::onToggleInterest,
@@ -118,6 +125,17 @@ fun FeedScreen(
             selectedCategory = state.selectedCategory,
             onCategorySelected = onCategorySelected
         )
+
+        if (state.location == LocationFilter.CERCANOS) {
+            Text(
+                text = stringResource(
+                    if (state.usingDeviceLocation) R.string.location_nearby_device else R.string.location_nearby_saved
+                ),
+                fontSize = 12.sp,
+                color = ColabTextSecondary,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 2.dp)
+            )
+        }
 
         if (!isMapMode) {
             FeedList(

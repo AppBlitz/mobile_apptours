@@ -192,6 +192,8 @@ fun PlaceFormScreen(
                 latitude = state.latitude,
                 longitude = state.longitude,
                 locationPicked = state.locationPicked,
+                category = state.category,
+                title = state.title,
                 onLocationChange = actions.onLocationChange,
                 errorMessage = form.messageOf(FormField.LOCATION),
                 requester = requesters[FormField.LOCATION]

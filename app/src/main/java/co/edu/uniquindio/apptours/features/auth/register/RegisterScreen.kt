@@ -114,7 +114,7 @@ fun RegisterScreen(
     onGoogleSignIn: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    var showMapPickerDialog by remember { mutableStateOf(false) }
+    var showMapPickerDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -216,7 +216,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = "Tu dirección",
+                    text = stringResource(R.string.map_picker_title_address),
                     color = ColabTextPrimary,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
@@ -246,9 +246,9 @@ fun RegisterScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = if (state.locationPicked) {
-                                "Lat ${state.latitude}, Lng ${state.longitude}"
+                                stringResource(R.string.map_coordinates, state.latitude, state.longitude)
                             } else {
-                                "Elegir ubicación en el..."
+                                stringResource(R.string.register_address_pending)
                             },
                             color = if (state.locationPicked) ColabTextPrimary else ColabTextSecondary,
                             fontSize = 14.sp
@@ -272,7 +272,7 @@ fun RegisterScreen(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Mapa",
+                                text = stringResource(R.string.feed_mode_map),
                                 color = ColabDarkGreen,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp
@@ -282,7 +282,7 @@ fun RegisterScreen(
                 }
 
                 Text(
-                    text = "Guardamos latitud y longitud al elegir el punto en el mapa.",
+                    text = stringResource(R.string.register_address_hint),
                     fontSize = 12.sp,
                     color = ColabTextSecondary,
                     modifier = Modifier.padding(top = 4.dp)
@@ -370,50 +370,15 @@ fun RegisterScreen(
     }
 
     if (showMapPickerDialog) {
-        AlertDialog(
-            onDismissRequest = { showMapPickerDialog = false },
-            title = { Text("Fijar tu dirección en el mapa", fontWeight = FontWeight.Bold) },
-            text = {
-                Column {
-                    Text(
-                        text = "Toca el mapa para actualizar tus coordenadas de referencia:",
-                        fontSize = 13.sp,
-                        color = ColabTextSecondary
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    SimulatedInteractiveMap(
-                        places = emptyList(),
-                        selectedPlace = null,
-                        onPlaceSelected = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp),
-                        interactivePointSelection = true,
-                        selectedLat = state.latitude,
-                        selectedLng = state.longitude,
-                        onCoordinatesChanged = { lat, lng ->
-                            onPickLocation(lat, lng)
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Lat ${state.latitude} · Lng ${state.longitude}",
-                        fontWeight = FontWeight.SemiBold,
-                        color = ColabDarkGreen,
-                        fontSize = 13.sp
-                    )
-                }
+        MapLocationPickerDialog(
+            title = stringResource(R.string.map_picker_title_address),
+            initialLatitude = state.latitude.takeIf { state.locationPicked },
+            initialLongitude = state.longitude.takeIf { state.locationPicked },
+            onConfirm = { lat, lng ->
+                onPickLocation(lat, lng)
+                showMapPickerDialog = false
             },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onPickLocation(state.latitude, state.longitude)
-                        showMapPickerDialog = false
-                    }
-                ) {
-                    Text("Confirmar punto", color = ColabDarkGreen, fontWeight = FontWeight.Bold)
-                }
-            }
+            onDismiss = { showMapPickerDialog = false }
         )
     }
 }

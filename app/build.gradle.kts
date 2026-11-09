@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -6,6 +8,13 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
 }
+
+// Llaves locales (nunca al repositorio): se leen de local.properties.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val mapboxAccessToken: String = localProperties.getProperty("MAPBOX_ACCESS_TOKEN", "")
 
 android {
     namespace = "co.edu.uniquindio.apptours"
@@ -21,6 +30,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // El SDK de mapas lee el token público del recurso mapbox_access_token.
+        resValue("string", "mapbox_access_token", mapboxAccessToken)
+        buildConfigField("boolean", "MAPS_ENABLED", (mapboxAccessToken.isNotBlank()).toString())
     }
 
     buildTypes {
@@ -37,6 +50,8 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+        resValues = true
     }
 }
 
@@ -73,6 +88,11 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    // Mapas y ubicación del dispositivo (IT-7)
+    implementation(libs.mapbox.maps)
+    implementation(libs.mapbox.compose)
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

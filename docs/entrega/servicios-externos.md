@@ -8,7 +8,8 @@
 | Recuperación de contraseña | Firebase Authentication (`sendPasswordResetEmail`) | |
 | Base de datos | Cloud Firestore | |
 | Imágenes | Cloudinary | Firebase Storage exige plan Blaze |
-| Mapas | Mapbox Maps SDK for Android | |
+| Mapas | Mapbox Maps SDK for Android | Nivel gratuito; token público en `local.properties` |
+| Ubicación del dispositivo | Google Play services Location | Solo para centrar el mapa y el filtro "Cercanos" |
 | IA | Google Gemini API (Google AI Studio) | Nivel gratuito |
 | Distribución | Firebase App Distribution | |
 
@@ -23,6 +24,9 @@
 | Plugin google-services | 4.5.0 | Lee `google-services.json` |
 | androidx.credentials (+ play-services-auth) | 1.5.0 | Selector de cuentas de Google (Credential Manager) |
 | googleid | 1.1.1 | Token de identidad de Google para Firebase Auth |
+| com.mapbox.maps:android | 11.33.1 | Mapa del feed, selector de ubicación y mini-mapa del detalle |
+| com.mapbox.extension:maps-compose | 11.33.1 | Mapa como Composable (`MapboxMap`, `ViewAnnotation`) |
+| play-services-location | 21.3.0 | Ubicación actual del teléfono (`FusedLocationProviderClient`) |
 
 ## Herramientas
 

@@ -47,33 +47,49 @@ class FeedViewModel @Inject constructor(
         val selectedMapPlaceId: String? = null
     )
 
+    /** Ubicación del teléfono (si el usuario dio permiso); si no, se usa la dirección guardada. */
+    private data class Origin(val latitude: Double, val longitude: Double, val fromDevice: Boolean)
+
     private val controls = MutableStateFlow(Controls())
+    private val deviceLocation = MutableStateFlow<Pair<Double, Double>?>(null)
     private val retryTrigger = RetryTrigger()
     private val currentUser = getCurrentUser()
 
-    private val places = combine(controls, currentUser) { c, user ->
+    private val origin = combine(currentUser, deviceLocation) { user, device ->
+        if (device != null) {
+            Origin(device.first, device.second, fromDevice = true)
+        } else {
+            Origin(
+                user?.latitude ?: DefaultLocation.LATITUDE,
+                user?.longitude ?: DefaultLocation.LONGITUDE,
+                fromDevice = false
+            )
+        }
+    }.distinctUntilChanged()
+
+    private val places = combine(controls, origin) { c, o ->
         FeedFilter(
             query = c.query,
             category = c.category,
             location = c.location,
-            userLatitude = user?.latitude ?: DefaultLocation.LATITUDE,
-            userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE
+            userLatitude = o.latitude,
+            userLongitude = o.longitude
         )
     }.distinctUntilChanged().flatMapLatest { filter -> getPublicFeed(filter) }
 
     val uiState: StateFlow<FeedUiState> = retryTrigger.restartable {
         combine(
-            controls,
-            currentUser,
+            combine(controls, currentUser, origin, ::Triple),
             places,
             getMyVotes(),
             getMyVisits().map { visits -> visits.map { it.placeId }.toSet() }
-        ) { c, user, places, votes, visits ->
+        ) { (c, user, o), places, votes, visits ->
             FeedUiState(
                 isLoading = false,
                 firstName = user?.firstName.orEmpty(),
-                userLatitude = user?.latitude ?: DefaultLocation.LATITUDE,
-                userLongitude = user?.longitude ?: DefaultLocation.LONGITUDE,
+                userLatitude = o.latitude,
+                userLongitude = o.longitude,
+                usingDeviceLocation = o.fromDevice,
                 query = c.query,
                 selectedCategory = c.category,
                 location = c.location,
@@ -92,6 +108,11 @@ class FeedViewModel @Inject constructor(
     fun onCategorySelected(category: PlaceCategory?) = controls.update { it.copy(category = category) }
 
     fun onLocationFilterSelected(location: LocationFilter) = controls.update { it.copy(location = location) }
+
+    /** El feed recibe la ubicación del teléfono al elegir "Cercanos" (si el usuario da el permiso). */
+    fun onDeviceLocation(latitude: Double, longitude: Double) {
+        deviceLocation.value = latitude to longitude
+    }
 
     fun onSelectMapPlace(placeId: String) = controls.update { it.copy(selectedMapPlaceId = placeId) }
 

@@ -21,15 +21,15 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | U-01 | Registro con correo y contraseña | ❌ Pendiente | | |
 | U-02 | Login con correo y contraseña | ❌ Pendiente | | |
 | U-03 | Recuperación de contraseña por correo | ❌ Pendiente | | |
-| U-04 | Feed en modo lista o mapa | 🟡 Lista lista; el mapa sigue simulado hasta IT-7 | | Solo muestra publicaciones verificadas y resueltas, ordenadas por votos. |
+| U-04 | Feed en modo lista o mapa | 🟡 Lista y mapa real implementados, falta probar en dispositivo | | Solo muestra publicaciones verificadas y resueltas, ordenadas por votos. |
 | U-05 | Filtro por categoría | 🟡 Implementado, falta probar en dispositivo | | Chips "Todos" + 5 categorías. |
-| U-06 | Filtro por ubicación | 🟡 Implementado, falta probar en dispositivo | | Cercanos (≤ 5 km), En mi ciudad (≤ 15 km) y Todas, medido desde la ubicación guardada del usuario. "En mi ciudad" es un radio, no el nombre de la ciudad: se puede afinar cuando el mapa real (IT-7) entregue la ciudad de cada punto. |
+| U-06 | Filtro por ubicación | 🟡 Implementado, falta probar en dispositivo | | Cercanos (≤ 5 km), En mi ciudad (≤ 15 km) y Todas, medido desde la ubicación del teléfono si el usuario da el permiso, o desde su dirección guardada. "En mi ciudad" es un radio, no el nombre de la ciudad: se puede afinar cuando el mapa real (IT-7) entregue la ciudad de cada punto. |
 | U-07 | Crear, editar y eliminar publicaciones | 🟡 Implementado, falta probar en dispositivo | | Formulario con validación en vivo por campo (sección 4.3). Eliminar pide confirmación, desde el detalle o desde la edición. |
 | U-08 | Publicación creada como no verificada | 🟡 Implementado, falta probar en dispositivo | | Nace "Pendiente de verificación"; editar algo ya revisado lo devuelve a pendiente y el formulario lo avisa. |
 | U-09 | El autor marca su publicación como resuelta | 🟡 Implementado, falta probar en dispositivo | | Botón "Finalizar" en el detalle (solo el autor). |
 | U-10 | "Me interesa" con votos que determinan relevancia | 🟡 Implementado, falta probar en dispositivo | | Un voto por usuario con transacción; el feed se ordena por votos y el detalle muestra la etiqueta de relevancia. |
 | U-11 | Comentarios | 🟡 Implementado, falta probar en dispositivo | | Lista en tiempo real; el campo valida en vivo (vacío o más de 500 caracteres). |
-| U-12 | Detalle completo: comentarios, ubicación, fotos, información | 🟡 Información, comentarios y visitas listos; fotos (IT-8) y mapa real (IT-7) pendientes | | |
+| U-12 | Detalle completo: comentarios, ubicación, fotos, información | 🟡 Información, comentarios, visitas y mini-mapa con "Cómo llegar" listos; fotos pendientes (IT-8) | | |
 | U-13 | Notificaciones guardadas en BD | 🟡 Implementado, falta probar en dispositivo | | Guardadas en la nube y en tiempo real: comentario, voto, verificada, rechazada, resuelta, insignia, subida de nivel (y trofeo para moderadores). |
 | U-14 | Notificaciones leídas/no leídas que navegan al detalle | 🟡 Implementado, falta probar en dispositivo | | Menú ⋮ en cada tarjeta para leída / no leída, "marcar todas", filtros Todas / No leídas / Logros. Tocarla la marca leída y abre el detalle. |
 | U-15 | Notificación al autor por cada comentario | 🟡 Implementado, falta probar en dispositivo | | Cada comentario notifica al autor salvo que se comente a sí mismo. |
@@ -42,7 +42,7 @@ La columna "Diferencias" compara contra el enunciado y contra los mockups de la 
 | IA-01 | Detección de duplicados con LLM (Google Gemini) | ❌ Pendiente | | |
 | R-01 | 100 % Jetpack Compose + Kotlin | ❌ Pendiente | | |
 | R-02 | Publicación con título, categoría, descripción, lat/lng y ≥1 imagen | 🟡 Validación lista (exige ≥ 1 foto y punto en el mapa); la carga real de fotos llega en IT-8 | | |
-| R-03 | Ubicación desde un mapa (Mapbox) guardada en BD | ❌ Pendiente | | |
+| R-03 | Ubicación desde un mapa (Mapbox) guardada en BD | 🟡 Implementado, falta probar en dispositivo | | Registro, editar perfil y publicación usan el mismo selector (pin fijo en el centro, toque o "Mi ubicación"); se guarda el punto confirmado en `users` y `places`. |
 | R-04 | Persistencia en la nube (Firestore) incluidas notificaciones | ❌ Pendiente | | |
 | R-05 | Autenticación con recuperación de contraseña | ❌ Pendiente | | |
 | R-06 | Imágenes en la nube (Cloudinary) | ❌ Pendiente | | |

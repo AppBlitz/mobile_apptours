@@ -108,12 +108,9 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun onFieldFocusLost(field: FormField) = _uiState.update { it.touch(field) }
 
-    /** Simula elegir otro punto en el mapa. TODO(IT-7): usar MapLocationPicker con Mapbox. */
-    fun onChangeLocation() = _uiState.update {
-        it.copy(
-            latitude = ((it.latitude + 0.0015) * 10000).toInt() / 10000.0,
-            longitude = ((it.longitude - 0.0012) * 10000).toInt() / 10000.0
-        ).edited()
+    /** Punto confirmado en el selector del mapa. */
+    fun onChangeLocation(latitude: Double, longitude: Double) = _uiState.update {
+        it.copy(latitude = latitude, longitude = longitude).edited()
     }
 
     fun onSave() {
