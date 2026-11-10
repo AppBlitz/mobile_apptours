@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import co.edu.uniquindio.apptours.core.common.FormField
 import co.edu.uniquindio.apptours.core.common.FormState
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
+import co.edu.uniquindio.apptours.domain.model.DuplicateCandidate
 import co.edu.uniquindio.apptours.domain.model.Place
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
 import co.edu.uniquindio.apptours.domain.model.PlaceDraft
@@ -33,7 +34,13 @@ data class PlaceFormUiState(
     val form: FormState = FormState(),
     @StringRes val errorRes: Int? = null,
     val isSaving: Boolean = false,
-    val showDeleteDialog: Boolean = false
+    val showDeleteDialog: Boolean = false,
+    /** "Analizando posibles duplicados…" mientras el modelo revisa los lugares cercanos. */
+    val isCheckingDuplicates: Boolean = false,
+    /** Posibles duplicados; si no está vacío se muestra la hoja para decidir. */
+    val duplicates: List<DuplicateCandidate> = emptyList(),
+    /** No se pudo revisar (sin red, cuota agotada): se avisa y el siguiente "Publicar" no vuelve a revisar. */
+    val duplicateCheckFailed: Boolean = false
 ) {
     val draft: PlaceDraft
         get() = PlaceDraft(
@@ -58,4 +65,6 @@ sealed interface PlaceFormEvent {
     data object Saved : PlaceFormEvent
     data object Deleted : PlaceFormEvent
     data class ScrollToField(val field: FormField) : PlaceFormEvent
+    /** "Ver y comentar el existente": abre el lugar que ya estaba publicado. */
+    data class OpenExistingPlace(val placeId: String) : PlaceFormEvent
 }

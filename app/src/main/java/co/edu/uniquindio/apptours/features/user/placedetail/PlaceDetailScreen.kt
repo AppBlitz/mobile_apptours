@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,6 +35,14 @@ fun PlaceDetailRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val requesters = rememberFieldRequesters()
+    var commentsFocused by rememberSaveable { mutableStateOf(false) }
+    val placeLoaded = state.place != null
+    LaunchedEffect(placeLoaded) {
+        if (placeLoaded && viewModel.focusComments && !commentsFocused) {
+            commentsFocused = true
+            requesters.reveal(FormField.COMMENT)
+        }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->

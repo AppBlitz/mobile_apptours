@@ -30,6 +30,7 @@ import co.edu.uniquindio.apptours.features.user.placeform.components.*
 fun PlaceFormRoute(
     onNavigateBack: () -> Unit,
     onPlaceDeleted: () -> Unit,
+    onOpenExistingPlace: (String) -> Unit,
     viewModel: PlaceFormViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,6 +42,7 @@ fun PlaceFormRoute(
                 PlaceFormEvent.Saved -> onNavigateBack()
                 PlaceFormEvent.Deleted -> onPlaceDeleted()
                 is PlaceFormEvent.ScrollToField -> requesters.reveal(event.field)
+                is PlaceFormEvent.OpenExistingPlace -> onOpenExistingPlace(event.placeId)
             }
         }
     }
@@ -65,7 +67,10 @@ fun PlaceFormRoute(
             onDeleteClick = viewModel::onDeleteClick,
             onConfirmDelete = viewModel::onConfirmDelete,
             onDismissDelete = viewModel::onDismissDelete,
-            onRetry = viewModel::onRetry
+            onRetry = viewModel::onRetry,
+            onPublishAnyway = viewModel::onPublishAnyway,
+            onOpenExistingPlace = viewModel::onOpenExistingPlace,
+            onDismissDuplicates = viewModel::onDismissDuplicates
         )
     )
 }
@@ -88,7 +93,10 @@ data class PlaceFormActions(
     val onDeleteClick: () -> Unit,
     val onConfirmDelete: () -> Unit,
     val onDismissDelete: () -> Unit,
-    val onRetry: () -> Unit
+    val onRetry: () -> Unit,
+    val onPublishAnyway: () -> Unit,
+    val onOpenExistingPlace: (String) -> Unit,
+    val onDismissDuplicates: () -> Unit
 )
 
 @Composable
@@ -206,12 +214,18 @@ fun PlaceFormScreen(
                 Text(text = stringResource(state.errorRes), color = ColabError, fontSize = 13.sp)
             }
 
+            // IA-01: si no se pudo revisar, se avisa y se deja publicar igual.
+            if (state.duplicateCheckFailed) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(text = stringResource(R.string.duplicates_check_failed), color = ColabBrown, fontSize = 13.sp)
+            }
+
             Spacer(modifier = Modifier.height(20.dp))
 
             ColabPrimaryButton(
                 text = stringResource(R.string.place_form_submit),
                 leadingIcon = Icons.AutoMirrored.Filled.Send,
-                enabled = !state.isSaving,
+                enabled = !state.isSaving && !state.isCheckingDuplicates,
                 onClick = actions.onSubmit
             )
 
@@ -229,13 +243,26 @@ fun PlaceFormScreen(
             Spacer(modifier = Modifier.height(28.dp))
         }
 
-        if (state.isLoading || state.isSaving) {
+        if (state.isLoading || state.isSaving || state.isCheckingDuplicates) {
             LoadingOverlay(
                 dimBackground = true,
                 progress = state.uploadProgress,
-                messageRes = if (state.uploadProgress != null) R.string.photos_uploading else R.string.loading
+                messageRes = when {
+                    state.isCheckingDuplicates -> R.string.duplicates_checking
+                    state.uploadProgress != null -> R.string.photos_uploading
+                    else -> R.string.loading
+                }
             )
         }
+    }
+
+    if (state.duplicates.isNotEmpty()) {
+        DuplicatesBottomSheet(
+            duplicates = state.duplicates,
+            onOpenExisting = actions.onOpenExistingPlace,
+            onPublishAnyway = actions.onPublishAnyway,
+            onDismiss = actions.onDismissDuplicates
+        )
     }
 
     if (state.showDeleteDialog) {

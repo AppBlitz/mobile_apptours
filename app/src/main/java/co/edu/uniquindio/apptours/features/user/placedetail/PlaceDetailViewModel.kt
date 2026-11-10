@@ -53,7 +53,11 @@ class PlaceDetailViewModel @Inject constructor(
     private val deletePlace: DeletePlaceUseCase
 ) : ViewModel() {
 
-    private val placeId = savedStateHandle.toRoute<PlaceDetail>().placeId
+    private val route = savedStateHandle.toRoute<PlaceDetail>()
+    private val placeId = route.placeId
+
+    /** true si se llegó desde un posible duplicado: se enfoca la caja de comentario al cargar. */
+    val focusComments: Boolean = route.focusComments
 
     /** Lo que solo vive en la pantalla (lo que se escribe, diálogos abiertos, errores de acciones). */
     private data class LocalState(

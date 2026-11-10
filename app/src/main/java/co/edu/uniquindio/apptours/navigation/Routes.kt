@@ -12,7 +12,8 @@ import kotlinx.serialization.Serializable
 // Grafo del usuario
 @Serializable data object UserGraph
 @Serializable data object UserHome
-@Serializable data class PlaceDetail(val placeId: String)
+/** [focusComments]: abre el detalle con el cuadro de comentario enfocado (p. ej. desde un posible duplicado). */
+@Serializable data class PlaceDetail(val placeId: String, val focusComments: Boolean = false)
 @Serializable data object CreatePlace
 @Serializable data class EditPlace(val placeId: String)
 @Serializable data object Recommendations

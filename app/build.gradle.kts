@@ -18,6 +18,9 @@ val mapboxAccessToken: String = localProperties.getProperty("MAPBOX_ACCESS_TOKEN
 // Cloudinary: solo el cloud name y un upload preset sin firma. El API secret NUNCA va en la app.
 val cloudinaryCloudName: String = localProperties.getProperty("CLOUDINARY_CLOUD_NAME", "")
 val cloudinaryUploadPreset: String = localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET", "")
+// Gemini (IT-10): el modelo se puede cambiar sin tocar código.
+val geminiApiKey: String = localProperties.getProperty("GEMINI_API_KEY", "")
+val geminiModel: String = localProperties.getProperty("GEMINI_MODEL", "").ifBlank { "gemini-3.5-flash" }
 
 android {
     namespace = "co.edu.uniquindio.apptours"
@@ -39,6 +42,8 @@ android {
         buildConfigField("boolean", "MAPS_ENABLED", (mapboxAccessToken.isNotBlank()).toString())
         buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryCloudName\"")
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "GEMINI_MODEL", "\"$geminiModel\"")
     }
 
     buildTypes {

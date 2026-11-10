@@ -8,8 +8,10 @@ import co.edu.uniquindio.apptours.core.common.FieldError
 import co.edu.uniquindio.apptours.core.common.FormField
 import co.edu.uniquindio.apptours.core.util.fieldErrors
 import co.edu.uniquindio.apptours.core.util.toMessageRes
+import co.edu.uniquindio.apptours.domain.model.DuplicateCheckInput
 import co.edu.uniquindio.apptours.domain.model.PlaceCategory
 import co.edu.uniquindio.apptours.domain.model.PriceRange
+import co.edu.uniquindio.apptours.domain.usecase.ai.DetectDuplicatesUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.CreatePlaceUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.DeletePlaceUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.GetPlaceByIdUseCase
@@ -34,10 +36,14 @@ class PlaceFormViewModel @Inject constructor(
     private val getPlaceById: GetPlaceByIdUseCase,
     private val createPlace: CreatePlaceUseCase,
     private val updatePlace: UpdatePlaceUseCase,
-    private val deletePlace: DeletePlaceUseCase
+    private val deletePlace: DeletePlaceUseCase,
+    private val detectDuplicates: DetectDuplicatesUseCase
 ) : ViewModel() {
 
     private val placeId: String? = savedStateHandle["placeId"]
+
+    /** true cuando el usuario ya revisó (o no se pudo revisar) los duplicados del texto y ubicación actuales. */
+    private var duplicatesReviewed = false
 
     private val _uiState = MutableStateFlow(PlaceFormUiState(isEditing = placeId != null, isLoading = placeId != null))
     val uiState: StateFlow<PlaceFormUiState> = _uiState.asStateFlow()
@@ -124,32 +130,72 @@ class PlaceFormViewModel @Inject constructor(
 
     fun onSubmit() {
         val s = _uiState.value
-        if (s.isSaving) return
+        if (s.isSaving || s.isCheckingDuplicates) return
         val errors = PlaceForms.place(s.draft)
         if (errors.isNotEmpty()) {
             showFieldErrors(errors)
             return
         }
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true, errorRes = null) }
-            val onProgress: (Float) -> Unit = { p -> _uiState.update { it.copy(uploadProgress = p) } }
-            val result = if (placeId == null) {
-                createPlace(s.draft, onProgress).map { }
-            } else {
-                updatePlace(placeId, s.draft, onProgress)
-            }
-            _uiState.update { it.copy(isSaving = false, uploadProgress = null) }
-            result
-                .onSuccess { _events.send(PlaceFormEvent.Saved) }
-                .onFailure { error ->
-                    val fieldErrors = error.fieldErrors
-                    if (fieldErrors.isNotEmpty()) {
-                        showFieldErrors(fieldErrors)
-                    } else {
-                        _uiState.update { it.copy(errorRes = error.toMessageRes()) }
-                    }
-                }
+            if (!duplicatesReviewed && !checkDuplicates(s)) return@launch
+            save(s)
         }
+    }
+
+    /**
+     * Revisa con IA si ya hay un lugar parecido cerca. Devuelve true si se puede publicar ya
+     * (no hay duplicados); false si se mostró la hoja de duplicados o el aviso de que no se pudo revisar.
+     */
+    private suspend fun checkDuplicates(s: PlaceFormUiState): Boolean {
+        _uiState.update { it.copy(isCheckingDuplicates = true, errorRes = null, duplicateCheckFailed = false) }
+        val input = DuplicateCheckInput(s.title.trim(), s.description.trim(), s.category, s.latitude, s.longitude)
+        val result = detectDuplicates(input, excludePlaceId = placeId)
+        _uiState.update { it.copy(isCheckingDuplicates = false) }
+        val duplicates = result.getOrElse {
+            // Sin red o sin cuota: no se bloquea; se avisa y el próximo "Publicar" publica.
+            duplicatesReviewed = true
+            _uiState.update { it.copy(duplicateCheckFailed = true) }
+            return false
+        }
+        if (duplicates.isEmpty()) return true
+        _uiState.update { it.copy(duplicates = duplicates) }
+        return false
+    }
+
+    /** "No es el mismo, publicar igual". */
+    fun onPublishAnyway() {
+        duplicatesReviewed = true
+        _uiState.update { it.copy(duplicates = emptyList()) }
+        onSubmit()
+    }
+
+    fun onDismissDuplicates() = _uiState.update { it.copy(duplicates = emptyList()) }
+
+    /** "Ver y comentar el existente". */
+    fun onOpenExistingPlace(id: String) {
+        _uiState.update { it.copy(duplicates = emptyList()) }
+        _events.trySend(PlaceFormEvent.OpenExistingPlace(id))
+    }
+
+    private suspend fun save(s: PlaceFormUiState) {
+        _uiState.update { it.copy(isSaving = true, errorRes = null) }
+        val onProgress: (Float) -> Unit = { p -> _uiState.update { it.copy(uploadProgress = p) } }
+        val result = if (placeId == null) {
+            createPlace(s.draft, onProgress).map { }
+        } else {
+            updatePlace(placeId, s.draft, onProgress)
+        }
+        _uiState.update { it.copy(isSaving = false, uploadProgress = null) }
+        result
+            .onSuccess { _events.send(PlaceFormEvent.Saved) }
+            .onFailure { error ->
+                val fieldErrors = error.fieldErrors
+                if (fieldErrors.isNotEmpty()) {
+                    showFieldErrors(fieldErrors)
+                } else {
+                    _uiState.update { it.copy(errorRes = error.toMessageRes()) }
+                }
+            }
     }
 
     fun onDeleteClick() = _uiState.update { it.copy(showDeleteDialog = true) }
@@ -169,6 +215,11 @@ class PlaceFormViewModel @Inject constructor(
     }
 
     private fun edit(field: FormField, transform: (PlaceFormUiState) -> PlaceFormUiState) {
+        // Si cambia lo que se compara (texto, categoría o ubicación) hay que volver a revisar duplicados.
+        if (field in DUPLICATE_FIELDS) {
+            duplicatesReviewed = false
+            _uiState.update { it.copy(duplicateCheckFailed = false) }
+        }
         _uiState.update { state ->
             val edited = transform(state).copy(errorRes = null).touch(field)
             // La hora de cierre se compara con la de apertura: si ya se tocó, se revalida junto con ella.
@@ -189,4 +240,8 @@ class PlaceFormViewModel @Inject constructor(
 
     private fun PlaceFormUiState.touch(field: FormField) =
         copy(form = form.touch(field, PlaceForms.place(draft)))
+
+    private companion object {
+        val DUPLICATE_FIELDS = setOf(FormField.TITLE, FormField.DESCRIPTION, FormField.CATEGORY, FormField.LOCATION)
+    }
 }

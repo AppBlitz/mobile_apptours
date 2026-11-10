@@ -41,4 +41,5 @@ sealed class AppException : Exception() {
     data object UserNotFound : AppException()
     data object Network : AppException()
     data object ImageUploadFailed : AppException()
+    data object DuplicateCheckUnavailable : AppException()
 }

@@ -409,4 +409,16 @@
     <string name="feed_recommendations_cold_start">Los más votados cerca de ti. Marca visitas para personalizarlos.</string>
     <string name="feed_recommendations_hint">Marca lugares como “Visitado” y te sugerimos otros a tu gusto.</string>
     <string name="feed_recommendations_open">Ver recomendaciones</string>
+
+    <!-- Posibles duplicados antes de publicar (IA-01) -->
+    <string name="duplicates_checking">Analizando posibles duplicados…</string>
+    <string name="duplicates_check_failed">No se pudo verificar si ya existe un lugar parecido. Puedes publicar de todos modos.</string>
+    <plurals name="duplicates_title">
+        <item quantity="one">Este lugar podría estar publicado</item>
+        <item quantity="other">Estos %1$d lugares podrían ser el mismo</item>
+    </plurals>
+    <string name="duplicates_subtitle">Encontramos publicaciones cercanas muy parecidas. Si es el mismo lugar, comparte lo que sabes en la que ya existe.</string>
+    <string name="duplicates_meta">A %1$s · %2$d %% parecido</string>
+    <string name="duplicates_open_existing">Ver y comentar el existente</string>
+    <string name="duplicates_publish_anyway">No es el mismo, publicar igual</string>
 </resources>

@@ -7,7 +7,8 @@ MAPBOX_ACCESS_TOKEN=
 
 # Google Gemini API (Google AI Studio) · https://aistudio.google.com/apikey
 GEMINI_API_KEY=
-GEMINI_MODEL=gemini-2.5-flash
+# gemini-2.5-flash ya no se ofrece a cuentas nuevas (verificado el 09/11/2026); vacío = gemini-3.5-flash
+GEMINI_MODEL=gemini-3.5-flash
 
 # Cloudinary (upload preset unsigned) · https://console.cloudinary.com/
 # Solo cloud name y preset: el API secret NUNCA se pone en la app (cualquiera lo sacaria del APK).

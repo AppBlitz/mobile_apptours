@@ -1,6 +1,8 @@
 package co.edu.uniquindio.apptours.di
 
 import co.edu.uniquindio.apptours.data.remote.cloudinary.CloudinaryApi
+import co.edu.uniquindio.apptours.data.remote.gemini.GeminiApi
+import co.edu.uniquindio.apptours.data.remote.gemini.GeminiAuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,14 +15,17 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-/** Cliente HTTP compartido y APIs REST (Cloudinary; Gemini se agrega en IT-10). */
+/** Cliente HTTP compartido y APIs REST (Cloudinary para fotos, Gemini para duplicados). */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideJson(): Json = Json { ignoreUnknownKeys = true }
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
+        explicitNulls = false
+    }
 
     @Provides
     @Singleton
@@ -38,4 +43,19 @@ object NetworkModule {
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
         .create(CloudinaryApi::class.java)
+
+    /** Cliente aparte con tiempo máximo de 20 s: si el modelo tarda, se publica sin esperar. */
+    @Provides
+    @Singleton
+    fun provideGeminiApi(client: OkHttpClient, auth: GeminiAuthInterceptor, json: Json): GeminiApi = Retrofit.Builder()
+        .baseUrl(GeminiApi.BASE_URL)
+        .client(
+            client.newBuilder()
+                .addInterceptor(auth)
+                .callTimeout(GeminiApi.TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build()
+        )
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .build()
+        .create(GeminiApi::class.java)
 }

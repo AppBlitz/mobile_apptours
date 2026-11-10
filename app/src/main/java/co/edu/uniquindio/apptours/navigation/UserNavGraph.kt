@@ -35,7 +35,13 @@ fun NavGraphBuilder.userGraph(navController: NavController) {
         composable<CreatePlace> {
             PlaceFormRoute(
                 onNavigateBack = { navController.popBackStack() },
-                onPlaceDeleted = { navController.popBackStack(UserHome, inclusive = false) }
+                onPlaceDeleted = { navController.popBackStack(UserHome, inclusive = false) },
+                // Se descarta el borrador: el usuario va a comentar en el lugar que ya existía.
+                onOpenExistingPlace = { placeId ->
+                    navController.navigate(PlaceDetail(placeId, focusComments = true)) {
+                        popUpTo<CreatePlace> { inclusive = true }
+                    }
+                }
             )
         }
 
@@ -45,7 +51,8 @@ fun NavGraphBuilder.userGraph(navController: NavController) {
                 onNavigateBack = { navController.popBackStack() },
                 onPlaceDeleted = {
                     if (!navController.popBackStack<PlaceDetail>(inclusive = true)) navController.popBackStack()
-                }
+                },
+                onOpenExistingPlace = { placeId -> navController.navigate(PlaceDetail(placeId, focusComments = true)) }
             )
         }
 
