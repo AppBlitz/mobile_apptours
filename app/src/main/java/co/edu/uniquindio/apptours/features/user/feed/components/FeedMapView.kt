@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.features.user.feed.components
 
+import co.edu.uniquindio.apptours.core.util.formatTime
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -127,7 +128,12 @@ private fun SelectedPlaceCard(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "${stringResource(place.priceRange.labelRes())} · ${place.openTime} – ${place.closeTime}",
+                        text = stringResource(
+                            R.string.map_card_price_hours,
+                            stringResource(place.priceRange.labelRes()),
+                            formatTime(place.openTime),
+                            formatTime(place.closeTime)
+                        ),
                         fontSize = 12.sp,
                         color = ColabTextSecondary
                     )

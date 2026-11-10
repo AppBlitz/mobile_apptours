@@ -86,16 +86,16 @@ fun WelcomeScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Column {
                     Row {
-                        Text("co", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text("Lab", color = ColabBrown, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text(stringResource(R.string.brand_co), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text(stringResource(R.string.brand_lab), color = ColabBrown, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     }
-                    Text("— tour —", color = ColabSageBg, fontSize = 10.sp)
+                    Text(stringResource(R.string.brand_tour_dashed), color = ColabSageBg, fontSize = 10.sp)
                 }
             }
 
             TextButton(onClick = onNavigateToLogin) {
                 Text(
-                    text = "Omitir",
+                    text = stringResource(R.string.welcome_skip),
                     color = ColabSageBg,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium
@@ -116,7 +116,7 @@ fun WelcomeScreen(
         Spacer(modifier = Modifier.height(28.dp))
 
         Text(
-            text = "Descubre lo que las\nguías no cuentan",
+            text = stringResource(R.string.welcome_title),
             color = Color.White,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
@@ -127,7 +127,7 @@ fun WelcomeScreen(
         Spacer(modifier = Modifier.height(14.dp))
 
         Text(
-            text = "Lugares compartidos por viajeros y locales,\nverificados por moderadores para que llegues\nsin sorpresas.",
+            text = stringResource(R.string.welcome_body),
             color = ColabSageBg.copy(alpha = 0.9f),
             fontSize = 15.sp,
             textAlign = TextAlign.Center,
@@ -137,7 +137,7 @@ fun WelcomeScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         ColabPrimaryButton(
-            text = "Comenzar",
+            text = stringResource(R.string.welcome_start),
             onClick = onNavigateToLogin,
             containerColor = ColabBrown,
             contentColor = Color.White

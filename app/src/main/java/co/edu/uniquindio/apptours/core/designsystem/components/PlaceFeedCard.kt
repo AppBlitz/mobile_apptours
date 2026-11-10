@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.core.designsystem.components
 
+import co.edu.uniquindio.apptours.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -105,7 +106,7 @@ fun PlaceFeedCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Verificado",
+                                text = stringResource(R.string.feed_badge_verified),
                                 color = ColabDarkGreen,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -121,7 +122,7 @@ fun PlaceFeedCard(
                         color = ColabAmberBg
                     ) {
                         Text(
-                            text = "Finalizado",
+                            text = stringResource(R.string.feed_badge_resolved),
                             color = ColabBrown,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
@@ -227,13 +228,13 @@ fun PlaceFeedCard(
                             ) {
                                 Icon(
                                     imageVector = if (isInterested) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                    contentDescription = "Me interesa",
+                                    contentDescription = stringResource(R.string.place_interest),
                                     tint = ColabBrown,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Me interesa · ${place.votesCount}",
+                                    text = stringResource(R.string.place_interest_count, place.votesCount),
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = ColabTextPrimary
@@ -256,13 +257,13 @@ fun PlaceFeedCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.CheckCircleOutline,
-                                    contentDescription = "Visitado",
+                                    contentDescription = stringResource(R.string.place_visited),
                                     tint = if (isVisited) ColabDarkGreen else ColabTextSecondary,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Visitado",
+                                    text = stringResource(R.string.place_visited),
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = if (isVisited) ColabDarkGreen else ColabTextSecondary

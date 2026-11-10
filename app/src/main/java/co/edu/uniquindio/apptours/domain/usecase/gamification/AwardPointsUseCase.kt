@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.domain.usecase.gamification
 
+import co.edu.uniquindio.apptours.domain.model.NotificationArgs
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PointAction
 import co.edu.uniquindio.apptours.domain.model.UserLevel
@@ -27,16 +28,10 @@ class AwardPointsUseCase @Inject constructor(
         sendNotification(
             userId = userId,
             type = NotificationType.LEVEL_UP,
-            title = "¡Subiste de nivel! Ahora eres ${level.displayName()}",
-            body = "Llegaste a ${level.minPoints} puntos de reputación. Sigue compartiendo lugares y experiencias."
+            args = mapOf(
+                NotificationArgs.LEVEL to level.name,
+                NotificationArgs.POINTS to level.minPoints.toString()
+            )
         )
-    }
-
-    // TODO(IT-11): el texto de la notificación se armará en la UI con recursos según el idioma.
-    private fun UserLevel.displayName(): String = when (this) {
-        UserLevel.TURISTA -> "Turista"
-        UserLevel.EXPLORADOR -> "Explorador"
-        UserLevel.AVENTURERO -> "Aventurero"
-        UserLevel.EMBAJADOR_LOCAL -> "Embajador Local"
     }
 }

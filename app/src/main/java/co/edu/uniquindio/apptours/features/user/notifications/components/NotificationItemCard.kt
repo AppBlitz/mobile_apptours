@@ -32,6 +32,7 @@ internal fun NotificationItemCard(
     onToggleRead: () -> Unit
 ) {
     var menuOpen by remember { mutableStateOf(false) }
+    val text = notification.text()
     val (icon, color) = when (notification.type) {
         NotificationType.VOTE -> Icons.Filled.Favorite to ColabBrown
         NotificationType.COMMENT -> Icons.Filled.ChatBubbleOutline to ColabDarkGreen
@@ -67,13 +68,13 @@ internal fun NotificationItemCard(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = notification.title,
+                    text = text.title,
                     fontWeight = if (!notification.isRead) FontWeight.Bold else FontWeight.SemiBold,
                     fontSize = 14.sp,
                     color = ColabTextPrimary
                 )
                 Spacer(modifier = Modifier.height(3.dp))
-                Text(text = notification.body, fontSize = 13.sp, color = ColabTextSecondary)
+                Text(text = text.body, fontSize = 13.sp, color = ColabTextSecondary)
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (!notification.isRead) {

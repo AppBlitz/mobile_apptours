@@ -65,9 +65,9 @@ internal fun ModerationPanelHeader(stats: ModerationStats) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("co", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text("Lab", color = ColabBrown, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(" tour", color = ColabSageBg, fontSize = 16.sp)
+                Text(stringResource(R.string.brand_co), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(stringResource(R.string.brand_lab), color = ColabBrown, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(stringResource(R.string.brand_tour_suffix), color = ColabSageBg, fontSize = 16.sp)
             }
             Surface(
                 shape = RoundedCornerShape(14.dp),
@@ -85,7 +85,7 @@ internal fun ModerationPanelHeader(stats: ModerationStats) {
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "Modo moderador",
+                        text = stringResource(R.string.moderator_mode),
                         color = ColabSageBg,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
@@ -97,7 +97,7 @@ internal fun ModerationPanelHeader(stats: ModerationStats) {
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Panel de moderación",
+            text = stringResource(R.string.moderation_panel_title),
             color = Color.White,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold

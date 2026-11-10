@@ -2,6 +2,7 @@ package co.edu.uniquindio.apptours.domain.usecase.moderation
 
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.domain.model.ModerationAction
+import co.edu.uniquindio.apptours.domain.model.NotificationArgs
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
@@ -30,8 +31,10 @@ class RejectPlaceUseCase @Inject constructor(
             sendNotification(
                 userId = place.authorId,
                 type = NotificationType.REJECTED,
-                title = "Un moderador rechazó tu publicación «${place.title}»",
-                body = "Motivo: $cleanReason",
+                args = mapOf(
+                    NotificationArgs.PLACE_TITLE to place.title,
+                    NotificationArgs.REASON to cleanReason
+                ),
                 relatedPlaceId = place.id
             )
         }

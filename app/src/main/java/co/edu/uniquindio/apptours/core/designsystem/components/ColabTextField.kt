@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.core.designsystem.components
 
+import co.edu.uniquindio.apptours.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -95,7 +96,7 @@ fun ColabTextField(
                 {
                     val icon = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                     IconButton(onClick = onPasswordVisibilityChange) {
-                        Icon(imageVector = icon, contentDescription = "Alternar contraseña", tint = ColabTextSecondary)
+                        Icon(imageVector = icon, contentDescription = stringResource(R.string.password_toggle), tint = ColabTextSecondary)
                     }
                 }
             } else null,

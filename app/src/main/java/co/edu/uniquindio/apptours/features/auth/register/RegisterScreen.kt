@@ -130,7 +130,7 @@ fun RegisterScreen(
             ColabLogoBadge()
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Únete a la comunidad de exploradores",
+                text = stringResource(R.string.register_tagline),
                 color = ColabSageBg,
                 fontSize = 14.sp
             )
@@ -160,8 +160,8 @@ fun RegisterScreen(
                 ColabTextField(
                     value = state.fullName,
                     onValueChange = onFullNameChange,
-                    label = "Nombre completo",
-                    placeholder = "Tu nombre",
+                    label = stringResource(R.string.field_full_name_label),
+                    placeholder = stringResource(R.string.field_full_name_placeholder),
                     leadingIcon = Icons.Filled.Person,
                     errorMessage = state.form.messageOf(FormField.FULL_NAME),
                     fieldRequester = requesters[FormField.FULL_NAME],
@@ -173,8 +173,8 @@ fun RegisterScreen(
                 ColabTextField(
                     value = state.email,
                     onValueChange = onEmailChange,
-                    label = "Correo electrónico",
-                    placeholder = "tu@correo.com",
+                    label = stringResource(R.string.field_email_label),
+                    placeholder = stringResource(R.string.field_email_placeholder),
                     leadingIcon = Icons.Filled.Email,
                     errorMessage = state.form.messageOf(FormField.EMAIL),
                     fieldRequester = requesters[FormField.EMAIL],
@@ -186,8 +186,8 @@ fun RegisterScreen(
                 ColabTextField(
                     value = state.password,
                     onValueChange = onPasswordChange,
-                    label = "Contraseña",
-                    placeholder = "Mínimo 8 caracteres",
+                    label = stringResource(R.string.field_password_label),
+                    placeholder = stringResource(R.string.field_password_new_placeholder),
                     leadingIcon = Icons.Filled.Lock,
                     isPassword = true,
                     passwordVisible = state.passwordVisible,
@@ -202,8 +202,8 @@ fun RegisterScreen(
                 ColabTextField(
                     value = state.confirmPassword,
                     onValueChange = onConfirmPasswordChange,
-                    label = "Confirmar contraseña",
-                    placeholder = "Repite tu contraseña",
+                    label = stringResource(R.string.field_password_confirm_label),
+                    placeholder = stringResource(R.string.field_password_confirm_placeholder),
                     leadingIcon = Icons.Filled.Lock,
                     isPassword = true,
                     passwordVisible = state.passwordVisible,
@@ -306,7 +306,7 @@ fun RegisterScreen(
                         )
                     )
                     Text(
-                        text = "Acepto los términos y la política de privacidad",
+                        text = stringResource(R.string.register_terms),
                         fontSize = 13.sp,
                         color = if (termsError != null) ColabError else ColabTextPrimary
                     )
@@ -333,7 +333,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(18.dp))
 
                 ColabPrimaryButton(
-                    text = "Crear cuenta",
+                    text = stringResource(R.string.auth_create_account),
                     onClick = onSubmit,
                     enabled = !state.isLoading
                 )

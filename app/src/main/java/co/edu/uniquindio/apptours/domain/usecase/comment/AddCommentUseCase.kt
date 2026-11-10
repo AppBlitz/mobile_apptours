@@ -2,6 +2,7 @@ package co.edu.uniquindio.apptours.domain.usecase.comment
 
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.domain.model.Comment
+import co.edu.uniquindio.apptours.domain.model.NotificationArgs
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PointAction
 import co.edu.uniquindio.apptours.domain.repository.CommentRepository
@@ -53,8 +54,11 @@ class AddCommentUseCase @Inject constructor(
                 sendNotification(
                     userId = place.authorId,
                     type = NotificationType.COMMENT,
-                    title = "${user.fullName} comentó en «${place.title}»",
-                    body = comment.text,
+                    args = mapOf(
+                        NotificationArgs.ACTOR_NAME to user.fullName,
+                        NotificationArgs.PLACE_TITLE to place.title,
+                        NotificationArgs.COMMENT_TEXT to comment.text
+                    ),
                     relatedPlaceId = place.id
                 )
             }

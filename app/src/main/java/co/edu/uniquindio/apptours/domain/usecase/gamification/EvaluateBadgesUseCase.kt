@@ -1,6 +1,7 @@
 package co.edu.uniquindio.apptours.domain.usecase.gamification
 
 import co.edu.uniquindio.apptours.domain.model.BadgeId
+import co.edu.uniquindio.apptours.domain.model.NotificationArgs
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.repository.UserRepository
@@ -40,30 +41,11 @@ class EvaluateBadgesUseCase @Inject constructor(
                     sendNotification(
                         userId = user.id,
                         type = NotificationType.BADGE,
-                        title = "¡Nueva insignia: ${badge.displayName()}!",
-                        body = "La encontrarás en tu perfil, con la fecha en que la ganaste."
+                        args = mapOf(NotificationArgs.BADGE to badge.name)
                     )
                 }
             }
             newlyEarned
         }
-    }
-
-    // TODO(IT-11): el texto de la notificación se armará en la UI con recursos según el idioma.
-    private fun BadgeId.displayName(): String = when (this) {
-        BadgeId.FIRST_PLACE -> "Primera publicación"
-        BadgeId.FIRST_COMMENT -> "Primer comentario"
-        BadgeId.COMMENTATOR -> "Comentarista"
-        BadgeId.TEN_VERIFIED -> "10 verificadas"
-        BadgeId.EXPLORER -> "Explorador"
-        BadgeId.ADVENTURER -> "Aventurero"
-        BadgeId.AMBASSADOR -> "Embajador Local"
-        BadgeId.FEATURED_OF_MONTH -> "Lugar más destacado del mes"
-        BadgeId.TRAVELER -> "Viajero"
-        BadgeId.GASTRONOMY_LOVER -> "Amante de la gastronomía"
-        BadgeId.CULTURE_LOVER -> "Amante de la cultura"
-        BadgeId.NATURE_LOVER -> "Amante de la naturaleza"
-        BadgeId.ENTERTAINMENT_LOVER -> "Amante del entretenimiento"
-        BadgeId.HISTORY_LOVER -> "Amante de la historia"
     }
 }

@@ -51,6 +51,7 @@ import co.edu.uniquindio.apptours.core.map.*
 import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.core.util.*
 import co.edu.uniquindio.apptours.domain.model.*
+import co.edu.uniquindio.apptours.features.user.account.components.LanguageSelector
 
 @Composable
 fun AccountSettingsRoute(
@@ -128,12 +129,12 @@ fun AccountSettingsScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Atrás",
+                        contentDescription = stringResource(R.string.action_back),
                         tint = ColabDarkGreen
                     )
                 }
                 Text(
-                    text = "Ajustes de cuenta",
+                    text = stringResource(R.string.account_title),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = ColabDarkGreen
@@ -170,7 +171,7 @@ fun AccountSettingsScreen(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Outlined.PhotoCamera,
-                            contentDescription = "Cambiar foto",
+                            contentDescription = stringResource(R.string.account_change_photo),
                             tint = Color.White,
                             modifier = Modifier.size(16.dp)
                         )
@@ -179,7 +180,7 @@ fun AccountSettingsScreen(
             }
 
             TextButton(onClick = {}) {
-                Text("Cambiar foto", color = ColabDarkGreen, fontWeight = FontWeight.SemiBold)
+                Text(stringResource(R.string.account_change_photo), color = ColabDarkGreen, fontWeight = FontWeight.SemiBold)
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -187,8 +188,8 @@ fun AccountSettingsScreen(
             ColabTextField(
                 value = state.fullName,
                 onValueChange = onFullNameChange,
-                label = "Nombre completo",
-                placeholder = "Valentina Ríos",
+                label = stringResource(R.string.field_full_name_label),
+                placeholder = stringResource(R.string.field_full_name_placeholder),
                 errorMessage = state.form.messageOf(FormField.FULL_NAME),
                 fieldRequester = requesters[FormField.FULL_NAME],
                 onFocusLost = { onFieldFocusLost(FormField.FULL_NAME) }
@@ -199,8 +200,8 @@ fun AccountSettingsScreen(
             ColabTextField(
                 value = state.email,
                 onValueChange = onEmailChange,
-                label = "Correo electrónico",
-                placeholder = "valentina@correo.com",
+                label = stringResource(R.string.field_email_label),
+                placeholder = stringResource(R.string.field_email_placeholder),
                 enabled = state.canChangeEmail,
                 errorMessage = state.form.messageOf(FormField.EMAIL),
                 fieldRequester = requesters[FormField.EMAIL],
@@ -222,7 +223,7 @@ fun AccountSettingsScreen(
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Dirección",
+                    text = stringResource(R.string.account_address),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
                     color = ColabTextPrimary
@@ -301,7 +302,7 @@ fun AccountSettingsScreen(
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(
-                            text = "Cambios guardados correctamente.",
+                            text = stringResource(R.string.account_saved),
                             color = ColabDarkGreen,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.SemiBold
@@ -324,10 +325,14 @@ fun AccountSettingsScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             ColabPrimaryButton(
-                text = "Guardar cambios",
+                text = stringResource(R.string.account_save),
                 onClick = onSave,
                 enabled = !state.isSaving
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            LanguageSelector()
 
             Spacer(modifier = Modifier.height(28.dp))
 
@@ -348,7 +353,7 @@ fun AccountSettingsScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Zona de peligro",
+                            text = stringResource(R.string.account_danger_zone),
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             color = ColabError
@@ -356,7 +361,7 @@ fun AccountSettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Eliminar tu cuenta borra tu perfil, tus publicaciones, puntos e insignias. Esta acción no se puede deshacer.",
+                        text = stringResource(R.string.account_delete_warning),
                         fontSize = 13.sp,
                         color = ColabTextPrimary
                     )
@@ -367,7 +372,7 @@ fun AccountSettingsScreen(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Eliminar cuenta", color = Color.White, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.account_delete), color = Color.White, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -379,24 +384,13 @@ fun AccountSettingsScreen(
     }
 
     if (state.showDeleteConfirm) {
-        AlertDialog(
-            onDismissRequest = onDismissDelete,
-            title = { Text("¿Eliminar tu cuenta?", fontWeight = FontWeight.Bold) },
-            text = {
-                Text("Se borrarán tu perfil, tus publicaciones, votos y visitas, y volverás al inicio de sesión.")
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = onConfirmDelete
-                ) {
-                    Text("Sí, eliminar", color = ColabError, fontWeight = FontWeight.Bold)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismissDelete) {
-                    Text("Cancelar", color = ColabTextSecondary)
-                }
-            }
+        ColabConfirmDialog(
+            title = stringResource(R.string.account_delete_title),
+            message = stringResource(R.string.account_delete_body),
+            confirmText = stringResource(R.string.account_delete_confirm),
+            dismissText = stringResource(R.string.action_cancel),
+            onConfirm = onConfirmDelete,
+            onDismiss = onDismissDelete
         )
     }
 }

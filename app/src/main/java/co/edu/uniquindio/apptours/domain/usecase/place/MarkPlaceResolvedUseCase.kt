@@ -2,6 +2,7 @@ package co.edu.uniquindio.apptours.domain.usecase.place
 
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.domain.model.ModerationAction
+import co.edu.uniquindio.apptours.domain.model.NotificationArgs
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.model.PointAction
@@ -50,8 +51,10 @@ class MarkPlaceResolvedUseCase @Inject constructor(
                 sendNotification(
                     userId = place.authorId,
                     type = NotificationType.RESOLVED,
-                    title = "Un moderador marcó como resuelta tu publicación «${place.title}»",
-                    body = "Sumaste +${PointAction.PLACE_RESOLVED.points} puntos.",
+                    args = mapOf(
+                        NotificationArgs.PLACE_TITLE to place.title,
+                        NotificationArgs.POINTS to PointAction.PLACE_RESOLVED.points.toString()
+                    ),
                     relatedPlaceId = place.id
                 )
             }

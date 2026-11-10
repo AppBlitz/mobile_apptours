@@ -80,12 +80,12 @@ internal fun FeedHeader(
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text = "Hola, $firstName",
+                    text = stringResource(R.string.feed_greeting, firstName),
                     color = ColabSageBg,
                     fontSize = 13.sp
                 )
                 Text(
-                    text = "Descubre lugares",
+                    text = stringResource(R.string.feed_header_title),
                     color = Color.White,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
@@ -102,7 +102,7 @@ internal fun FeedHeader(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notificaciones",
+                contentDescription = stringResource(R.string.notifications_title),
                 tint = Color.White
             )
         }

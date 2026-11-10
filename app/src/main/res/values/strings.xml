@@ -421,4 +421,123 @@
     <string name="duplicates_meta">A %1$s · %2$d %% parecido</string>
     <string name="duplicates_open_existing">Ver y comentar el existente</string>
     <string name="duplicates_publish_anyway">No es el mismo, publicar igual</string>
+
+    <!-- IT-11: textos que estaban en duro en las pantallas -->
+    <string name="field_email_label">Correo electrónico</string>
+    <string name="field_email_placeholder">tu@correo.com</string>
+    <string name="field_password_label">Contraseña</string>
+    <string name="field_password_placeholder">Tu contraseña</string>
+    <string name="field_full_name_label">Nombre completo</string>
+    <string name="field_full_name_placeholder">Tu nombre</string>
+    <string name="field_password_new_placeholder">Mínimo 8 caracteres</string>
+    <string name="field_password_confirm_label">Confirmar contraseña</string>
+    <string name="field_password_confirm_placeholder">Repite tu contraseña</string>
+    <string name="password_toggle">Mostrar u ocultar la contraseña</string>
+    <string name="auth_login">Iniciar sesión</string>
+    <string name="auth_register">Registrarme</string>
+    <string name="auth_create_account">Crear cuenta</string>
+    <string name="forgot_title">¿Olvidaste tu contraseña?</string>
+    <string name="forgot_body">Escribe el correo de tu cuenta y te enviaremos un enlace para crear una contraseña nueva.</string>
+    <string name="forgot_submit">Enviar enlace de recuperación</string>
+    <string name="forgot_hint">Sirve para usuarios y moderadores. Si no lo ves en tu bandeja, revisa la carpeta de spam.</string>
+    <string name="forgot_back_to_login">Volver a iniciar sesión</string>
+    <string name="login_tagline">Explora. Comparte. Descubre.</string>
+    <string name="login_forgot_question">"¿Olvidaste tu contraseña? "</string>
+    <string name="login_recover">Recuperar</string>
+    <string name="login_first_time">¿Primera vez en coLab tour?</string>
+    <string name="register_tagline">Únete a la comunidad de exploradores</string>
+    <string name="register_terms">Acepto los términos y la política de privacidad</string>
+    <string name="welcome_skip">Omitir</string>
+    <string name="welcome_title">Descubre lo que las\nguías no cuentan</string>
+    <string name="welcome_body">Lugares compartidos por viajeros y locales,\nverificados por moderadores para que llegues\nsin sorpresas.</string>
+    <string name="welcome_start">Comenzar</string>
+    <string name="brand_logo_description">Logo de coLab tour</string>
+    <string name="moderator_mode">Modo moderador</string>
+    <string name="moderation_panel_title">Panel de moderación</string>
+    <string name="review_pending_badge">Pendiente</string>
+    <string name="review_sent_at">Enviada %1$s</string>
+    <string name="detail_price_title">PRECIO</string>
+    <string name="detail_schedule_title">HORARIO SUGERIDO</string>
+    <string name="detail_distance_title">DISTANCIA</string>
+    <string name="detail_relevance_title">RELEVANCIA</string>
+    <string name="detail_distance_value">%1$s de ti</string>
+    <string name="detail_published_by">"Publicado por "</string>
+    <string name="account_title">Ajustes de cuenta</string>
+    <string name="account_change_photo">Cambiar foto</string>
+    <string name="account_address">Dirección</string>
+    <string name="account_saved">Cambios guardados correctamente.</string>
+    <string name="account_save">Guardar cambios</string>
+    <string name="account_danger_zone">Zona de peligro</string>
+    <string name="account_delete_warning">Eliminar tu cuenta borra tu perfil, tus publicaciones, puntos e insignias. Esta acción no se puede deshacer.</string>
+    <string name="account_delete">Eliminar cuenta</string>
+    <string name="account_delete_title">¿Eliminar tu cuenta?</string>
+    <string name="account_delete_body">Se borrarán tu perfil, tus publicaciones, votos y visitas, y volverás al inicio de sesión.</string>
+    <string name="account_delete_confirm">Sí, eliminar</string>
+    <string name="feed_header_title">Descubre lugares</string>
+    <string name="feed_greeting">Hola, %1$s</string>
+    <string name="feed_list_title">Cerca de ti</string>
+    <string name="feed_list_order">Ordenado por relevancia</string>
+    <string name="feed_badge_verified">Verificado</string>
+    <string name="feed_badge_resolved">Finalizado</string>
+    <string name="place_interest">Me interesa</string>
+    <string name="map_card_price_hours">%1$s · %2$s – %3$s</string>
+    <string name="tab_home">Inicio</string>
+    <string name="tab_alerts">Alertas</string>
+    <string name="tab_profile">Perfil</string>
+    <string name="profile_title">Mi perfil</string>
+    <string name="profile_logout">Cerrar sesión</string>
+    <string name="stats_title">Mis estadísticas</string>
+    <string name="stats_visited">Lugares visitados</string>
+    <string name="stats_votes_received">Votos recibidos</string>
+    <string name="time_placeholder_open">7:00 a. m.</string>
+    <string name="time_placeholder_close">7:00 p. m.</string>
+    <string name="author_with_level">%1$s · %2$s</string>
+    <!-- Marca: no se traduce -->
+    <string name="brand_co" translatable="false">co</string>
+    <string name="brand_lab" translatable="false">Lab</string>
+    <string name="brand_tour_dashed" translatable="false">— tour —</string>
+    <string name="brand_tour_suffix" translatable="false">" tour"</string>
+
+    <!-- Días (inicial) y relevancia -->
+    <string name="day_short_mon">L</string>
+    <string name="day_short_tue">M</string>
+    <string name="day_short_wed">X</string>
+    <string name="day_short_thu">J</string>
+    <string name="day_short_fri">V</string>
+    <string name="day_short_sat">S</string>
+    <string name="day_short_sun">D</string>
+    <string name="relevance_high">Alta</string>
+    <string name="relevance_medium">Media</string>
+    <string name="relevance_growing">En crecimiento</string>
+    <plurals name="relevance_votes">
+        <item quantity="one">%1$d voto · %2$s</item>
+        <item quantity="other">%1$d votos · %2$s</item>
+    </plurals>
+
+    <!-- Notificaciones: se arman con los datos guardados (tipo + args) en el idioma actual -->
+    <string name="notif_vote_title">%1$s marcó «Me interesa» en tu publicación «%2$s»</string>
+    <string name="notif_vote_body">Sumaste +%1$d puntos de reputación.</string>
+    <string name="notif_comment_title">%1$s comentó en «%2$s»</string>
+    <string name="notif_verified_title">Un moderador verificó tu publicación «%1$s»</string>
+    <string name="notif_verified_body">Ya es visible en el feed público. Ganaste +%1$d puntos.</string>
+    <string name="notif_rejected_title">Un moderador rechazó tu publicación «%1$s»</string>
+    <string name="notif_rejected_body">Motivo: %1$s</string>
+    <string name="notif_resolved_title">Un moderador marcó como resuelta tu publicación «%1$s»</string>
+    <string name="notif_resolved_body">Sumaste +%1$d puntos.</string>
+    <string name="notif_level_title">¡Subiste de nivel! Ahora eres %1$s</string>
+    <string name="notif_level_body">Llegaste a %1$d puntos de reputación. Sigue compartiendo lugares y experiencias.</string>
+    <string name="notif_badge_title">¡Nueva insignia: %1$s!</string>
+    <string name="notif_badge_body">La encontrarás en tu perfil, con la fecha en que la ganaste.</string>
+    <string name="notif_trophy_title">¡Nuevo trofeo: %1$s!</string>
+    <string name="notif_trophy_body">Lo encontrarás en tu perfil de moderador.</string>
+    <string name="stats_active">Publicaciones\nactivas</string>
+    <string name="stats_finished">Finalizadas</string>
+    <string name="stats_pending">Pendientes de\nverificación</string>
+
+    <!-- Idioma de la app -->
+    <string name="language_title">Idioma</string>
+    <string name="language_system">Sistema</string>
+    <string name="language_spanish" translatable="false">Español</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_hint">“Sistema” usa el idioma del teléfono.</string>
 </resources>

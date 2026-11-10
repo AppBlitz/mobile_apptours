@@ -91,7 +91,7 @@ internal fun ModeratorQueueCard(
                 color = ColabTextPrimary
             )
             Text(
-                text = "${place.authorName} · ${stringResource(place.authorLevel.labelRes())}",
+                text = stringResource(R.string.author_with_level, place.authorName, stringResource(place.authorLevel.labelRes())),
                 fontSize = 12.sp,
                 color = ColabTextSecondary
             )

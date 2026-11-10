@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.uniquindio.apptours.R
+import co.edu.uniquindio.apptours.core.util.dayShortRes
 import co.edu.uniquindio.apptours.core.designsystem.components.ColabTextField
 import co.edu.uniquindio.apptours.core.designsystem.components.FieldErrorText
 import co.edu.uniquindio.apptours.core.designsystem.components.fieldBorderColor
@@ -68,7 +69,7 @@ internal fun ScheduleSelector(
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
-                            text = day,
+                            text = stringResource(dayShortRes(day)),
                             color = if (active) Color.White else ColabTextPrimary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp
@@ -90,7 +91,7 @@ internal fun ScheduleSelector(
             value = openTime,
             onValueChange = onOpenTimeChange,
             label = stringResource(R.string.place_form_open_label),
-            placeholder = "7:00 a. m.",
+            placeholder = stringResource(R.string.time_placeholder_open),
             leadingIcon = Icons.Outlined.Schedule,
             errorMessage = openTimeError,
             fieldRequester = openTimeRequester,
@@ -101,7 +102,7 @@ internal fun ScheduleSelector(
             value = closeTime,
             onValueChange = onCloseTimeChange,
             label = stringResource(R.string.place_form_close_label),
-            placeholder = "7:00 p. m.",
+            placeholder = stringResource(R.string.time_placeholder_close),
             leadingIcon = Icons.Outlined.Schedule,
             errorMessage = closeTimeError,
             fieldRequester = closeTimeRequester,

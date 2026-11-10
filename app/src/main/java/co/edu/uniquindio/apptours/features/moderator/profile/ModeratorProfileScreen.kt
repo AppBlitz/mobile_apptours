@@ -16,6 +16,7 @@ import co.edu.uniquindio.apptours.core.designsystem.components.LoadingOverlay
 import co.edu.uniquindio.apptours.core.theme.ColabBackground
 import co.edu.uniquindio.apptours.domain.model.TrophyId
 import co.edu.uniquindio.apptours.features.moderator.profile.components.*
+import co.edu.uniquindio.apptours.features.user.account.components.LanguageSelector
 
 /** Perfil del moderador (M-06): insights reales, XP con rango, trofeos y últimas acciones. */
 @Composable
@@ -89,6 +90,8 @@ fun ModeratorProfileScreen(
             ModeratorXpRulesCard()
             Spacer(modifier = Modifier.height(20.dp))
             ModerationHistoryList(entries = profile.recentActions, onOpenPlace = onOpenPlace)
+            Spacer(modifier = Modifier.height(24.dp))
+            LanguageSelector()
             Spacer(modifier = Modifier.height(24.dp))
         }
     }

@@ -1,0 +1,536 @@
+<resources>
+    <string name="app_name">apptours</string>
+
+    <!-- Categories (T-02) -->
+    <string name="category_gastronomy">Food &amp; drink</string>
+    <string name="category_culture">Culture</string>
+    <string name="category_nature">Nature</string>
+    <string name="category_entertainment">Entertainment</string>
+    <string name="category_history">History</string>
+
+    <!-- Price ranges (T-04) -->
+    <string name="price_free">Free</string>
+    <string name="price_cheap">Budget</string>
+    <string name="price_moderate">Moderate</string>
+    <string name="price_expensive">Expensive</string>
+
+    <!-- Post status -->
+    <string name="status_pending">Pending verification</string>
+    <string name="status_verified">Verified by moderators</string>
+    <string name="status_rejected">Rejected</string>
+    <string name="status_resolved">Closed / Resolved</string>
+
+    <!-- Levels (T-07) -->
+    <string name="level_tourist">Tourist</string>
+    <string name="level_explorer">Explorer</string>
+    <string name="level_adventurer">Adventurer</string>
+    <string name="level_local_ambassador">Local Ambassador</string>
+    <string name="level_max">Top level</string>
+
+    <!-- Opening hours -->
+    <string name="schedule_every_day">Every day</string>
+    <string name="schedule_mon_sat">Mon–Sat</string>
+    <string name="schedule_format">%1$s %2$s – %3$s</string>
+
+    <!-- Dates -->
+    <string name="time_just_now">Just now</string>
+
+    <!-- Errors -->
+    <string name="error_invalid_email">The email must look like name@domain.com</string>
+    <string name="error_email_required">Enter your email</string>
+    <string name="error_password_confirmation_required">Type the password again to confirm it</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_full_name_required">Full name is required</string>
+    <string name="error_password_min_length">At least 8 characters</string>
+    <string name="error_password_mismatch">Passwords don\'t match</string>
+    <plurals name="error_password_too_short">
+        <item quantity="one">%1$d more character needed: minimum %2$d</item>
+        <item quantity="other">%1$d more characters needed: minimum %2$d</item>
+    </plurals>
+    <string name="error_weak_password">The password is too weak. Use at least 8 characters mixing letters and numbers.</string>
+    <string name="error_recent_login_required">For security, sign out and sign in again before making this change.</string>
+    <string name="error_too_many_attempts">Too many attempts. Wait a few minutes and try again.</string>
+    <string name="error_account_disabled">This account is disabled.</string>
+    <string name="error_google_sign_in">We couldn\'t sign you in with Google. Please try again.</string>
+    <string name="error_google_no_account">There are no Google accounts on this device. Add one in the phone settings.</string>
+    <string name="error_terms_required">You must accept the terms and privacy policy</string>
+    <string name="error_title_required">Enter the name of the place</string>
+    <string name="error_category_required">Choose a category</string>
+    <string name="error_description_required">Enter a description of the place</string>
+    <string name="error_price_required">Choose a price range</string>
+    <string name="error_days_required">Choose at least one opening day</string>
+    <string name="error_time_required">Enter the time</string>
+    <string name="error_time_invalid">Use the format 7:00 AM or 19:00</string>
+    <string name="error_close_before_open">Closing time must be later than opening time</string>
+    <string name="error_photos_required">Add at least one photo</string>
+    <string name="error_location_required">Tap the map to set the place\'s location</string>
+    <string name="error_rating_required">Choose a rating from 1 to 5 stars</string>
+    <string name="error_text_too_long">Maximum %1$d characters</string>
+    <string name="error_comment_required">Write a comment before sending it.</string>
+    <string name="error_reject_reason_required">You must write a reason to reject the post</string>
+    <string name="error_invalid_credentials">Incorrect credentials. Check your email and password.</string>
+    <string name="error_email_in_use">An account with this email already exists.</string>
+    <string name="error_not_authenticated">Your session expired. Please sign in again.</string>
+    <string name="error_not_allowed">You don\'t have permission to do this.</string>
+    <string name="error_place_not_found">Post not found</string>
+    <string name="error_user_not_found">We couldn\'t find your user profile.</string>
+    <string name="error_network">We couldn\'t connect. Check your connection and try again.</string>
+    <string name="error_load_failed">We couldn\'t load the information.</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_continue_with_google">Continue with Google</string>
+    <string name="auth_or_continue_with">or continue with</string>
+    <string name="auth_google_terms_hint">If you use Google, you must also accept the terms.</string>
+    <string name="profile_email_verification_sent">We sent a link to %1$s. Your email changes once you confirm it.</string>
+    <string name="profile_email_google_hint">Your email is managed by your Google account.</string>
+    <string name="loading">Loading…</string>
+    <string name="error_unknown">Something went wrong. Please try again.</string>
+
+    <!-- Post photos -->
+    <string name="photos_upload_button">Add photo</string>
+    <string name="photos_hint">%1$d of %2$d photos · the first one is the cover</string>
+    <string name="photos_limit_reached">You already have the %1$d photos allowed. Remove one to change it.</string>
+    <string name="photos_remove">Remove photo</string>
+    <string name="photos_cover">Cover</string>
+    <string name="photo_preview">Selected photo %1$d</string>
+    <string name="photo_of_place">Photo %1$d of %2$s</string>
+    <string name="photo_counter">%1$d / %2$d</string>
+    <string name="photos_uploading">Uploading photos…</string>
+    <string name="photos_uploading_progress">%1$s %2$d%%</string>
+    <string name="error_image_upload">The photos couldn\'t be uploaded. Check your connection and try again.</string>
+
+    <!-- Common actions -->
+    <string name="action_close">Close</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+
+    <!-- Feed -->
+    <string name="feed_search_placeholder">Search places by name or description</string>
+    <string name="feed_mode_list">List</string>
+    <string name="feed_mode_map">Map</string>
+    <string name="feed_category_all">All</string>
+    <string name="feed_location_filter">Filter by location</string>
+    <string name="feed_location_nearby">Nearby</string>
+    <string name="feed_location_city">In my city</string>
+    <string name="feed_location_all">All</string>
+    <string name="feed_location_radius">Up to %1$d km from you</string>
+    <string name="feed_location_any">No distance limit</string>
+
+    <!-- Post form -->
+    <string name="place_form_header_create">Share a place</string>
+    <string name="place_form_header_edit">Edit post</string>
+    <string name="place_form_pending_title">It will be created as “Pending verification”</string>
+    <string name="place_form_edit_pending_title">Still “Pending verification”</string>
+    <string name="place_form_pending_body">A moderator will check that the place exists and that the details are accurate before showing it in the public feed.</string>
+    <string name="place_form_edit_review_title">When you save, it goes back to “Pending verification”</string>
+    <string name="place_form_edit_review_body">This post was already reviewed. If you save changes it will leave the public feed until a moderator approves it again.</string>
+    <string name="place_form_title_label">Title</string>
+    <string name="place_form_title_placeholder">e.g. Café with a terrace and a view</string>
+    <string name="place_form_category_label">Category</string>
+    <string name="place_form_category_placeholder">Choose a category</string>
+    <string name="place_form_description_label">Description</string>
+    <string name="place_form_description_counter">%1$d / %2$d</string>
+    <string name="place_form_description_placeholder">Tell us what makes this place special, how to get there and what you recommend.</string>
+    <string name="place_form_price_label">Price range</string>
+    <string name="place_form_schedule_label">Suggested opening hours</string>
+    <string name="place_form_open_label">Opens</string>
+    <string name="place_form_close_label">Closes</string>
+    <string name="place_form_photos_label">Photos</string>
+    <string name="place_form_photos_limits">Minimum 1 · maximum %1$d</string>
+    <string name="place_form_location_label">Location on the map</string>
+    <string name="place_form_location_hint">Tap to set the point</string>
+    <string name="place_form_location_pending">You haven\'t set the place\'s location yet.</string>
+    <string name="place_form_submit">Send for verification</string>
+    <string name="place_form_delete">Delete post</string>
+    <string name="place_delete_title">Delete post?</string>
+    <string name="place_delete_body">The post, its comments and its votes will be deleted. This can\'t be undone.</string>
+
+    <!-- Place detail -->
+    <string name="action_back">Back</string>
+    <string name="place_interest_count">Interested · %1$d</string>
+    <string name="place_mark_visited">Mark as visited</string>
+    <string name="place_visited">Visited</string>
+    <string name="place_share_experience">Share my experience</string>
+    <string name="place_action_edit">Edit</string>
+    <string name="place_action_resolve">Close post</string>
+    <string name="place_detail_visits_title">VISITS</string>
+    <plurals name="place_detail_visits_count">
+        <item quantity="one">%1$d person visited it</item>
+        <item quantity="other">%1$d people visited it</item>
+    </plurals>
+    <string name="comments_title">Comments and experiences (%1$d)</string>
+    <string name="comments_placeholder">Write a comment (+5 pts)…</string>
+    <string name="comments_send">Send comment</string>
+    <string name="comments_visit_tag">Visited this place</string>
+    <string name="rating_description">%1$d of %2$d stars</string>
+
+    <!-- Share your experience (T-05) -->
+    <string name="experience_title">Share your experience</string>
+    <string name="experience_body">You marked this place as visited. Tell the community how it went.</string>
+    <string name="experience_rating_label">Your rating</string>
+    <string name="experience_text_label">Your experience (optional)</string>
+    <string name="experience_text_placeholder">What did you like? What do you recommend to other travelers?</string>
+    <string name="experience_submit">Post</string>
+    <string name="experience_skip">Not now</string>
+
+    <!-- My posts -->
+    <string name="my_places_title">My posts</string>
+    <string name="my_places_tab_format">%1$s (%2$d)</string>
+    <string name="my_places_tab_active">Active</string>
+    <string name="my_places_tab_pending">Pending</string>
+    <string name="my_places_tab_resolved">Closed</string>
+    <string name="my_places_tab_rejected">Rejected</string>
+    <string name="my_places_empty_active">You don\'t have verified posts in the feed yet.</string>
+    <string name="my_places_empty_pending">You don\'t have posts waiting for review.</string>
+    <string name="my_places_empty_resolved">You don\'t have closed posts.</string>
+    <string name="my_places_empty_rejected">None of your posts has been rejected.</string>
+    <string name="my_places_created_at">Posted %1$s</string>
+    <string name="my_places_pending_hint">A moderator will review it soon. Until then it doesn\'t appear in the feed.</string>
+    <string name="my_places_no_reason">The moderator didn\'t leave a reason.</string>
+    <string name="my_places_rejected_hint">You can edit it to fix it: it will go back to review.</string>
+
+    <!-- Notifications -->
+    <string name="notifications_title">Notifications</string>
+    <plurals name="notifications_unread">
+        <item quantity="one">%1$d unread</item>
+        <item quantity="other">%1$d unread</item>
+    </plurals>
+    <string name="notifications_mark_all_read">Mark all\nas read</string>
+    <string name="notifications_filter_all">All</string>
+    <string name="notifications_filter_unread">Unread · %1$d</string>
+    <string name="notifications_filter_achievements">Achievements</string>
+    <string name="notifications_today">TODAY</string>
+    <string name="notifications_earlier">EARLIER</string>
+    <string name="notifications_empty">You have no notifications here.</string>
+    <string name="notifications_options">Notification options</string>
+    <string name="notifications_mark_read">Mark as read</string>
+    <string name="notifications_mark_unread">Mark as unread</string>
+
+    <!-- Profile, points and badges -->
+    <string name="profile_points">%1$d points</string>
+    <string name="profile_points_to_next">%1$d to %2$s</string>
+    <string name="stats_rejected">Rejected</string>
+    <string name="points_rules_title">How to earn points</string>
+    <string name="points_value">+%1$d</string>
+    <string name="points_create_place">Create a post</string>
+    <string name="points_place_verified">Post verified</string>
+    <string name="points_comment">Comment</string>
+    <string name="points_vote_received">Receive an “Interested”</string>
+    <string name="points_visit_experience">Mark as visited and share your experience</string>
+    <string name="points_place_resolved">Post resolved</string>
+    <string name="badges_title">Badges</string>
+    <string name="badges_count">%1$d of %2$d earned</string>
+    <string name="badges_progress">%1$d/%2$d</string>
+    <string name="badges_progress_detail">Progress: %1$d of %2$d</string>
+    <string name="badges_earned_on">Earned on %1$s</string>
+    <string name="badges_just_earned">Just earned!</string>
+    <string name="badge_first_place">First post</string>
+    <string name="badge_first_place_desc">Share your first place with the community.</string>
+    <string name="badge_first_comment">First comment</string>
+    <string name="badge_first_comment_desc">Write your first comment on a post.</string>
+    <string name="badge_commentator">Commentator</string>
+    <string name="badge_commentator_desc">Write %1$d comments on posts.</string>
+    <string name="badge_ten_verified">10 verified</string>
+    <string name="badge_ten_verified_desc">Get %1$d of your posts verified by moderators.</string>
+    <string name="badge_level_desc">Reach %1$d reputation points.</string>
+    <string name="badge_featured_month">Featured of the month</string>
+    <string name="badge_featured_month_desc">Have the post with the most “Interested” among those created this month.</string>
+    <string name="badge_traveler">Traveler</string>
+    <string name="badge_traveler_desc">Mark %1$d places as visited.</string>
+    <string name="badge_gastronomy_lover">Food lover</string>
+    <string name="badge_gastronomy_lover_desc">Visit %1$d Food &amp; drink places.</string>
+    <string name="badge_culture_lover">Culture lover</string>
+    <string name="badge_culture_lover_desc">Visit %1$d Culture places.</string>
+    <string name="badge_nature_lover">Nature lover</string>
+    <string name="badge_nature_lover_desc">Visit %1$d Nature places.</string>
+    <string name="badge_entertainment_lover">Entertainment lover</string>
+    <string name="badge_entertainment_lover_desc">Visit %1$d Entertainment places.</string>
+    <string name="badge_history_lover">History lover</string>
+    <string name="badge_history_lover_desc">Visit %1$d History places.</string>
+
+    <!-- Moderator profile (M-06) -->
+    <string name="moderator_tab_queue">To review</string>
+    <string name="moderator_tab_history">History</string>
+    <string name="moderator_tab_alerts">Alerts</string>
+    <string name="moderator_tab_profile">Profile</string>
+    <string name="moderator_profile_title">My moderator profile</string>
+    <string name="moderator_logout">Sign out of moderator</string>
+    <string name="moderator_xp">%1$d XP</string>
+    <string name="moderator_xp_to_next">%1$d XP to %2$s</string>
+    <string name="moderator_max_rank">Top rank</string>
+    <string name="rank_reviewer">Reviewer</string>
+    <string name="rank_guardian">Guardian</string>
+    <string name="rank_curator">Curator</string>
+    <string name="rank_expert">Expert Moderator</string>
+    <string name="moderator_stats_title">My statistics</string>
+    <string name="moderator_stats_reviewed">Reviewed</string>
+    <string name="moderator_stats_verified">Verified</string>
+    <string name="moderator_stats_rejected">Rejected</string>
+    <string name="moderator_stats_resolved">Resolved</string>
+    <string name="moderator_stats_rejection_rate">Rejection rate</string>
+    <string name="moderator_stats_percent">%1$d%%</string>
+    <string name="moderator_stats_today_week">Today / week</string>
+    <string name="moderator_stats_today_week_value">%1$d / %2$d</string>
+    <string name="xp_rules_title">How to earn XP</string>
+    <string name="xp_value">+%1$d XP</string>
+    <string name="xp_verify">Verify a post</string>
+    <string name="xp_reject">Reject a post with a reason</string>
+    <string name="xp_resolve">Mark as resolved</string>
+    <string name="xp_daily_bonus">Review %1$d posts in one day (bonus)</string>
+    <string name="trophies_title">Trophies</string>
+    <string name="trophy_first_review">First review</string>
+    <string name="trophy_reviews_10">10 reviews</string>
+    <string name="trophy_reviews_50">50 reviews</string>
+    <string name="trophy_reviews_100">100 reviews</string>
+    <string name="trophy_reviews_desc">Review %1$d posts (verify, reject or resolve).</string>
+    <string name="trophy_first_rejection">First rejection</string>
+    <string name="trophy_first_rejection_desc">Reject your first post with a reason.</string>
+    <string name="trophy_critical_eye">Critical eye</string>
+    <string name="trophy_critical_eye_desc">Reject %1$d posts explaining the reason.</string>
+    <string name="trophy_quality_seal">Quality seal</string>
+    <string name="trophy_quality_seal_desc">Verify %1$d posts.</string>
+    <string name="trophy_intense_day">Busy day</string>
+    <string name="trophy_intense_day_desc">Review %1$d posts in a single day.</string>
+    <string name="trophy_closer">Closer</string>
+    <string name="trophy_closer_desc">Mark %1$d posts as resolved.</string>
+    <string name="moderator_recent_title">Latest actions</string>
+    <string name="moderator_recent_empty">No actions recorded yet. Each review will appear here with the XP it gave you.</string>
+    <string name="moderator_recent_reason">Reason: %1$s</string>
+
+    <!-- Authentication -->
+    <string name="recovery_link_sent">We sent a recovery link to %1$s</string>
+
+    <!-- Moderation -->
+    <string name="moderator_review_action">Review</string>
+    <string name="moderation_filter_format">%1$s · %2$d</string>
+    <string name="moderation_filter_pending">Pending</string>
+    <string name="moderation_filter_verified">Verified</string>
+    <string name="moderation_filter_rejected">Rejected</string>
+    <string name="moderation_filter_resolved">Resolved</string>
+    <string name="moderation_verified_today">Verified today</string>
+    <string name="moderation_rejected_today">Rejected today</string>
+    <string name="moderation_resolved_today">Resolved today</string>
+    <string name="moderation_queue_title">Review queue</string>
+    <string name="moderation_queue_order">Oldest first</string>
+    <string name="moderation_empty_pending">No posts waiting for review. All caught up!</string>
+    <string name="moderation_empty_verified">No verified posts.</string>
+    <string name="moderation_empty_rejected">No rejected posts.</string>
+    <string name="moderation_empty_resolved">No resolved posts.</string>
+    <string name="review_current_status">Current status: %1$s</string>
+    <string name="review_previous_reason">Reason given to the author: %1$s</string>
+    <string name="review_checklist_title">Verification checklist</string>
+    <string name="review_checklist_hint">Check each item you verified. All of them are required to approve.</string>
+    <string name="review_check_exists">The place exists in real life</string>
+    <string name="review_check_location">The location on the map is correct</string>
+    <string name="review_check_schedule_price">Opening hours and price make sense</string>
+    <string name="review_check_photos">The photos are real and show the place</string>
+    <string name="review_comments_title">Comments (%1$d)</string>
+    <string name="review_no_comments">No comments on this post yet.</string>
+    <string name="review_verify">Verify / Approve</string>
+    <plurals name="review_verify_missing">
+        <item quantity="one">%1$d checklist item left to verify.</item>
+        <item quantity="other">%1$d checklist items left to verify.</item>
+    </plurals>
+    <string name="review_resolve">Mark resolved</string>
+    <string name="review_reject">Reject</string>
+    <string name="reject_title">Reject post</string>
+    <string name="reject_place_by">%1$s · by %2$s</string>
+    <string name="reject_body">The post will no longer appear in the public feed and the author will see your reason in their notifications.</string>
+    <string name="reject_reason_label">Rejection reason *</string>
+    <string name="reject_reason_counter">Required · %1$d / %2$d</string>
+    <string name="reject_reason_placeholder">Explain what is wrong and how the author can fix it…</string>
+    <string name="reject_quick_location">Wrong location</string>
+    <string name="reject_quick_not_exists">The place doesn\'t exist</string>
+    <string name="reject_quick_inaccurate">Inaccurate information</string>
+    <string name="reject_quick_inappropriate">Inappropriate content</string>
+    <string name="reject_confirm">Confirm rejection</string>
+    <string name="moderation_history_title">Review history</string>
+    <string name="moderation_history_summary">%1$d approved · %2$d rejected</string>
+    <string name="moderation_history_empty">You haven\'t reviewed any posts yet.\nYour decisions will appear here.</string>
+    <string name="moderation_decision_approved">Approved</string>
+    <string name="moderation_decision_rejected">Rejected</string>
+    <string name="moderation_decision_resolved">Resolved</string>
+    <string name="moderation_reviewed_at">Reviewed %1$s</string>
+    <string name="moderation_author">by %1$s</string>
+    <string name="moderation_rejection_reason">Rejection reason</string>
+
+    <!-- Maps and location (IT-7) -->
+    <string name="map_unavailable">The map isn\'t available right now.</string>
+    <string name="map_my_location">My location</string>
+    <string name="map_coordinates">%1$.5f, %2$.5f</string>
+    <string name="map_picker_hint">Move or tap the map to drop the pin on the exact spot.</string>
+    <string name="map_picker_confirm">Confirm point</string>
+    <string name="map_picker_close">Close</string>
+    <string name="map_picker_title_place">Place location</string>
+    <string name="map_picker_title_address">Your address</string>
+    <string name="map_pick_on_map">Choose on the map</string>
+    <string name="map_change_point">Change point</string>
+    <string name="map_directions">Get directions</string>
+    <string name="map_directions_unavailable">There\'s no maps app to open the route.</string>
+    <string name="location_permission_denied">No location permission. You can choose the point by moving the map.</string>
+    <string name="location_unavailable">We couldn\'t get your location. Make sure location is turned on.</string>
+    <string name="location_nearby_saved">Showing places near your saved address.</string>
+    <string name="location_nearby_device">Showing places near where you are.</string>
+    <string name="place_detail_about">About this place</string>
+    <string name="place_detail_exact_location">Exact location</string>
+    <string name="place_see_detail">See details</string>
+    <string name="account_location_point">Point chosen on the map</string>
+    <string name="register_address_pending">You haven\'t set your address yet.</string>
+    <string name="register_address_hint">We save the point you choose on the map to show you nearby places.</string>
+
+    <!-- Recommendations based on visit history (N-01) -->
+    <string name="recommendations_title">Recommended for you</string>
+    <string name="recommendations_tastes">Based on your visits</string>
+    <plurals name="recommendations_based_on">
+        <item quantity="one">Based on your %1$d visit and %2$d area you often go to. This is how your tastes break down:</item>
+        <item quantity="other">Based on your %1$d visits and %2$d areas you often go to. This is how your tastes break down:</item>
+    </plurals>
+    <string name="recommendations_affinity_chip">%1$s · %2$d%%</string>
+    <string name="recommendations_cold_start_title">We don\'t know you well yet</string>
+    <plurals name="recommendations_cold_start">
+        <item quantity="one">You have %1$d visited place. Meanwhile we show you the most voted places near you; mark places as “Visited” and the recommendations will adapt to your tastes.</item>
+        <item quantity="other">You have %1$d visited places. Meanwhile we show you the most voted places near you; mark places as “Visited” and the recommendations will adapt to your tastes.</item>
+    </plurals>
+    <string name="recommendations_origin_device">Distances are measured from where you are now.</string>
+    <string name="recommendations_origin_saved">Distances are measured from your saved address.</string>
+    <string name="recommendations_empty">There are no new places to recommend right now. Explore the home feed or come back when there are more posts.</string>
+    <plurals name="recommendation_reason_category">
+        <item quantity="one">Because you visited %1$d %2$s place</item>
+        <item quantity="other">Because you visited %1$d %2$s places</item>
+    </plurals>
+    <string name="recommendation_reason_new_category">Something different: you haven\'t visited %1$s places yet</string>
+    <string name="recommendation_reason_with_zone">%1$s · %2$s from an area you often go to</string>
+    <plurals name="recommendation_reason_popular">
+        <item quantity="one">Among the most voted near you · %1$d vote</item>
+        <item quantity="other">Among the most voted near you · %1$d votes</item>
+    </plurals>
+    <string name="recommendation_distance">%1$s away</string>
+    <string name="recommendation_match">%1$d%% match</string>
+    <string name="feed_recommendations_top">Start with: %1$s</string>
+    <string name="feed_recommendations_cold_start">The most voted near you. Mark visits to personalize them.</string>
+    <string name="feed_recommendations_hint">Mark places as “Visited” and we\'ll suggest others you\'ll like.</string>
+    <string name="feed_recommendations_open">See recommendations</string>
+
+    <!-- Possible duplicates before posting (IA-01) -->
+    <string name="duplicates_checking">Checking for possible duplicates…</string>
+    <string name="duplicates_check_failed">We couldn\'t check whether a similar place already exists. You can post anyway.</string>
+    <plurals name="duplicates_title">
+        <item quantity="one">This place might already be posted</item>
+        <item quantity="other">These %1$d places might be the same</item>
+    </plurals>
+    <string name="duplicates_subtitle">We found very similar posts nearby. If it\'s the same place, share what you know on the existing one.</string>
+    <string name="duplicates_meta">%1$s away · %2$d%% similar</string>
+    <string name="duplicates_open_existing">View and comment on the existing one</string>
+    <string name="duplicates_publish_anyway">It\'s not the same, post anyway</string>
+
+    <!-- IT-11: texts that used to be hardcoded -->
+    <string name="field_email_label">Email</string>
+    <string name="field_email_placeholder">you@email.com</string>
+    <string name="field_password_label">Password</string>
+    <string name="field_password_placeholder">Your password</string>
+    <string name="field_full_name_label">Full name</string>
+    <string name="field_full_name_placeholder">Your name</string>
+    <string name="field_password_new_placeholder">At least 8 characters</string>
+    <string name="field_password_confirm_label">Confirm password</string>
+    <string name="field_password_confirm_placeholder">Repeat your password</string>
+    <string name="password_toggle">Show or hide the password</string>
+    <string name="auth_login">Sign in</string>
+    <string name="auth_register">Sign up</string>
+    <string name="auth_create_account">Create account</string>
+    <string name="forgot_title">Forgot your password?</string>
+    <string name="forgot_body">Enter your account email and we\'ll send you a link to create a new password.</string>
+    <string name="forgot_submit">Send recovery link</string>
+    <string name="forgot_hint">Works for users and moderators. If you don\'t see it in your inbox, check your spam folder.</string>
+    <string name="forgot_back_to_login">Back to sign in</string>
+    <string name="login_tagline">Explore. Share. Discover.</string>
+    <string name="login_forgot_question">"Forgot your password? "</string>
+    <string name="login_recover">Recover</string>
+    <string name="login_first_time">New to coLab tour?</string>
+    <string name="register_tagline">Join the community of explorers</string>
+    <string name="register_terms">I accept the terms and privacy policy</string>
+    <string name="welcome_skip">Skip</string>
+    <string name="welcome_title">Discover what\nguidebooks don\'t tell you</string>
+    <string name="welcome_body">Places shared by travelers and locals,\nverified by moderators so you get there\nwith no surprises.</string>
+    <string name="welcome_start">Get started</string>
+    <string name="brand_logo_description">coLab tour logo</string>
+    <string name="moderator_mode">Moderator mode</string>
+    <string name="moderation_panel_title">Moderation panel</string>
+    <string name="review_pending_badge">Pending</string>
+    <string name="review_sent_at">Submitted %1$s</string>
+    <string name="detail_price_title">PRICE</string>
+    <string name="detail_schedule_title">SUGGESTED HOURS</string>
+    <string name="detail_distance_title">DISTANCE</string>
+    <string name="detail_relevance_title">RELEVANCE</string>
+    <string name="detail_distance_value">%1$s away</string>
+    <string name="detail_published_by">"Posted by "</string>
+    <string name="account_title">Account settings</string>
+    <string name="account_change_photo">Change photo</string>
+    <string name="account_address">Address</string>
+    <string name="account_saved">Changes saved.</string>
+    <string name="account_save">Save changes</string>
+    <string name="account_danger_zone">Danger zone</string>
+    <string name="account_delete_warning">Deleting your account removes your profile, posts, points and badges. This can\'t be undone.</string>
+    <string name="account_delete">Delete account</string>
+    <string name="account_delete_title">Delete your account?</string>
+    <string name="account_delete_body">Your profile, posts, votes and visits will be deleted and you\'ll go back to sign in.</string>
+    <string name="account_delete_confirm">Yes, delete</string>
+    <string name="feed_header_title">Discover places</string>
+    <string name="feed_greeting">Hi, %1$s</string>
+    <string name="feed_list_title">Near you</string>
+    <string name="feed_list_order">Sorted by relevance</string>
+    <string name="feed_badge_verified">Verified</string>
+    <string name="feed_badge_resolved">Closed</string>
+    <string name="place_interest">Interested</string>
+    <string name="map_card_price_hours">%1$s · %2$s – %3$s</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_alerts">Alerts</string>
+    <string name="tab_profile">Profile</string>
+    <string name="profile_title">My profile</string>
+    <string name="profile_logout">Sign out</string>
+    <string name="stats_title">My statistics</string>
+    <string name="stats_visited">Places visited</string>
+    <string name="stats_votes_received">Votes received</string>
+    <string name="time_placeholder_open">7:00 AM</string>
+    <string name="time_placeholder_close">7:00 PM</string>
+    <string name="author_with_level">%1$s · %2$s</string>
+
+    <!-- Day initials and relevance -->
+    <string name="day_short_mon">M</string>
+    <string name="day_short_tue">T</string>
+    <string name="day_short_wed">W</string>
+    <string name="day_short_thu">T</string>
+    <string name="day_short_fri">F</string>
+    <string name="day_short_sat">S</string>
+    <string name="day_short_sun">S</string>
+    <string name="relevance_high">High</string>
+    <string name="relevance_medium">Medium</string>
+    <string name="relevance_growing">Growing</string>
+    <plurals name="relevance_votes">
+        <item quantity="one">%1$d vote · %2$s</item>
+        <item quantity="other">%1$d votes · %2$s</item>
+    </plurals>
+
+    <!-- Notifications: built from the stored data (type + args) in the current language -->
+    <string name="notif_vote_title">%1$s marked “Interested” on your post “%2$s”</string>
+    <string name="notif_vote_body">You earned +%1$d reputation points.</string>
+    <string name="notif_comment_title">%1$s commented on “%2$s”</string>
+    <string name="notif_verified_title">A moderator verified your post “%1$s”</string>
+    <string name="notif_verified_body">It\'s now visible in the public feed. You earned +%1$d points.</string>
+    <string name="notif_rejected_title">A moderator rejected your post “%1$s”</string>
+    <string name="notif_rejected_body">Reason: %1$s</string>
+    <string name="notif_resolved_title">A moderator marked your post “%1$s” as resolved</string>
+    <string name="notif_resolved_body">You earned +%1$d points.</string>
+    <string name="notif_level_title">You leveled up! You\'re now %1$s</string>
+    <string name="notif_level_body">You reached %1$d reputation points. Keep sharing places and experiences.</string>
+    <string name="notif_badge_title">New badge: %1$s!</string>
+    <string name="notif_badge_body">You\'ll find it in your profile, with the date you earned it.</string>
+    <string name="notif_trophy_title">New trophy: %1$s!</string>
+    <string name="notif_trophy_body">You\'ll find it in your moderator profile.</string>
+    <string name="stats_active">Active\nposts</string>
+    <string name="stats_finished">Closed</string>
+    <string name="stats_pending">Pending\nverification</string>
+
+    <!-- App language -->
+    <string name="language_title">Language</string>
+    <string name="language_system">System</string>
+    <string name="language_hint">“System” uses the phone\'s language.</string>
+</resources>

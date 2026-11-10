@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.core.designsystem.components
 
+import co.edu.uniquindio.apptours.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -61,15 +62,15 @@ fun ColabLogoBadge(modifier: Modifier = Modifier) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     imageVector = Icons.Filled.Terrain,
-                    contentDescription = "Logo coLab tour",
+                    contentDescription = stringResource(R.string.brand_logo_description),
                     tint = ColabLightGreen,
                     modifier = Modifier.size(34.dp)
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("co", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                    Text("Lab", color = ColabBrown, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    Text(stringResource(R.string.brand_co), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    Text(stringResource(R.string.brand_lab), color = ColabBrown, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                 }
-                Text("— tour —", color = ColabSageBg, fontSize = 8.sp)
+                Text(stringResource(R.string.brand_tour_dashed), color = ColabSageBg, fontSize = 8.sp)
             }
         }
     }

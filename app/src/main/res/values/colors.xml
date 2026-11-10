@@ -7,4 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Igual a ColabBackground de core/theme/Color.kt: fondo mientras arranca la app -->
+    <color name="colab_background">#FFF4F2E6</color>
 </resources>

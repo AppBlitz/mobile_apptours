@@ -100,7 +100,7 @@ internal fun ReviewPlaceHeader(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "Pendiente",
+                    text = stringResource(R.string.review_pending_badge),
                     color = ColabTextPrimary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold

@@ -51,6 +51,8 @@ class FirebaseAuthRepository @Inject constructor(
     }
 
     override suspend fun sendPasswordReset(email: String): Result<Unit> = authCall {
+        // El correo de recuperación llega en el idioma de la app (es / en).
+        auth.setLanguageCode(java.util.Locale.getDefault().language)
         auth.sendPasswordResetEmail(email).await()
         Unit
     }

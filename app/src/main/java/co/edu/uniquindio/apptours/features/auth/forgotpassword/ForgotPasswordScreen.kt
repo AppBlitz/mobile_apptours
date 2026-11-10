@@ -110,7 +110,7 @@ fun ForgotPasswordScreen(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Regresar",
+                        contentDescription = stringResource(R.string.action_back),
                         tint = ColabDarkGreen
                     )
                 }
@@ -162,7 +162,7 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "¿Olvidaste tu contraseña?",
+                text = stringResource(R.string.forgot_title),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = ColabTextPrimary,
@@ -172,7 +172,7 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Escribe el correo de tu cuenta y te enviaremos un enlace para crear una contraseña nueva.",
+                text = stringResource(R.string.forgot_body),
                 fontSize = 14.sp,
                 color = ColabTextSecondary,
                 textAlign = TextAlign.Center,
@@ -184,8 +184,8 @@ fun ForgotPasswordScreen(
             ColabTextField(
                 value = state.email,
                 onValueChange = onEmailChange,
-                label = "Correo electrónico",
-                placeholder = "tu@correo.com",
+                label = stringResource(R.string.field_email_label),
+                placeholder = stringResource(R.string.field_email_placeholder),
                 leadingIcon = Icons.Filled.Email,
                 errorMessage = state.form.messageOf(FormField.EMAIL),
                 fieldRequester = requesters[FormField.EMAIL],
@@ -228,7 +228,7 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(22.dp))
 
             ColabPrimaryButton(
-                text = "Enviar enlace de recuperación",
+                text = stringResource(R.string.forgot_submit),
                 onClick = onSend,
                 enabled = !state.isLoading,
                 leadingIcon = Icons.AutoMirrored.Filled.Send
@@ -255,7 +255,7 @@ fun ForgotPasswordScreen(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "Sirve para usuarios y moderadores. Si no lo ves en tu bandeja, revisa la carpeta de spam.",
+                        text = stringResource(R.string.forgot_hint),
                         fontSize = 13.sp,
                         color = ColabTextSecondary,
                         lineHeight = 18.sp
@@ -267,7 +267,7 @@ fun ForgotPasswordScreen(
 
             TextButton(onClick = onNavigateBack) {
                 Text(
-                    text = "Volver a iniciar sesión",
+                    text = stringResource(R.string.forgot_back_to_login),
                     color = ColabDarkGreen,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 15.sp

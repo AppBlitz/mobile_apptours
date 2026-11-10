@@ -76,7 +76,7 @@ internal fun ProfileHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Mi perfil",
+                text = stringResource(R.string.profile_title),
                 color = Color.White,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
@@ -85,14 +85,14 @@ internal fun ProfileHeader(
                 IconButton(onClick = onOpenAccountSettings) {
                     Icon(
                         imageVector = Icons.Outlined.Settings,
-                        contentDescription = "Ajustes de cuenta",
+                        contentDescription = stringResource(R.string.account_title),
                         tint = Color.White
                     )
                 }
                 IconButton(onClick = onLogout) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Logout,
-                        contentDescription = "Cerrar sesión",
+                        contentDescription = stringResource(R.string.profile_logout),
                         tint = ColabSageBg
                     )
                 }

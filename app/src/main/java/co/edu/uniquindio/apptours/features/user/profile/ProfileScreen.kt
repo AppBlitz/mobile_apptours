@@ -151,7 +151,7 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(18.dp))
 
             ColabOutlinedButton(
-                text = "Ajustes de cuenta",
+                text = stringResource(R.string.account_title),
                 leadingIcon = Icons.Outlined.Settings,
                 onClick = onOpenAccountSettings
             )

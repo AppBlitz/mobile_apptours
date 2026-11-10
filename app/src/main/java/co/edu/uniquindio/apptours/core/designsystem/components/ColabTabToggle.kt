@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.core.designsystem.components
 
+import co.edu.uniquindio.apptours.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -46,8 +47,8 @@ import co.edu.uniquindio.apptours.domain.model.*
 
 @Composable
 fun ColabTabToggle(
-    leftText: String = "Iniciar sesión",
-    rightText: String = "Registrarme",
+    leftText: String = stringResource(R.string.auth_login),
+    rightText: String = stringResource(R.string.auth_register),
     isLeftSelected: Boolean,
     onTabSelected: (Boolean) -> Unit,
     modifier: Modifier = Modifier

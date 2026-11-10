@@ -246,8 +246,11 @@ object SeedData {
             id = "notif_1",
             userId = "user_valentina",
             type = NotificationType.VOTE,
-            title = "Camila R. marcó «Me interesa» en tu publicación «Mirador Alto del Águila»",
-            body = "Tu publicación sigue sumando relevancia en la comunidad.",
+            args = mapOf(
+                NotificationArgs.ACTOR_NAME to "Camila R.",
+                NotificationArgs.PLACE_TITLE to "Mirador Alto del Águila",
+                NotificationArgs.POINTS to PointAction.VOTE_RECEIVED.points.toString()
+            ),
             relatedPlaceId = "place_2",
             createdAt = now - 5 * MINUTE
         ),
@@ -255,8 +258,11 @@ object SeedData {
             id = "notif_2",
             userId = "user_valentina",
             type = NotificationType.COMMENT,
-            title = "Andrés P. comentó en «Mirador Alto del Águila»",
-            body = "Excelente para ver el amanecer, lleven abrigo...",
+            args = mapOf(
+                NotificationArgs.ACTOR_NAME to "Andrés P.",
+                NotificationArgs.PLACE_TITLE to "Mirador Alto del Águila",
+                NotificationArgs.COMMENT_TEXT to "Excelente para ver el amanecer, lleven abrigo..."
+            ),
             relatedPlaceId = "place_2",
             createdAt = now - HOUR
         ),
@@ -264,8 +270,10 @@ object SeedData {
             id = "notif_3",
             userId = "user_valentina",
             type = NotificationType.VERIFIED,
-            title = "Un moderador verificó tu publicación «Mirador Alto del Águila»",
-            body = "Ya es visible en el feed público.",
+            args = mapOf(
+                NotificationArgs.PLACE_TITLE to "Mirador Alto del Águila",
+                NotificationArgs.POINTS to PointAction.PLACE_VERIFIED.points.toString()
+            ),
             relatedPlaceId = "place_2",
             createdAt = now - 3 * HOUR
         ),
@@ -273,8 +281,7 @@ object SeedData {
             id = "notif_4",
             userId = "user_valentina",
             type = NotificationType.BADGE,
-            title = "¡Ganaste la insignia Explorador!",
-            body = "Alcanzaste más de 300 puntos compartiendo lugares con la comunidad.",
+            args = mapOf(NotificationArgs.BADGE to BadgeId.EXPLORER.name),
             isRead = true,
             createdAt = now - DAY
         ),
@@ -282,8 +289,10 @@ object SeedData {
             id = "notif_5",
             userId = "user_valentina",
             type = NotificationType.REJECTED,
-            title = "Un moderador rechazó tu publicación «Local sin nombre»",
-            body = "Motivo: no pudimos verificar la ubicación indicada.",
+            args = mapOf(
+                NotificationArgs.PLACE_TITLE to "Local sin nombre",
+                NotificationArgs.REASON to "No pudimos verificar la ubicación indicada."
+            ),
             isRead = true,
             relatedPlaceId = "place_7",
             createdAt = now - 2 * DAY

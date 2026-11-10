@@ -69,13 +69,13 @@ internal fun UserBottomBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             BottomNavItem(
-                label = "Inicio",
+                label = stringResource(R.string.tab_home),
                 icon = Icons.Outlined.Home,
                 selected = selectedTab == UserBottomTab.INICIO,
                 onClick = { onSelectTab(UserBottomTab.INICIO) }
             )
             BottomNavItem(
-                label = "Mapa",
+                label = stringResource(R.string.feed_mode_map),
                 icon = Icons.Outlined.Map,
                 selected = selectedTab == UserBottomTab.MAPA,
                 onClick = { onSelectTab(UserBottomTab.MAPA) }
@@ -93,7 +93,7 @@ internal fun UserBottomBar(
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Publicar un lugar",
+                        contentDescription = stringResource(R.string.place_form_header_create),
                         tint = ColabDarkGreen,
                         modifier = Modifier.size(28.dp)
                     )
@@ -102,7 +102,7 @@ internal fun UserBottomBar(
 
             Box {
                 BottomNavItem(
-                    label = "Alertas",
+                    label = stringResource(R.string.tab_alerts),
                     icon = Icons.Outlined.Notifications,
                     selected = selectedTab == UserBottomTab.ALERTAS,
                     onClick = { onSelectTab(UserBottomTab.ALERTAS) }
@@ -127,7 +127,7 @@ internal fun UserBottomBar(
             }
 
             BottomNavItem(
-                label = "Perfil",
+                label = stringResource(R.string.tab_profile),
                 icon = Icons.Outlined.Person,
                 selected = selectedTab == UserBottomTab.PERFIL,
                 onClick = { onSelectTab(UserBottomTab.PERFIL) }

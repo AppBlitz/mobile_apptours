@@ -54,7 +54,7 @@ import co.edu.uniquindio.apptours.domain.model.*
 internal fun StatsDashboard(stats: UserStats) {
 
     Text(
-        text = "Mis estadísticas",
+        text = stringResource(R.string.stats_title),
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
         color = ColabDarkGreen
@@ -65,9 +65,9 @@ internal fun StatsDashboard(stats: UserStats) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        StatBox("Publicaciones\nactivas", stats.activeCount.toString(), Modifier.weight(1f))
-        StatBox("Finalizadas", stats.finishedCount.toString(), Modifier.weight(1f))
-        StatBox("Pendientes de\nverificación", stats.pendingCount.toString(), Modifier.weight(1f))
+        StatBox(stringResource(R.string.stats_active), stats.activeCount.toString(), Modifier.weight(1f))
+        StatBox(stringResource(R.string.stats_finished), stats.finishedCount.toString(), Modifier.weight(1f))
+        StatBox(stringResource(R.string.stats_pending), stats.pendingCount.toString(), Modifier.weight(1f))
     }
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -77,12 +77,12 @@ internal fun StatsDashboard(stats: UserStats) {
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         StatBox(
-            label = "Lugares visitados",
+            label = stringResource(R.string.stats_visited),
             value = stats.visitedCount.toString(),
             modifier = Modifier.weight(1f)
         )
         StatBox(
-            label = "Votos recibidos",
+            label = stringResource(R.string.stats_votes_received),
             value = stats.votesReceived.toString(),
             modifier = Modifier.weight(1f)
         )

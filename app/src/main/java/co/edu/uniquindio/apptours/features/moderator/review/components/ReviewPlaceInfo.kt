@@ -112,7 +112,7 @@ internal fun ReviewPlaceInfo(place: Place) {
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Enviada ${relativeTimeLabel(place.createdAt)}",
+                        text = stringResource(R.string.review_sent_at, relativeTimeLabel(place.createdAt)),
                         fontSize = 12.sp,
                         color = ColabTextSecondary
                     )
@@ -135,7 +135,7 @@ internal fun ReviewPlaceInfo(place: Place) {
             color = ColabSurface
         ) {
             Column(modifier = Modifier.padding(12.dp)) {
-                Text("PRECIO", fontSize = 11.sp, color = ColabTextSecondary, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.detail_price_title), fontSize = 11.sp, color = ColabTextSecondary, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(stringResource(place.priceRange.labelRes()), fontWeight = FontWeight.Bold, fontSize = 15.sp)
             }
@@ -148,7 +148,7 @@ internal fun ReviewPlaceInfo(place: Place) {
             color = ColabSurface
         ) {
             Column(modifier = Modifier.padding(12.dp)) {
-                Text("HORARIO SUGERIDO", fontSize = 11.sp, color = ColabTextSecondary, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.detail_schedule_title), fontSize = 11.sp, color = ColabTextSecondary, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(place.scheduleLabel(), fontWeight = FontWeight.Bold, fontSize = 13.sp)
             }
@@ -158,7 +158,7 @@ internal fun ReviewPlaceInfo(place: Place) {
     Spacer(modifier = Modifier.height(18.dp))
 
     Text(
-        text = "Descripción",
+        text = stringResource(R.string.place_form_description_label),
         fontWeight = FontWeight.Bold,
         fontSize = 17.sp,
         color = ColabDarkGreen

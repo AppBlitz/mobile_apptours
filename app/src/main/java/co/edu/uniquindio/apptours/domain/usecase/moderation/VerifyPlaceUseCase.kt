@@ -2,6 +2,7 @@ package co.edu.uniquindio.apptours.domain.usecase.moderation
 
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.domain.model.ModerationAction
+import co.edu.uniquindio.apptours.domain.model.NotificationArgs
 import co.edu.uniquindio.apptours.domain.model.NotificationType
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
 import co.edu.uniquindio.apptours.domain.model.PointAction
@@ -31,8 +32,10 @@ class VerifyPlaceUseCase @Inject constructor(
             sendNotification(
                 userId = place.authorId,
                 type = NotificationType.VERIFIED,
-                title = "Un moderador verificó tu publicación «${place.title}»",
-                body = "Ya es visible en el feed público. Ganaste +${PointAction.PLACE_VERIFIED.points} puntos.",
+                args = mapOf(
+                    NotificationArgs.PLACE_TITLE to place.title,
+                    NotificationArgs.POINTS to PointAction.PLACE_VERIFIED.points.toString()
+                ),
                 relatedPlaceId = place.id
             )
         }

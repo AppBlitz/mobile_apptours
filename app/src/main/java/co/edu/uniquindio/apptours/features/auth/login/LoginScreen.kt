@@ -122,7 +122,7 @@ fun LoginScreen(
             ColabLogoBadge()
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "Explora. Comparte. Descubre.",
+                text = stringResource(R.string.login_tagline),
                 color = ColabSageBg,
                 fontSize = 14.sp
             )
@@ -154,8 +154,8 @@ fun LoginScreen(
                 ColabTextField(
                     value = state.email,
                     onValueChange = onEmailChange,
-                    label = "Correo electrónico",
-                    placeholder = "tu@correo.com",
+                    label = stringResource(R.string.field_email_label),
+                    placeholder = stringResource(R.string.field_email_placeholder),
                     leadingIcon = Icons.Filled.Email,
                     errorMessage = state.form.messageOf(FormField.EMAIL),
                     fieldRequester = requesters[FormField.EMAIL],
@@ -167,8 +167,8 @@ fun LoginScreen(
                 ColabTextField(
                     value = state.password,
                     onValueChange = onPasswordChange,
-                    label = "Contraseña",
-                    placeholder = "Tu contraseña",
+                    label = stringResource(R.string.field_password_label),
+                    placeholder = stringResource(R.string.field_password_placeholder),
                     leadingIcon = Icons.Filled.Lock,
                     isPassword = true,
                     passwordVisible = state.passwordVisible,
@@ -185,12 +185,12 @@ fun LoginScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     Text(
-                        text = "¿Olvidaste tu contraseña? ",
+                        text = stringResource(R.string.login_forgot_question),
                         color = ColabTextSecondary,
                         fontSize = 13.sp
                     )
                     Text(
-                        text = "Recuperar",
+                        text = stringResource(R.string.login_recover),
                         color = ColabDarkGreen,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
@@ -218,7 +218,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(22.dp))
 
                 ColabPrimaryButton(
-                    text = "Iniciar sesión",
+                    text = stringResource(R.string.auth_login),
                     onClick = onSubmit,
                     enabled = !state.isLoading
                 )
@@ -234,7 +234,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(18.dp))
 
                 Text(
-                    text = "¿Primera vez en coLab tour?",
+                    text = stringResource(R.string.login_first_time),
                     color = ColabTextSecondary,
                     fontSize = 13.sp
                 )
@@ -242,7 +242,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 ColabOutlinedButton(
-                    text = "Crear cuenta",
+                    text = stringResource(R.string.auth_create_account),
                     onClick = onNavigateToRegister
                 )
             }

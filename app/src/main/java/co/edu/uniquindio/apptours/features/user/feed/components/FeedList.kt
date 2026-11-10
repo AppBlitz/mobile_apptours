@@ -86,13 +86,13 @@ internal fun FeedList(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Cerca de ti",
+                    text = stringResource(R.string.feed_list_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = ColabTextPrimary
                 )
                 Text(
-                    text = "Ordenado por relevancia",
+                    text = stringResource(R.string.feed_list_order),
                     fontSize = 12.sp,
                     color = ColabTextSecondary
                 )

@@ -114,7 +114,7 @@ internal fun PlaceDetailInfo(
         }
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Publicado por ",
+            text = stringResource(R.string.detail_published_by),
             fontSize = 13.sp,
             color = ColabTextSecondary
         )
@@ -147,13 +147,13 @@ internal fun PlaceDetailInfo(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         DetailMetricCard(
-            title = "PRECIO",
+            title = stringResource(R.string.detail_price_title),
             value = stringResource(place.priceRange.labelRes()),
             icon = Icons.Outlined.Payments,
             modifier = Modifier.weight(1f)
         )
         DetailMetricCard(
-            title = "HORARIO SUGERIDO",
+            title = stringResource(R.string.detail_schedule_title),
             value = place.scheduleLabel(),
             icon = Icons.Outlined.Schedule,
             modifier = Modifier.weight(1f)
@@ -167,14 +167,14 @@ internal fun PlaceDetailInfo(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         DetailMetricCard(
-            title = "DISTANCIA",
-            value = "${Formatters.formatDistance(distanceKm)} de ti",
+            title = stringResource(R.string.detail_distance_title),
+            value = stringResource(R.string.detail_distance_value, Formatters.formatDistance(distanceKm)),
             icon = Icons.Outlined.Place,
             modifier = Modifier.weight(1f)
         )
         DetailMetricCard(
-            title = "RELEVANCIA",
-            value = Formatters.relevanceLabel(place.votesCount),
+            title = stringResource(R.string.detail_relevance_title),
+            value = relevanceLabel(place.votesCount),
             icon = Icons.Outlined.FavoriteBorder,
             modifier = Modifier.weight(1f)
         )
