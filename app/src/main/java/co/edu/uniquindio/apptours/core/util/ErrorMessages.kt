@@ -46,6 +46,7 @@ fun Throwable.toMessageRes(): Int = when (this) {
     AppException.PlaceNotFound -> R.string.error_place_not_found
     AppException.UserNotFound -> R.string.error_user_not_found
     AppException.Network -> R.string.error_network
+    AppException.ImageUploadFailed -> R.string.error_image_upload
     else -> R.string.error_unknown
 }
 

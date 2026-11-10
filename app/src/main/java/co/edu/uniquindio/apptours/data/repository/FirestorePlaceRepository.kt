@@ -64,7 +64,8 @@ class FirestorePlaceRepository @Inject constructor(
     override suspend fun update(place: Place): Result<Unit> = firestoreCall {
         val ref = places.document(place.id)
         if (!ref.get().await().exists()) throw AppException.PlaceNotFound
-        ref.update(place.toDto().editableFields()).await()
+        // "photosCount" era el contador simulado de antes de IT-8: se borra al editar.
+        ref.update(place.toDto().editableFields() + ("photosCount" to FieldValue.delete())).await()
         Unit
     }
 

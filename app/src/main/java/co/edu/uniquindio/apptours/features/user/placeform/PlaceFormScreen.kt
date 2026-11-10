@@ -57,7 +57,7 @@ fun PlaceFormRoute(
             onToggleDay = viewModel::onToggleDay,
             onOpenTimeChange = viewModel::onOpenTimeChange,
             onCloseTimeChange = viewModel::onCloseTimeChange,
-            onAddPhoto = viewModel::onAddPhoto,
+            onPhotosPicked = viewModel::onPhotosPicked,
             onRemovePhoto = viewModel::onRemovePhoto,
             onLocationChange = viewModel::onLocationChange,
             onFieldFocusLost = viewModel::onFieldFocusLost,
@@ -80,8 +80,8 @@ data class PlaceFormActions(
     val onToggleDay: (String) -> Unit,
     val onOpenTimeChange: (String) -> Unit,
     val onCloseTimeChange: (String) -> Unit,
-    val onAddPhoto: () -> Unit,
-    val onRemovePhoto: () -> Unit,
+    val onPhotosPicked: (List<String>) -> Unit,
+    val onRemovePhoto: (String) -> Unit,
     val onLocationChange: (Double, Double) -> Unit,
     val onFieldFocusLost: (FormField) -> Unit,
     val onSubmit: () -> Unit,
@@ -179,8 +179,9 @@ fun PlaceFormScreen(
             Spacer(modifier = Modifier.height(18.dp))
 
             PhotoPickerSection(
-                photosCount = state.photosCount,
-                onAddPhoto = actions.onAddPhoto,
+                photos = state.photos,
+                enabled = !state.isSaving,
+                onPhotosPicked = actions.onPhotosPicked,
                 onRemovePhoto = actions.onRemovePhoto,
                 errorMessage = form.messageOf(FormField.PHOTOS),
                 requester = requesters[FormField.PHOTOS]
@@ -229,7 +230,11 @@ fun PlaceFormScreen(
         }
 
         if (state.isLoading || state.isSaving) {
-            LoadingOverlay(dimBackground = true)
+            LoadingOverlay(
+                dimBackground = true,
+                progress = state.uploadProgress,
+                messageRes = if (state.uploadProgress != null) R.string.photos_uploading else R.string.loading
+            )
         }
     }
 

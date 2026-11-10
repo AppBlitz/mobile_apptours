@@ -41,7 +41,7 @@ object PlaceForms {
         FormField.DAYS to if (draft.daysActive.isEmpty()) FieldError.Required else null,
         FormField.OPEN_TIME to Validators.time(draft.openTime),
         FormField.CLOSE_TIME to Validators.closeTime(draft.openTime, draft.closeTime),
-        FormField.PHOTOS to if (draft.photosCount < 1) FieldError.Required else null,
+        FormField.PHOTOS to if (draft.photos.isEmpty()) FieldError.Required else null,
         FormField.LOCATION to if (draft.latitude == null || draft.longitude == null) FieldError.Required else null
     )
 

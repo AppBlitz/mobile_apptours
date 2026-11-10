@@ -14,5 +14,6 @@ data class PlaceDraft(
     val closeTime: String,
     val latitude: Double?,
     val longitude: Double?,
-    val photosCount: Int
+    /** Fotos en orden: direcciones ya subidas (https) o fotos locales recién elegidas (content://). */
+    val photos: List<String>
 )

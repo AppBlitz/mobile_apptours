@@ -11,7 +11,8 @@ data class Place(
     val closeTime: String = "7:00 p. m.",
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
-    val photosCount: Int = 1,
+    /** Direcciones https de las fotos (1 a 6); la primera es la portada. */
+    val imageUrls: List<String> = emptyList(),
     val authorId: String,
     val authorName: String,
     val authorLevel: UserLevel = UserLevel.TURISTA,
@@ -23,6 +24,8 @@ data class Place(
     val moderatorId: String? = null,
     val reviewedAt: Long? = null
 ) {
+    val coverImageUrl: String? get() = imageUrls.firstOrNull()
+
     companion object {
         val ALL_DAYS = listOf("L", "M", "X", "J", "V", "S", "D")
         val DEFAULT_DAYS = listOf("L", "M", "X", "J", "V", "S")

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.uniquindio.apptours.R
 import co.edu.uniquindio.apptours.core.designsystem.components.CategoryBadgeChip
-import co.edu.uniquindio.apptours.core.designsystem.components.MountainIllustrationHeader
+import co.edu.uniquindio.apptours.core.designsystem.components.AsyncPlaceImage
 import co.edu.uniquindio.apptours.core.map.MapboxPlacesMap
 import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.core.util.DistanceCalculator
@@ -96,7 +96,13 @@ private fun SelectedPlaceCard(
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                MountainIllustrationHeader(modifier = Modifier.size(84.dp), showPins = false)
+                AsyncPlaceImage(
+                    url = place.coverImageUrl,
+                    contentDescription = place.title,
+                    modifier = Modifier
+                        .size(84.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Row(

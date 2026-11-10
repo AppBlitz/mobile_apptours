@@ -72,7 +72,7 @@ class PlaceFormViewModel @Inject constructor(
                             selectedDays = place.daysActive,
                             openTime = place.openTime,
                             closeTime = place.closeTime,
-                            photosCount = place.photosCount,
+                            photos = place.imageUrls,
                             latitude = place.latitude,
                             longitude = place.longitude,
                             locationPicked = true
@@ -103,11 +103,16 @@ class PlaceFormViewModel @Inject constructor(
 
     fun onCloseTimeChange(value: String) = edit(FormField.CLOSE_TIME) { it.copy(closeTime = value) }
 
-    fun onAddPhoto() = edit(FormField.PHOTOS) {
-        it.copy(photosCount = (it.photosCount + 1).coerceAtMost(PlaceForms.MAX_PHOTOS))
+    /** Fotos elegidas en el selector del sistema; nunca se pasa del máximo ni se repiten. */
+    fun onPhotosPicked(uris: List<String>) {
+        if (uris.isEmpty()) {
+            _uiState.update { it.touch(FormField.PHOTOS) }
+            return
+        }
+        edit(FormField.PHOTOS) { it.copy(photos = (it.photos + uris).distinct().take(PlaceForms.MAX_PHOTOS)) }
     }
 
-    fun onRemovePhoto() = edit(FormField.PHOTOS) { it.copy(photosCount = (it.photosCount - 1).coerceAtLeast(0)) }
+    fun onRemovePhoto(photo: String) = edit(FormField.PHOTOS) { it.copy(photos = it.photos - photo) }
 
     fun onLocationChange(lat: Double, lng: Double) = edit(FormField.LOCATION) {
         it.copy(latitude = lat, longitude = lng, locationPicked = true)
@@ -127,8 +132,13 @@ class PlaceFormViewModel @Inject constructor(
         }
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true, errorRes = null) }
-            val result = if (placeId == null) createPlace(s.draft).map { } else updatePlace(placeId, s.draft)
-            _uiState.update { it.copy(isSaving = false) }
+            val onProgress: (Float) -> Unit = { p -> _uiState.update { it.copy(uploadProgress = p) } }
+            val result = if (placeId == null) {
+                createPlace(s.draft, onProgress).map { }
+            } else {
+                updatePlace(placeId, s.draft, onProgress)
+            }
+            _uiState.update { it.copy(isSaving = false, uploadProgress = null) }
             result
                 .onSuccess { _events.send(PlaceFormEvent.Saved) }
                 .onFailure { error ->

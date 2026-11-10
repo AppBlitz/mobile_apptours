@@ -118,7 +118,11 @@ fun ModeratorReviewScreen(
                 .background(ColabBackground)
                 .verticalScroll(rememberScrollState())
         ) {
-            ReviewPlaceHeader(onNavigateBack = actions.onNavigateBack)
+            ReviewPlaceHeader(
+                imageUrls = place.imageUrls,
+                placeTitle = place.title,
+                onNavigateBack = actions.onNavigateBack
+            )
 
             Column(modifier = Modifier.padding(20.dp)) {
                 ReviewPlaceInfo(place = place)

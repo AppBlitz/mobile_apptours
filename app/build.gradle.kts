@@ -15,6 +15,9 @@ val localProperties = Properties().apply {
     if (file.exists()) file.inputStream().use { load(it) }
 }
 val mapboxAccessToken: String = localProperties.getProperty("MAPBOX_ACCESS_TOKEN", "")
+// Cloudinary: solo el cloud name y un upload preset sin firma. El API secret NUNCA va en la app.
+val cloudinaryCloudName: String = localProperties.getProperty("CLOUDINARY_CLOUD_NAME", "")
+val cloudinaryUploadPreset: String = localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET", "")
 
 android {
     namespace = "co.edu.uniquindio.apptours"
@@ -34,6 +37,8 @@ android {
         // El SDK de mapas lee el token público del recurso mapbox_access_token.
         resValue("string", "mapbox_access_token", mapboxAccessToken)
         buildConfigField("boolean", "MAPS_ENABLED", (mapboxAccessToken.isNotBlank()).toString())
+        buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryCloudName\"")
+        buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")
     }
 
     buildTypes {
@@ -93,6 +98,14 @@ dependencies {
     implementation(libs.mapbox.maps)
     implementation(libs.mapbox.compose)
     implementation(libs.play.services.location)
+
+    // Fotos en la nube (IT-8): subida por HTTP, compresión y carga en la UI
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.androidx.exifinterface)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

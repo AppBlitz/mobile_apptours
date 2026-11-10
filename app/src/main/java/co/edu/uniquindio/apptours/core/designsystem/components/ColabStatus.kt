@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -31,12 +33,19 @@ import co.edu.uniquindio.apptours.R
 import co.edu.uniquindio.apptours.core.theme.ColabBackground
 import co.edu.uniquindio.apptours.core.theme.ColabDarkGreen
 import co.edu.uniquindio.apptours.core.theme.ColabError
+import co.edu.uniquindio.apptours.core.theme.ColabSageBg
 import co.edu.uniquindio.apptours.core.theme.ColabTextPrimary
 import co.edu.uniquindio.apptours.core.theme.ColabTextSecondary
 
 /** Indicador de carga a pantalla completa; bloquea los toques mientras está visible. */
 @Composable
-fun LoadingOverlay(modifier: Modifier = Modifier, dimBackground: Boolean = false) {
+fun LoadingOverlay(
+    modifier: Modifier = Modifier,
+    dimBackground: Boolean = false,
+    /** Avance 0..1 si se conoce (p. ej. al cargar fotos): muestra barra y porcentaje en lugar del círculo. */
+    progress: Float? = null,
+    @StringRes messageRes: Int = R.string.loading
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -49,9 +58,26 @@ fun LoadingOverlay(modifier: Modifier = Modifier, dimBackground: Boolean = false
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            CircularProgressIndicator(color = ColabDarkGreen)
+            if (progress == null) {
+                CircularProgressIndicator(color = ColabDarkGreen)
+            } else {
+                LinearProgressIndicator(
+                    progress = { progress.coerceIn(0f, 1f) },
+                    modifier = Modifier.width(220.dp),
+                    color = ColabDarkGreen,
+                    trackColor = ColabSageBg
+                )
+            }
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = stringResource(R.string.loading), color = ColabTextSecondary, fontSize = 13.sp)
+            Text(
+                text = if (progress == null) {
+                    stringResource(messageRes)
+                } else {
+                    stringResource(R.string.photos_uploading_progress, stringResource(messageRes), (progress * 100).toInt())
+                },
+                color = ColabTextSecondary,
+                fontSize = 13.sp
+            )
         }
     }
 }

@@ -63,6 +63,13 @@ internal fun ModeratorQueueCard(
         colors = CardDefaults.cardColors(containerColor = ColabSurface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
+        AsyncPlaceImage(
+            url = place.coverImageUrl,
+            contentDescription = place.title,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(130.dp)
+        )
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

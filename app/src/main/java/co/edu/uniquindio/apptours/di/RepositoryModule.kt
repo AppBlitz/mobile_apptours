@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.di
 
+import co.edu.uniquindio.apptours.data.repository.CloudinaryImageRepository
 import co.edu.uniquindio.apptours.data.repository.FirebaseAuthRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreCommentRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreModerationRepository
@@ -9,6 +10,7 @@ import co.edu.uniquindio.apptours.data.repository.FirestoreUserRepository
 import co.edu.uniquindio.apptours.data.repository.FirestoreVisitRepository
 import co.edu.uniquindio.apptours.domain.repository.AuthRepository
 import co.edu.uniquindio.apptours.domain.repository.CommentRepository
+import co.edu.uniquindio.apptours.domain.repository.ImageRepository
 import co.edu.uniquindio.apptours.domain.repository.ModerationRepository
 import co.edu.uniquindio.apptours.domain.repository.NotificationRepository
 import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
@@ -20,7 +22,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/** Interfaz de dominio -> implementación: sesión en Firebase Auth y datos en Firestore. */
+/** Interfaz de dominio -> implementación: sesión en Firebase Auth, datos en Firestore y fotos en Cloudinary. */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
@@ -52,4 +54,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindModerationRepository(impl: FirestoreModerationRepository): ModerationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindImageRepository(impl: CloudinaryImageRepository): ImageRepository
 }

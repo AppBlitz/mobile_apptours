@@ -23,7 +23,10 @@ data class PlaceFormUiState(
     val selectedDays: List<String> = Place.DEFAULT_DAYS,
     val openTime: String = "7:00 a. m.",
     val closeTime: String = "7:00 p. m.",
-    val photosCount: Int = 0,
+    /** Fotos en orden: las ya publicadas (https) y las recién elegidas (content://). */
+    val photos: List<String> = emptyList(),
+    /** Avance de la carga de fotos (0..1) mientras se publica; null si no se está cargando. */
+    val uploadProgress: Float? = null,
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
     val locationPicked: Boolean = false,
@@ -43,7 +46,7 @@ data class PlaceFormUiState(
             closeTime = closeTime,
             latitude = latitude.takeIf { locationPicked },
             longitude = longitude.takeIf { locationPicked },
-            photosCount = photosCount
+            photos = photos
         )
 
     /** Editar algo ya revisado (verificado, rechazado o resuelto) lo devuelve a la cola de moderación. */

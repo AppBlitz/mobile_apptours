@@ -8,19 +8,21 @@ import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
 import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.EvaluateBadgesUseCase
-import co.edu.uniquindio.apptours.domain.validation.PlaceForms
 import javax.inject.Inject
 
-/** Crea una publicación en estado PENDIENTE (U-08) y otorga los puntos de publicar. */
+/** Sube las fotos, crea la publicación en estado PENDIENTE (U-08) y otorga los puntos de publicar. */
 class CreatePlaceUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
+    private val uploadPlaceImages: UploadPlaceImagesUseCase,
     private val awardPoints: AwardPointsUseCase,
     private val evaluateBadges: EvaluateBadgesUseCase
 ) {
-    suspend operator fun invoke(draft: PlaceDraft): Result<String> {
+    suspend operator fun invoke(draft: PlaceDraft, onUploadProgress: (Float) -> Unit = {}): Result<String> {
         draft.validate()?.let { return Result.failure(it) }
         val author = getSession.require().getOrElse { return Result.failure(it) }
+        // Las fotos se suben solo cuando todo lo demás es válido; sin fotos subidas no se publica.
+        val imageUrls = uploadPlaceImages(draft.photos, onUploadProgress).getOrElse { return Result.failure(it) }
 
         // Tras validar, categoría, precio y ubicación ya no son nulos.
         val place = Place(
@@ -34,7 +36,7 @@ class CreatePlaceUseCase @Inject constructor(
             closeTime = draft.closeTime.trim(),
             latitude = requireNotNull(draft.latitude),
             longitude = requireNotNull(draft.longitude),
-            photosCount = draft.photosCount.coerceIn(1, PlaceForms.MAX_PHOTOS),
+            imageUrls = imageUrls,
             authorId = author.id,
             authorName = author.fullName,
             authorLevel = author.level,

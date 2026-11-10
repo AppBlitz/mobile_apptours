@@ -127,7 +127,11 @@ fun PlaceDetailScreen(
             contentPadding = PaddingValues(bottom = 32.dp)
         ) {
             item {
-                PlaceDetailHeader(photosCount = place.photosCount, onNavigateBack = actions.onNavigateBack)
+                PlaceDetailHeader(
+                    imageUrls = place.imageUrls,
+                    placeTitle = place.title,
+                    onNavigateBack = actions.onNavigateBack
+                )
             }
 
             item {

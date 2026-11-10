@@ -78,7 +78,11 @@ fun PlaceFeedCard(
                     .fillMaxWidth()
                     .height(155.dp)
             ) {
-                MountainIllustrationHeader(modifier = Modifier.fillMaxSize(), showPins = false)
+                AsyncPlaceImage(
+                    url = place.coverImageUrl,
+                    contentDescription = place.title,
+                    modifier = Modifier.fillMaxSize()
+                )
 
                 // Etiqueta de verificación arriba a la izquierda
                 if (place.status == PlaceStatus.VERIFICADA) {

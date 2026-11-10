@@ -69,9 +69,17 @@ service cloud.firestore {
       }
     }
 
+    // IT-8: toda publicación nueva o editada por su autor lleva de 1 a 6 fotos en la nube (https).
+    function validImages() {
+      return request.resource.data.imageUrls is list
+        && request.resource.data.imageUrls.size() >= 1
+        && request.resource.data.imageUrls.size() <= 6;
+    }
+
     match /places/{placeId} {
       allow read: if signedIn();
       allow create: if signedIn()
+        && validImages()
         && request.resource.data.authorId == request.auth.uid
         && request.resource.data.status == 'PENDIENTE'
         && request.resource.data.votesCount == 0
@@ -83,6 +91,7 @@ service cloud.firestore {
       //   - Nunca puede ponerla VERIFICADA ni RECHAZADA ni escribir moderatorId / reviewedAt.
       // Moderador: verifica, rechaza o resuelve. Cualquiera: solo el contador de votos o el de visitas (T-05).
       allow update: if (isOwner(resource.data.authorId)
+          && (validImages() || request.resource.data.status == 'RESUELTA')
           && request.resource.data.authorId == resource.data.authorId
           && request.resource.data.votesCount == resource.data.votesCount
           && request.resource.data.get('visitsCount', 0) == resource.data.get('visitsCount', 0)

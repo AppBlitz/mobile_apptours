@@ -49,16 +49,21 @@ import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.core.util.*
 import co.edu.uniquindio.apptours.domain.model.*
 
-/** Cabecera ilustrada con botón atrás y etiqueta "Pendiente". */
+/** Fotos de la publicación (para revisar que sean reales) con botón atrás y etiqueta "Pendiente". */
 @Composable
-internal fun ReviewPlaceHeader(onNavigateBack: () -> Unit) {
+internal fun ReviewPlaceHeader(
+    imageUrls: List<String>,
+    placeTitle: String,
+    onNavigateBack: () -> Unit
+) {
 
-    Box(
+    PlacePhotoCarousel(
+        imageUrls = imageUrls,
+        placeTitle = placeTitle,
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp)
     ) {
-        MountainIllustrationHeader(modifier = Modifier.fillMaxSize())
 
         IconButton(
             onClick = onNavigateBack,
@@ -71,7 +76,7 @@ internal fun ReviewPlaceHeader(onNavigateBack: () -> Unit) {
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Atrás",
+                contentDescription = stringResource(R.string.action_back),
                 tint = ColabDarkGreen
             )
         }
