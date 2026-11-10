@@ -376,4 +376,37 @@
     <string name="account_location_point">Punto elegido en el mapa</string>
     <string name="register_address_pending">Aún no has fijado tu dirección.</string>
     <string name="register_address_hint">Guardamos el punto que elijas en el mapa para mostrarte lugares cercanos.</string>
+
+    <!-- Recomendaciones por historial de visitas (N-01) -->
+    <string name="recommendations_title">Recomendados para ti</string>
+    <string name="recommendations_tastes">Según tus visitas</string>
+    <plurals name="recommendations_based_on">
+        <item quantity="one">Calculado con tu %1$d visita y %2$d zona que frecuentas. Así se reparten tus gustos:</item>
+        <item quantity="other">Calculado con tus %1$d visitas y %2$d zonas que frecuentas. Así se reparten tus gustos:</item>
+    </plurals>
+    <string name="recommendations_affinity_chip">%1$s · %2$d %%</string>
+    <string name="recommendations_cold_start_title">Aún te conocemos poco</string>
+    <plurals name="recommendations_cold_start">
+        <item quantity="one">Tienes %1$d lugar visitado. Mientras tanto te mostramos los más votados cerca de ti; marca lugares como “Visitado” y las recomendaciones se ajustarán a tus gustos.</item>
+        <item quantity="other">Tienes %1$d lugares visitados. Mientras tanto te mostramos los más votados cerca de ti; marca lugares como “Visitado” y las recomendaciones se ajustarán a tus gustos.</item>
+    </plurals>
+    <string name="recommendations_origin_device">Las distancias se miden desde donde estás ahora.</string>
+    <string name="recommendations_origin_saved">Las distancias se miden desde tu dirección guardada.</string>
+    <string name="recommendations_empty">No hay lugares nuevos para recomendarte por ahora. Explora el inicio o vuelve cuando haya más publicaciones.</string>
+    <plurals name="recommendation_reason_category">
+        <item quantity="one">Porque visitaste %1$d lugar de %2$s</item>
+        <item quantity="other">Porque visitaste %1$d lugares de %2$s</item>
+    </plurals>
+    <string name="recommendation_reason_new_category">Algo distinto: aún no visitas lugares de %1$s</string>
+    <string name="recommendation_reason_with_zone">%1$s · a %2$s de una zona que frecuentas</string>
+    <plurals name="recommendation_reason_popular">
+        <item quantity="one">De los más votados cerca de ti · %1$d voto</item>
+        <item quantity="other">De los más votados cerca de ti · %1$d votos</item>
+    </plurals>
+    <string name="recommendation_distance">A %1$s de ti</string>
+    <string name="recommendation_match">Coincidencia %1$d %%</string>
+    <string name="feed_recommendations_top">Empieza por: %1$s</string>
+    <string name="feed_recommendations_cold_start">Los más votados cerca de ti. Marca visitas para personalizarlos.</string>
+    <string name="feed_recommendations_hint">Marca lugares como “Visitado” y te sugerimos otros a tu gusto.</string>
+    <string name="feed_recommendations_open">Ver recomendaciones</string>
 </resources>

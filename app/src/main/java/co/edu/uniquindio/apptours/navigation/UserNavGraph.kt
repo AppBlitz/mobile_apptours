@@ -9,6 +9,7 @@ import co.edu.uniquindio.apptours.features.user.home.UserHomeRoute
 import co.edu.uniquindio.apptours.features.user.myplaces.MyPlacesRoute
 import co.edu.uniquindio.apptours.features.user.placedetail.PlaceDetailRoute
 import co.edu.uniquindio.apptours.features.user.placeform.PlaceFormRoute
+import co.edu.uniquindio.apptours.features.user.recommendations.RecommendationsRoute
 
 fun NavGraphBuilder.userGraph(navController: NavController) {
     navigation<UserGraph>(startDestination = UserHome) {
@@ -17,6 +18,7 @@ fun NavGraphBuilder.userGraph(navController: NavController) {
                 onOpenPlaceDetail = { placeId -> navController.navigate(PlaceDetail(placeId)) },
                 onOpenCreatePlace = { navController.navigate(CreatePlace) },
                 onOpenMyPlaces = { navController.navigate(MyPlaces) },
+                onOpenRecommendations = { navController.navigate(Recommendations) },
                 onOpenAccountSettings = { navController.navigate(AccountSettings) },
                 onLoggedOut = { navController.navigateClearingBackStack(Login) }
             )
@@ -49,6 +51,13 @@ fun NavGraphBuilder.userGraph(navController: NavController) {
 
         composable<MyPlaces> {
             MyPlacesRoute(
+                onNavigateBack = { navController.popBackStack() },
+                onOpenPlace = { placeId -> navController.navigate(PlaceDetail(placeId)) }
+            )
+        }
+
+        composable<Recommendations> {
+            RecommendationsRoute(
                 onNavigateBack = { navController.popBackStack() },
                 onOpenPlace = { placeId -> navController.navigate(PlaceDetail(placeId)) }
             )

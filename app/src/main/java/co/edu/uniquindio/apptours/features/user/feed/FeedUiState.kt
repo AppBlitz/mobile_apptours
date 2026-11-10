@@ -19,6 +19,9 @@ data class FeedUiState(
     val selectedMapPlaceId: String? = null,
     val votedPlaceIds: Set<String> = emptySet(),
     val visitedPlaceIds: Set<String> = emptySet(),
+    /** Título de la primera recomendación (N-01) para la tarjeta "Recomendados para ti". */
+    val topRecommendationTitle: String? = null,
+    val recommendationsColdStart: Boolean = false,
     val isLoading: Boolean = true,
     @StringRes val loadErrorRes: Int? = null
 )

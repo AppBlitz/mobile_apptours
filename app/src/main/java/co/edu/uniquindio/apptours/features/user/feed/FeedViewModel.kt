@@ -11,6 +11,7 @@ import co.edu.uniquindio.apptours.domain.model.PlaceCategory
 import co.edu.uniquindio.apptours.domain.usecase.place.GetMyVotesUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.GetPublicFeedUseCase
 import co.edu.uniquindio.apptours.domain.usecase.place.ToggleInterestUseCase
+import co.edu.uniquindio.apptours.domain.usecase.recommendation.GetRecommendationsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.GetCurrentUserUseCase
 import co.edu.uniquindio.apptours.domain.usecase.visit.GetMyVisitsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.visit.ToggleVisitedUseCase
@@ -36,6 +37,7 @@ class FeedViewModel @Inject constructor(
     getPublicFeed: GetPublicFeedUseCase,
     getMyVotes: GetMyVotesUseCase,
     getMyVisits: GetMyVisitsUseCase,
+    getRecommendations: GetRecommendationsUseCase,
     private val toggleInterest: ToggleInterestUseCase,
     private val toggleVisited: ToggleVisitedUseCase
 ) : ViewModel() {
@@ -82,8 +84,9 @@ class FeedViewModel @Inject constructor(
             combine(controls, currentUser, origin, ::Triple),
             places,
             getMyVotes(),
-            getMyVisits().map { visits -> visits.map { it.placeId }.toSet() }
-        ) { (c, user, o), places, votes, visits ->
+            getMyVisits().map { visits -> visits.map { it.placeId }.toSet() },
+            getRecommendations(deviceLocation)
+        ) { (c, user, o), places, votes, visits, recommendations ->
             FeedUiState(
                 isLoading = false,
                 firstName = user?.firstName.orEmpty(),
@@ -96,7 +99,9 @@ class FeedViewModel @Inject constructor(
                 places = places,
                 selectedMapPlaceId = c.selectedMapPlaceId,
                 votedPlaceIds = votes,
-                visitedPlaceIds = visits
+                visitedPlaceIds = visits,
+                topRecommendationTitle = recommendations.recommendations.firstOrNull()?.place?.title,
+                recommendationsColdStart = recommendations.isColdStart
             )
         }.catch { emit(FeedUiState(isLoading = false, loadErrorRes = it.toMessageRes())) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FeedUiState())

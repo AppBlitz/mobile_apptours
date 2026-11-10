@@ -57,6 +57,7 @@ fun FeedRoute(
     onShowMap: () -> Unit,
     onOpenNotifications: () -> Unit,
     onOpenPlaceDetail: (String) -> Unit,
+    onOpenRecommendations: () -> Unit,
     viewModel: FeedViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -80,6 +81,7 @@ fun FeedRoute(
         onShowMap = onShowMap,
         onOpenNotifications = onOpenNotifications,
         onOpenPlaceDetail = onOpenPlaceDetail,
+        onOpenRecommendations = onOpenRecommendations,
         onRetry = viewModel::onRetry
     )
 }
@@ -98,6 +100,7 @@ fun FeedScreen(
     onShowMap: () -> Unit,
     onOpenNotifications: () -> Unit,
     onOpenPlaceDetail: (String) -> Unit,
+    onOpenRecommendations: () -> Unit,
     onRetry: () -> Unit
 ) {
     if (state.loadErrorRes != null) {
@@ -146,7 +149,10 @@ fun FeedScreen(
                 visitedPlaceIds = state.visitedPlaceIds,
                 onToggleInterest = onToggleInterest,
                 onToggleVisited = onToggleVisited,
-                onOpenPlaceDetail = onOpenPlaceDetail
+                onOpenPlaceDetail = onOpenPlaceDetail,
+                topRecommendationTitle = state.topRecommendationTitle,
+                recommendationsColdStart = state.recommendationsColdStart,
+                onOpenRecommendations = onOpenRecommendations
             )
         } else {
             FeedMapView(

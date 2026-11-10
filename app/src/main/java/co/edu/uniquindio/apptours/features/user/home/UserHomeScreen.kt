@@ -58,6 +58,7 @@ fun UserHomeRoute(
     onOpenPlaceDetail: (String) -> Unit,
     onOpenCreatePlace: () -> Unit,
     onOpenMyPlaces: () -> Unit,
+    onOpenRecommendations: () -> Unit,
     onOpenAccountSettings: () -> Unit,
     onLoggedOut: () -> Unit,
     viewModel: UserHomeViewModel = hiltViewModel()
@@ -87,11 +88,13 @@ fun UserHomeRoute(
                     onShowList = { currentTab = UserBottomTab.INICIO },
                     onShowMap = { currentTab = UserBottomTab.MAPA },
                     onOpenNotifications = { currentTab = UserBottomTab.ALERTAS },
-                    onOpenPlaceDetail = onOpenPlaceDetail
+                    onOpenPlaceDetail = onOpenPlaceDetail,
+                    onOpenRecommendations = onOpenRecommendations
                 )
                 UserBottomTab.ALERTAS -> NotificationsRoute(onOpenPlaceDetail = onOpenPlaceDetail)
                 UserBottomTab.PERFIL -> ProfileRoute(
                     onOpenMyPlaces = onOpenMyPlaces,
+                    onOpenRecommendations = onOpenRecommendations,
                     onOpenAccountSettings = onOpenAccountSettings,
                     onLoggedOut = onLoggedOut
                 )

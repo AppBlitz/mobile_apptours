@@ -58,7 +58,10 @@ internal fun FeedList(
     visitedPlaceIds: Set<String>,
     onToggleInterest: (String) -> Unit,
     onToggleVisited: (String) -> Unit,
-    onOpenPlaceDetail: (String) -> Unit
+    onOpenPlaceDetail: (String) -> Unit,
+    topRecommendationTitle: String?,
+    recommendationsColdStart: Boolean,
+    onOpenRecommendations: () -> Unit
 ) {
 
     LazyColumn(
@@ -68,6 +71,14 @@ internal fun FeedList(
         verticalArrangement = Arrangement.spacedBy(14.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
+        item {
+            RecommendationsTeaserCard(
+                topTitle = topRecommendationTitle,
+                isColdStart = recommendationsColdStart,
+                onClick = onOpenRecommendations
+            )
+        }
+
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
