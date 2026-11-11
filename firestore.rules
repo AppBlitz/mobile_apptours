@@ -89,7 +89,7 @@ service cloud.firestore {
       //     algo verificado y dejarlo verificado: cualquier cambio vuelve a revisión).
       //   - Solo puede marcarla RESUELTA si ya estaba VERIFICADA (si no, saltaría la moderación).
       //   - Nunca puede ponerla VERIFICADA ni RECHAZADA ni escribir moderatorId / reviewedAt.
-      // Moderador: verifica, rechaza o resuelve. Cualquiera: solo el contador de votos o el de visitas (T-05).
+      // Moderador: verifica, rechaza o resuelve (resolver, igual que el autor, solo desde VERIFICADA). Cualquiera: solo el contador de votos o el de visitas (T-05).
       allow update: if (isOwner(resource.data.authorId)
           && (validImages() || request.resource.data.status == 'RESUELTA')
           && request.resource.data.authorId == resource.data.authorId
@@ -100,7 +100,10 @@ service cloud.firestore {
               || request.resource.data.get('rejectionReason', null) == resource.data.get('rejectionReason', null))
           && (request.resource.data.status == 'PENDIENTE'
               || (request.resource.data.status == 'RESUELTA' && resource.data.status == 'VERIFICADA')))
-        || isModerator()
+        || (isModerator()
+          && (request.resource.data.status != 'RESUELTA'
+              || resource.data.status == 'RESUELTA'
+              || resource.data.status == 'VERIFICADA'))
         || (signedIn() && onlyChanges(['votesCount']))
         || (signedIn() && onlyChanges(['visitsCount']));
       allow delete: if isOwner(resource.data.authorId) || isModerator();

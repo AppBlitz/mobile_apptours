@@ -332,6 +332,7 @@
     </plurals>
     <string name="review_resolve">Marcar resuelta</string>
     <string name="review_reject">Rechazar</string>
+    <string name="review_other_actions">Otras acciones</string>
     <string name="reject_title">Rechazar publicación</string>
     <string name="reject_place_by">%1$s · por %2$s</string>
     <string name="reject_body">La publicación dejará de mostrarse en el feed público y el autor verá tu motivo en sus notificaciones.</string>

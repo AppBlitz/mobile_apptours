@@ -332,6 +332,7 @@
     </plurals>
     <string name="review_resolve">Mark resolved</string>
     <string name="review_reject">Reject</string>
+    <string name="review_other_actions">Other actions</string>
     <string name="reject_title">Reject post</string>
     <string name="reject_place_by">%1$s · by %2$s</string>
     <string name="reject_body">The post will no longer appear in the public feed and the author will see your reason in their notifications.</string>

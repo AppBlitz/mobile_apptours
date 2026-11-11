@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Surface
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -107,8 +108,9 @@ fun ModeratorReviewScreen(
     }
 
     // Qué acciones tienen sentido según el estado actual (M-02, M-03, M-04).
+    // Solo se resuelve lo ya verificado: así nada llega al feed sin pasar por la lista de verificación.
     val canBeVerified = place.status == PlaceStatus.PENDIENTE || place.status == PlaceStatus.RECHAZADA
-    val canBeResolved = place.status != PlaceStatus.RESUELTA
+    val canBeResolved = place.status == PlaceStatus.VERIFICADA
     val canBeRejected = place.status != PlaceStatus.RECHAZADA
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -152,6 +154,22 @@ fun ModeratorReviewScreen(
                             enabled = !state.isProcessing
                         )
                     }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ColabPrimaryButton(
+                        text = stringResource(R.string.review_verify),
+                        leadingIcon = Icons.Filled.Check,
+                        enabled = state.canVerify,
+                        onClick = actions.onVerify
+                    )
+                    if (!state.canVerify && !state.isProcessing) {
+                        val missing = ChecklistItem.entries.size - state.checkedItems.size
+                        Text(
+                            text = pluralStringResource(R.plurals.review_verify_missing, missing, missing),
+                            fontSize = 12.sp,
+                            color = ColabTextSecondary,
+                            modifier = Modifier.padding(top = 4.dp, start = 6.dp)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -175,22 +193,15 @@ fun ModeratorReviewScreen(
             state.comments.forEach { comment -> CommentCard(comment = comment) }
 
             Column(modifier = Modifier.padding(20.dp)) {
-                if (canBeVerified) {
-                    ColabPrimaryButton(
-                        text = stringResource(R.string.review_verify),
-                        leadingIcon = Icons.Filled.Check,
-                        enabled = state.canVerify,
-                        onClick = actions.onVerify
+                if (canBeResolved || canBeRejected) {
+                    HorizontalDivider(color = ColabTextSecondary.copy(alpha = 0.25f))
+                    Spacer(modifier = Modifier.height(14.dp))
+                    Text(
+                        text = stringResource(R.string.review_other_actions),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = ColabDarkGreen
                     )
-                    if (!state.canVerify && !state.isProcessing) {
-                        val missing = ChecklistItem.entries.size - state.checkedItems.size
-                        Text(
-                            text = pluralStringResource(R.plurals.review_verify_missing, missing, missing),
-                            fontSize = 12.sp,
-                            color = ColabTextSecondary,
-                            modifier = Modifier.padding(top = 4.dp, start = 6.dp)
-                        )
-                    }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
