@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    El SDK de mapas lee el token con getIdentifier("mapbox_access_token"), es decir, por nombre.
+    El reductor de recursos del build release no ve esa referencia y lo eliminaba: sin token,
+    el mapa lanzaba una excepción y la app se cerraba al abrir cualquier pantalla con mapa.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/mapbox_access_token" />
