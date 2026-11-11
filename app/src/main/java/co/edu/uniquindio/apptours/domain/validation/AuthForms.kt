@@ -22,7 +22,7 @@ object AuthForms {
     val PROFILE_ORDER = listOf(FormField.FULL_NAME, FormField.EMAIL)
 
     fun login(email: String, password: String) = errorsOf(
-        FormField.EMAIL to Validators.email(email),
+        FormField.EMAIL to Validators.emailAddress(email),
         FormField.PASSWORD to Validators.required(password)
     )
 
@@ -33,18 +33,18 @@ object AuthForms {
         confirmation: String,
         termsAccepted: Boolean
     ) = errorsOf(
-        FormField.FULL_NAME to Validators.required(fullName),
-        FormField.EMAIL to Validators.email(email),
-        FormField.PASSWORD to Validators.newPassword(password),
+        FormField.FULL_NAME to Validators.personName(fullName),
+        FormField.EMAIL to Validators.emailAddress(email),
+        FormField.PASSWORD to Validators.strongPassword(password),
         FormField.PASSWORD_CONFIRMATION to Validators.confirmation(password, confirmation),
         FormField.TERMS to Validators.accepted(termsAccepted)
     )
 
-    fun passwordReset(email: String) = errorsOf(FormField.EMAIL to Validators.email(email))
+    fun passwordReset(email: String) = errorsOf(FormField.EMAIL to Validators.emailAddress(email))
 
     fun profile(fullName: String, email: String) = errorsOf(
-        FormField.FULL_NAME to Validators.required(fullName),
-        FormField.EMAIL to Validators.email(email)
+        FormField.FULL_NAME to Validators.personName(fullName),
+        FormField.EMAIL to Validators.emailAddress(email)
     )
 
     private fun errorsOf(vararg checks: Pair<FormField, FieldError?>): Map<FormField, FieldError> =

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.domain.usecase.place
 
+import co.edu.uniquindio.apptours.core.util.Validators
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.domain.model.PlaceDraft
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
@@ -28,7 +29,7 @@ class UpdatePlaceUseCase @Inject constructor(
 
         return placeRepository.update(
             place.copy(
-                title = draft.title.trim(),
+                title = Validators.singleSpaced(draft.title),
                 category = requireNotNull(draft.category),
                 description = draft.description.trim(),
                 priceRange = requireNotNull(draft.priceRange),

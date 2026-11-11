@@ -8,6 +8,8 @@ data class User(
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
     val addressLabel: String = "",
+    /** Foto de perfil en la nube; vacía si el usuario no ha cargado una (se ven las iniciales). */
+    val photoUrl: String = "",
     val points: Int = 0,
     /** Comentarios escritos (para las insignias de comentarista). */
     val commentsCount: Int = 0,

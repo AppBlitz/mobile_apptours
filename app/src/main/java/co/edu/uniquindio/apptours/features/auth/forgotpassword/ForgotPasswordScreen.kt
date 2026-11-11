@@ -185,6 +185,7 @@ fun ForgotPasswordScreen(
                 value = state.email,
                 onValueChange = onEmailChange,
                 label = stringResource(R.string.field_email_label),
+                keyboardOptions = ColabKeyboard.Email,
                 placeholder = stringResource(R.string.field_email_placeholder),
                 leadingIcon = Icons.Filled.Email,
                 errorMessage = state.form.messageOf(FormField.EMAIL),

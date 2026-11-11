@@ -12,7 +12,7 @@ object ModerationForms {
     const val MAX_REASON_LENGTH = 300
 
     fun rejection(reason: String): Map<FormField, FieldError> =
-        Validators.text(reason, MIN_REASON_LENGTH, MAX_REASON_LENGTH)
+        Validators.freeText(reason, MIN_REASON_LENGTH, MAX_REASON_LENGTH)
             ?.let { mapOf(FormField.REJECTION_REASON to it) }
             .orEmpty()
 }

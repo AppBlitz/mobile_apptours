@@ -11,6 +11,7 @@ import co.edu.uniquindio.apptours.core.util.toMessageRes
 import co.edu.uniquindio.apptours.domain.model.DefaultLocation
 import co.edu.uniquindio.apptours.domain.usecase.auth.DeleteAccountUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.GetCurrentUserUseCase
+import co.edu.uniquindio.apptours.domain.usecase.user.UpdateProfilePhotoUseCase
 import co.edu.uniquindio.apptours.domain.usecase.user.UpdateProfileUseCase
 import co.edu.uniquindio.apptours.domain.validation.AuthForms
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,6 +33,10 @@ data class AccountSettingsUiState(
     @StringRes val loadErrorRes: Int? = null,
     val isSaving: Boolean = false,
     val initials: String = "",
+    val photoUrl: String = "",
+    /** Avance de 0 a 1 mientras se carga la foto de perfil; null si no se está cargando. */
+    val photoUploadProgress: Float? = null,
+    val photoSavedBanner: Boolean = false,
     val fullName: String = "",
     val email: String = "",
     /** Las cuentas de Google no cambian el correo desde la app. */
@@ -55,6 +60,7 @@ sealed interface AccountSettingsEvent {
 class AccountSettingsViewModel @Inject constructor(
     private val getCurrentUser: GetCurrentUserUseCase,
     private val updateProfile: UpdateProfileUseCase,
+    private val updateProfilePhoto: UpdateProfilePhotoUseCase,
     private val deleteAccount: DeleteAccountUseCase
 ) : ViewModel() {
 
@@ -81,11 +87,12 @@ class AccountSettingsViewModel @Inject constructor(
                 .collect { user ->
                     _uiState.update { state ->
                         if (state.isLoaded) {
-                            state.copy(initials = user.initials)
+                            state.copy(initials = user.initials, photoUrl = user.photoUrl)
                         } else {
                             state.copy(
                                 isLoaded = true,
                                 initials = user.initials,
+                                photoUrl = user.photoUrl,
                                 fullName = user.fullName,
                                 email = user.email,
                                 canChangeEmail = updateProfile.canChangeEmail(),
@@ -113,9 +120,36 @@ class AccountSettingsViewModel @Inject constructor(
         it.copy(latitude = latitude, longitude = longitude).edited()
     }
 
+    /** Foto nueva (cámara o galería): se carga y se guarda de una vez, sin esperar a "Guardar cambios". */
+    fun onPhotoPicked(localUri: String) {
+        if (_uiState.value.photoUploadProgress != null) return
+        _uiState.update { it.edited().copy(photoUploadProgress = 0f) }
+        viewModelScope.launch {
+            updateProfilePhoto(localUri) { progress ->
+                _uiState.update { it.copy(photoUploadProgress = progress) }
+            }
+                .onSuccess { url ->
+                    _uiState.update { it.copy(photoUploadProgress = null, photoUrl = url, photoSavedBanner = true) }
+                }
+                .onFailure { error ->
+                    _uiState.update { it.copy(photoUploadProgress = null, errorRes = error.toMessageRes()) }
+                }
+        }
+    }
+
+    fun onRemovePhoto() {
+        if (_uiState.value.photoUploadProgress != null) return
+        _uiState.update { it.edited().copy(isSaving = true) }
+        viewModelScope.launch {
+            updateProfilePhoto.remove()
+                .onSuccess { _uiState.update { it.copy(isSaving = false, photoUrl = "", photoSavedBanner = true) } }
+                .onFailure { error -> _uiState.update { it.copy(isSaving = false, errorRes = error.toMessageRes()) } }
+        }
+    }
+
     fun onSave() {
         val s = _uiState.value
-        if (s.isSaving) return
+        if (s.isSaving || s.photoUploadProgress != null) return
         val errors = s.validate()
         if (errors.isNotEmpty()) {
             showFieldErrors(errors)
@@ -166,5 +200,5 @@ class AccountSettingsViewModel @Inject constructor(
     private fun AccountSettingsUiState.touch(field: FormField) = copy(form = form.touch(field, validate()))
 
     private fun AccountSettingsUiState.edited() =
-        copy(savedBanner = false, emailVerificationSentTo = null, errorRes = null)
+        copy(savedBanner = false, photoSavedBanner = false, emailVerificationSentTo = null, errorRes = null)
 }

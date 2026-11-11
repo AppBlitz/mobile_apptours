@@ -3,8 +3,16 @@ package co.edu.uniquindio.apptours.domain.repository
 /** Guarda fotos en la nube y devuelve la dirección pública con la que se muestran. */
 interface ImageRepository {
     /**
-     * Comprime y sube la foto local [localUri] (content://…).
+     * Comprime y sube la foto local [localUri] (content://…) a la carpeta de [kind].
      * [onProgress] recibe el avance de 0 a 1 mientras se envía.
      */
-    suspend fun upload(localUri: String, onProgress: (Float) -> Unit = {}): Result<String>
+    suspend fun upload(
+        localUri: String,
+        kind: ImageKind = ImageKind.PLACE,
+        onProgress: (Float) -> Unit = {}
+    ): Result<String>
+}
+
+/** Para qué es la foto: se guardan en carpetas distintas. */
+enum class ImageKind { PLACE, PROFILE
 }

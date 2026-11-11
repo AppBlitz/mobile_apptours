@@ -29,6 +29,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -65,7 +68,8 @@ fun ColabTextField(
     minLines: Int = 1,
     enabled: Boolean = true,
     fieldRequester: FieldRequester? = null,
-    onFocusLost: () -> Unit = {}
+    onFocusLost: () -> Unit = {},
+    keyboardOptions: KeyboardOptions = if (isPassword) ColabKeyboard.Password else ColabKeyboard.Sentences
 ) {
     // Solo cuenta como "perdió el foco" si antes lo tuvo (al componer llega un evento sin foco).
     var hadFocus by remember { mutableStateOf(false) }
@@ -120,7 +124,8 @@ fun ColabTextField(
                 disabledTextColor = ColabTextSecondary
             ),
             singleLine = singleLine,
-            minLines = minLines
+            minLines = minLines,
+            keyboardOptions = keyboardOptions
         )
         if (errorMessage != null) {
             Text(
@@ -131,4 +136,12 @@ fun ColabTextField(
             )
         }
     }
+}
+
+/** Teclado adecuado para cada tipo de campo (correo con @, contraseña sin sugerencias, nombres en mayúscula inicial). */
+object ColabKeyboard {
+    val Email = KeyboardOptions(keyboardType = KeyboardType.Email, autoCorrectEnabled = false)
+    val Password = KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrectEnabled = false)
+    val Name = KeyboardOptions(keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Words)
+    val Sentences = KeyboardOptions(keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Sentences)
 }

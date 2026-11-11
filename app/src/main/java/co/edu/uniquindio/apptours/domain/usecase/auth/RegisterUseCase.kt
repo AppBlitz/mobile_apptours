@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.domain.usecase.auth
 
+import co.edu.uniquindio.apptours.core.util.Validators
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.domain.model.User
 import co.edu.uniquindio.apptours.domain.model.UserRole
@@ -29,7 +30,7 @@ class RegisterUseCase @Inject constructor(
         return authRepository.register(cleanEmail, password).mapCatching { uid ->
             val user = User(
                 id = uid,
-                fullName = fullName.trim(),
+                fullName = Validators.singleSpaced(fullName),
                 email = cleanEmail,
                 role = UserRole.USER,
                 latitude = latitude,

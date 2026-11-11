@@ -52,6 +52,7 @@ import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.core.util.*
 import co.edu.uniquindio.apptours.domain.model.*
 import co.edu.uniquindio.apptours.features.user.account.components.LanguageSelector
+import co.edu.uniquindio.apptours.features.user.account.components.ProfilePhotoEditor
 
 @Composable
 fun AccountSettingsRoute(
@@ -79,6 +80,8 @@ fun AccountSettingsRoute(
         onEmailChange = viewModel::onEmailChange,
         onFieldFocusLost = viewModel::onFieldFocusLost,
         onChangeLocation = viewModel::onChangeLocation,
+        onPhotoPicked = viewModel::onPhotoPicked,
+        onRemovePhoto = viewModel::onRemovePhoto,
         onSave = viewModel::onSave,
         onRequestDelete = viewModel::onRequestDelete,
         onDismissDelete = viewModel::onDismissDelete,
@@ -96,6 +99,8 @@ fun AccountSettingsScreen(
     onEmailChange: (String) -> Unit,
     onFieldFocusLost: (FormField) -> Unit,
     onChangeLocation: (Double, Double) -> Unit,
+    onPhotoPicked: (String) -> Unit,
+    onRemovePhoto: () -> Unit,
     onSave: () -> Unit,
     onRequestDelete: () -> Unit,
     onDismissDelete: () -> Unit,
@@ -143,45 +148,14 @@ fun AccountSettingsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Avatar VR con icono de cámara
-            Box(modifier = Modifier.size(92.dp)) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    shape = CircleShape,
-                    color = ColabBrown,
-                    border = BorderStroke(2.dp, ColabLightGreen)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = state.initials,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = ColabDarkGreen
-                        )
-                    }
-                }
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .size(32.dp),
-                    shape = CircleShape,
-                    color = ColabDarkGreen,
-                    border = BorderStroke(2.dp, Color.White)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Outlined.PhotoCamera,
-                            contentDescription = stringResource(R.string.account_change_photo),
-                            tint = Color.White,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-            }
-
-            TextButton(onClick = {}) {
-                Text(stringResource(R.string.account_change_photo), color = ColabDarkGreen, fontWeight = FontWeight.SemiBold)
-            }
+            ProfilePhotoEditor(
+                photoUrl = state.photoUrl,
+                initials = state.initials,
+                uploadProgress = state.photoUploadProgress,
+                enabled = !state.isSaving,
+                onPhotoPicked = onPhotoPicked,
+                onRemovePhoto = onRemovePhoto
+            )
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -189,6 +163,7 @@ fun AccountSettingsScreen(
                 value = state.fullName,
                 onValueChange = onFullNameChange,
                 label = stringResource(R.string.field_full_name_label),
+                keyboardOptions = ColabKeyboard.Name,
                 placeholder = stringResource(R.string.field_full_name_placeholder),
                 errorMessage = state.form.messageOf(FormField.FULL_NAME),
                 fieldRequester = requesters[FormField.FULL_NAME],
@@ -201,6 +176,7 @@ fun AccountSettingsScreen(
                 value = state.email,
                 onValueChange = onEmailChange,
                 label = stringResource(R.string.field_email_label),
+                keyboardOptions = ColabKeyboard.Email,
                 placeholder = stringResource(R.string.field_email_placeholder),
                 enabled = state.canChangeEmail,
                 errorMessage = state.form.messageOf(FormField.EMAIL),
@@ -288,6 +264,19 @@ fun AccountSettingsScreen(
                         text = stringResource(state.errorRes),
                         color = ColabError,
                         fontSize = 13.sp,
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            }
+
+            if (state.photoSavedBanner) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Surface(color = ColabSageBg, shape = RoundedCornerShape(12.dp), modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(R.string.account_photo_saved),
+                        color = ColabDarkGreen,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(12.dp)
                     )
                 }

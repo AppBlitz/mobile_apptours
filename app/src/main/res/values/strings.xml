@@ -429,7 +429,7 @@
     <string name="field_password_placeholder">Tu contraseña</string>
     <string name="field_full_name_label">Nombre completo</string>
     <string name="field_full_name_placeholder">Tu nombre</string>
-    <string name="field_password_new_placeholder">Mínimo 8 caracteres</string>
+    <string name="field_password_new_placeholder">Mínimo 8, con letras y números</string>
     <string name="field_password_confirm_label">Confirmar contraseña</string>
     <string name="field_password_confirm_placeholder">Repite tu contraseña</string>
     <string name="password_toggle">Mostrar u ocultar la contraseña</string>
@@ -540,4 +540,24 @@
     <string name="language_spanish" translatable="false">Español</string>
     <string name="language_english" translatable="false">English</string>
     <string name="language_hint">“Sistema” usa el idioma del teléfono.</string>
+    <!-- Fotos: cámara o galería -->
+    <string name="photos_source_title">Agregar foto</string>
+    <string name="photos_take_photo">Tomar foto</string>
+    <string name="photos_from_gallery">Elegir de la galería</string>
+    <string name="photos_camera_unavailable">No encontramos una app de cámara en este dispositivo.</string>
+
+    <!-- Foto de perfil -->
+    <string name="account_photo_description">Foto de perfil</string>
+    <string name="account_photo_uploading">Cargando foto… %1$d %%</string>
+    <string name="account_photo_saved">Foto de perfil actualizada.</string>
+
+    <!-- Validaciones de contenido -->
+    <string name="error_name_invalid">El nombre solo puede tener letras y un espacio entre palabras (también guion o apóstrofo), sin números ni símbolos</string>
+    <string name="error_password_letters_digits">La contraseña debe combinar letras y números</string>
+    <string name="error_password_edge_spaces">La contraseña no puede empezar ni terminar con un espacio</string>
+    <string name="error_title_invalid_chars" formatted="false">Usa solo letras, números y signos básicos (. , : - \' &amp; ( ) # ! ? / %)</string>
+    <string name="error_text_forbidden_chars">No uses los signos &lt; ni &gt;</string>
+    <string name="error_text_no_letters">Escribe palabras: el texto no puede tener solo números o símbolos</string>
+    <string name="error_comment_no_letters">El comentario debe tener letras o números, no solo símbolos</string>
+    <string name="error_text_repeated_chars">No repitas el mismo carácter más de %1$d veces seguidas</string>
 </resources>

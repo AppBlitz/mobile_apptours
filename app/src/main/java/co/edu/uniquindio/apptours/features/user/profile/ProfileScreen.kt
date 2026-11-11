@@ -109,6 +109,7 @@ fun ProfileScreen(
         ProfileHeader(
             fullName = user?.fullName.orEmpty(),
             initials = user?.initials.orEmpty(),
+            photoUrl = user?.photoUrl.orEmpty(),
             points = user?.points ?: 0,
             levelProgress = state.levelProgress,
             onOpenAccountSettings = onOpenAccountSettings,

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.domain.usecase.user
 
+import co.edu.uniquindio.apptours.core.util.Validators
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.domain.repository.AuthRepository
 import co.edu.uniquindio.apptours.domain.repository.UserRepository
@@ -39,7 +40,7 @@ class UpdateProfileUseCase @Inject constructor(
         }
 
         return userRepository.update(
-            user.copy(fullName = fullName.trim(), latitude = latitude, longitude = longitude)
+            user.copy(fullName = Validators.singleSpaced(fullName), latitude = latitude, longitude = longitude)
         ).map { if (emailChanged) newEmail else null }
     }
 }

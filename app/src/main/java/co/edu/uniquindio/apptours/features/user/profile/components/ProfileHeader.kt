@@ -54,6 +54,7 @@ import co.edu.uniquindio.apptours.domain.model.*
 internal fun ProfileHeader(
     fullName: String,
     initials: String,
+    photoUrl: String,
     points: Int,
     levelProgress: Float,
     onOpenAccountSettings: () -> Unit,
@@ -102,20 +103,13 @@ internal fun ProfileHeader(
         Spacer(modifier = Modifier.height(10.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Surface(
-                modifier = Modifier.size(64.dp),
-                shape = CircleShape,
-                color = ColabBrown
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = initials,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = ColabDarkGreen
-                    )
-                }
-            }
+            UserAvatar(
+                photoUrl = photoUrl,
+                initials = initials,
+                fontSize = 22.sp,
+                contentDescription = stringResource(R.string.account_photo_description),
+                modifier = Modifier.size(64.dp)
+            )
             Spacer(modifier = Modifier.width(14.dp))
             Column {
                 Text(

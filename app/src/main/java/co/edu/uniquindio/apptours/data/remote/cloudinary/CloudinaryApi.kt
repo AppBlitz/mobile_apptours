@@ -22,5 +22,6 @@ interface CloudinaryApi {
     companion object {
         const val BASE_URL = "https://api.cloudinary.com/"
         const val FOLDER = "colabtour/places"
+        const val PROFILE_FOLDER = "colabtour/profiles"
     }
 }

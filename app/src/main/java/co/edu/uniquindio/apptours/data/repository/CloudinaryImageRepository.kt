@@ -6,6 +6,7 @@ import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.data.remote.cloudinary.CloudinaryApi
 import co.edu.uniquindio.apptours.data.remote.cloudinary.ImageCompressor
 import co.edu.uniquindio.apptours.data.remote.cloudinary.ProgressRequestBody
+import co.edu.uniquindio.apptours.domain.repository.ImageKind
 import co.edu.uniquindio.apptours.domain.repository.ImageRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,7 @@ class CloudinaryImageRepository @Inject constructor(
     private val compressor: ImageCompressor
 ) : ImageRepository {
 
-    override suspend fun upload(localUri: String, onProgress: (Float) -> Unit): Result<String> =
+    override suspend fun upload(localUri: String, kind: ImageKind, onProgress: (Float) -> Unit): Result<String> =
         withContext(Dispatchers.IO) {
             if (BuildConfig.CLOUDINARY_CLOUD_NAME.isBlank() || BuildConfig.CLOUDINARY_UPLOAD_PRESET.isBlank()) {
                 Log.e(TAG, "Faltan CLOUDINARY_CLOUD_NAME o CLOUDINARY_UPLOAD_PRESET en local.properties")
@@ -45,7 +46,7 @@ class CloudinaryImageRepository @Inject constructor(
                     cloudName = BuildConfig.CLOUDINARY_CLOUD_NAME,
                     file = filePart,
                     uploadPreset = BuildConfig.CLOUDINARY_UPLOAD_PRESET.toRequestBody(TEXT),
-                    folder = CloudinaryApi.FOLDER.toRequestBody(TEXT)
+                    folder = kind.folder().toRequestBody(TEXT)
                 )
                 Result.success(response.secureUrl)
             } catch (e: CancellationException) {
@@ -66,6 +67,11 @@ class CloudinaryImageRepository @Inject constructor(
                 Result.failure(AppException.ImageUploadFailed)
             }
         }
+
+    private fun ImageKind.folder(): String = when (this) {
+        ImageKind.PLACE -> CloudinaryApi.FOLDER
+        ImageKind.PROFILE -> CloudinaryApi.PROFILE_FOLDER
+    }
 
     private companion object {
         const val TAG = "CloudinaryImageRepo"

@@ -80,6 +80,15 @@ fun FieldError.message(field: FormField): String = when (this) {
     FieldError.Mismatch -> stringResource(R.string.error_password_mismatch)
     FieldError.InvalidTime -> stringResource(R.string.error_time_invalid)
     FieldError.CloseBeforeOpen -> stringResource(R.string.error_close_before_open)
+    FieldError.InvalidName -> stringResource(R.string.error_name_invalid)
+    FieldError.PasswordNeedsLetterAndDigit -> stringResource(R.string.error_password_letters_digits)
+    FieldError.PasswordEdgeSpaces -> stringResource(R.string.error_password_edge_spaces)
+    FieldError.InvalidTitleCharacters -> stringResource(R.string.error_title_invalid_chars)
+    FieldError.ForbiddenCharacters -> stringResource(R.string.error_text_forbidden_chars)
+    FieldError.NoLetters -> stringResource(
+        if (field == FormField.COMMENT) R.string.error_comment_no_letters else R.string.error_text_no_letters
+    )
+    is FieldError.RepeatedCharacters -> stringResource(R.string.error_text_repeated_chars, max)
 }
 
 /** Mensaje visible del campo en el formulario, o null si no está tocado o es válido. */

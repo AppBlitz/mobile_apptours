@@ -429,7 +429,7 @@
     <string name="field_password_placeholder">Your password</string>
     <string name="field_full_name_label">Full name</string>
     <string name="field_full_name_placeholder">Your name</string>
-    <string name="field_password_new_placeholder">At least 8 characters</string>
+    <string name="field_password_new_placeholder">At least 8, with letters and numbers</string>
     <string name="field_password_confirm_label">Confirm password</string>
     <string name="field_password_confirm_placeholder">Repeat your password</string>
     <string name="password_toggle">Show or hide the password</string>
@@ -533,4 +533,24 @@
     <string name="language_title">Language</string>
     <string name="language_system">System</string>
     <string name="language_hint">“System” uses the phone\'s language.</string>
+    <!-- Photos: camera or gallery -->
+    <string name="photos_source_title">Add photo</string>
+    <string name="photos_take_photo">Take photo</string>
+    <string name="photos_from_gallery">Choose from gallery</string>
+    <string name="photos_camera_unavailable">We couldn\'t find a camera app on this device.</string>
+
+    <!-- Profile photo -->
+    <string name="account_photo_description">Profile photo</string>
+    <string name="account_photo_uploading">Uploading photo… %1$d %%</string>
+    <string name="account_photo_saved">Profile photo updated.</string>
+
+    <!-- Content validation -->
+    <string name="error_name_invalid">The name can only have letters and one space between words (hyphens or apostrophes too), no numbers or symbols</string>
+    <string name="error_password_letters_digits">The password must mix letters and numbers</string>
+    <string name="error_password_edge_spaces">The password can\'t start or end with a space</string>
+    <string name="error_title_invalid_chars" formatted="false">Use only letters, numbers and basic punctuation (. , : - \' &amp; ( ) # ! ? / %)</string>
+    <string name="error_text_forbidden_chars">Don\'t use the &lt; or &gt; signs</string>
+    <string name="error_text_no_letters">Write words: the text can\'t be only numbers or symbols</string>
+    <string name="error_comment_no_letters">The comment must have letters or numbers, not only symbols</string>
+    <string name="error_text_repeated_chars">Don\'t repeat the same character more than %1$d times in a row</string>
 </resources>

@@ -34,9 +34,9 @@ object PlaceForms {
     )
 
     fun place(draft: PlaceDraft) = errorsOf(
-        FormField.TITLE to Validators.text(draft.title, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH),
+        FormField.TITLE to Validators.title(draft.title, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH),
         FormField.CATEGORY to selected(draft.category),
-        FormField.DESCRIPTION to Validators.text(draft.description, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH),
+        FormField.DESCRIPTION to Validators.freeText(draft.description, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH),
         FormField.PRICE_RANGE to selected(draft.priceRange),
         FormField.DAYS to if (draft.daysActive.isEmpty()) FieldError.Required else null,
         FormField.OPEN_TIME to Validators.time(draft.openTime),
@@ -46,13 +46,13 @@ object PlaceForms {
     )
 
     fun comment(text: String) = errorsOf(
-        FormField.COMMENT to Validators.text(text, min = 1, max = MAX_COMMENT_LENGTH)
+        FormField.COMMENT to Validators.comment(text, max = MAX_COMMENT_LENGTH)
     )
 
     /** La calificación es obligatoria; el texto es opcional pero no puede pasar del máximo. */
     fun experience(rating: Int?, text: String) = errorsOf(
         FormField.RATING to if (rating == null || rating !in MIN_RATING..MAX_RATING) FieldError.Required else null,
-        FormField.COMMENT to if (text.trim().length > MAX_COMMENT_LENGTH) FieldError.TooLong(MAX_COMMENT_LENGTH) else null
+        FormField.COMMENT to Validators.comment(text, max = MAX_COMMENT_LENGTH, required = false)
     )
 
     private fun selected(value: Any?): FieldError? = if (value == null) FieldError.Required else null

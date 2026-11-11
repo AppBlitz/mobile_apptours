@@ -19,6 +19,7 @@ data class UserDto(
     val latitude: Double = DefaultLocation.LATITUDE,
     val longitude: Double = DefaultLocation.LONGITUDE,
     val addressLabel: String = "",
+    val photoUrl: String = "",
     val points: Int = 0,
     val commentsCount: Int = 0,
     val badges: Map<String, Timestamp> = emptyMap()
@@ -29,7 +30,8 @@ data class UserDto(
         "email" to email,
         "latitude" to latitude,
         "longitude" to longitude,
-        "addressLabel" to addressLabel
+        "addressLabel" to addressLabel,
+        "photoUrl" to photoUrl
     )
 
     fun toMap(): Map<String, Any?> = profileFields() + mapOf(
@@ -48,6 +50,7 @@ data class UserDto(
         latitude = latitude,
         longitude = longitude,
         addressLabel = addressLabel,
+        photoUrl = photoUrl,
         points = points,
         commentsCount = commentsCount,
         earnedBadges = badges.mapValues { it.value.toMillis() }
@@ -62,6 +65,7 @@ data class UserDto(
             latitude = doc.getDouble("latitude") ?: DefaultLocation.LATITUDE,
             longitude = doc.getDouble("longitude") ?: DefaultLocation.LONGITUDE,
             addressLabel = doc.getString("addressLabel").orEmpty(),
+            photoUrl = doc.getString("photoUrl").orEmpty(),
             points = doc.getLong("points")?.toInt() ?: 0,
             commentsCount = doc.getLong("commentsCount")?.toInt() ?: 0,
             badges = (doc.get("badges") as? Map<*, *>).orEmpty()
@@ -79,6 +83,7 @@ fun User.toDto(): UserDto = UserDto(
     latitude = latitude,
     longitude = longitude,
     addressLabel = addressLabel,
+    photoUrl = photoUrl,
     points = points,
     commentsCount = commentsCount,
     badges = earnedBadges.mapValues { it.value.toTimestamp() }

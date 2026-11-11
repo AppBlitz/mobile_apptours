@@ -1,8 +1,5 @@
 package co.edu.uniquindio.apptours.features.user.placeform.components
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -16,6 +13,10 @@ import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +28,8 @@ import androidx.compose.ui.unit.sp
 import co.edu.uniquindio.apptours.R
 import co.edu.uniquindio.apptours.core.designsystem.components.AsyncPlaceImage
 import co.edu.uniquindio.apptours.core.designsystem.components.FieldErrorText
+import co.edu.uniquindio.apptours.core.designsystem.components.PhotoSourceSheet
+import co.edu.uniquindio.apptours.core.designsystem.components.rememberPhotoSourceLauncher
 import co.edu.uniquindio.apptours.core.designsystem.components.fieldBorderColor
 import co.edu.uniquindio.apptours.core.designsystem.components.fieldLabelColor
 import co.edu.uniquindio.apptours.core.designsystem.form.FieldRequester
@@ -35,7 +38,7 @@ import co.edu.uniquindio.apptours.core.theme.*
 import co.edu.uniquindio.apptours.domain.validation.PlaceForms
 
 /**
- * Fotos de la publicación con el selector del sistema (sin permisos de almacenamiento).
+ * Fotos de la publicación: se toman con la cámara o se eligen de la galería (sin permisos de almacenamiento).
  * Muestra la vista previa de cada foto con su botón para quitarla; la primera es la portada.
  */
 @Composable
@@ -48,17 +51,12 @@ internal fun PhotoPickerSection(
     requester: FieldRequester
 ) {
     val remaining = PlaceForms.MAX_PHOTOS - photos.size
-    // El selector múltiple exige un máximo de 2 o más; si solo cabe una foto se usa el sencillo.
-    val pickMany = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickMultipleVisualMedia(PlaceForms.MAX_PHOTOS)
-    ) { uris -> onPhotosPicked(uris.map { it.toString() }) }
-    val pickOne = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri -> onPhotosPicked(listOfNotNull(uri?.toString())) }
+    var showSourceSheet by rememberSaveable { mutableStateOf(false) }
+    val photoSource = rememberPhotoSourceLauncher(maxPhotos = remaining.coerceAtLeast(1), onPicked = onPhotosPicked)
+    val openPicker = { showSourceSheet = true }
 
-    val openPicker = {
-        val request = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-        if (remaining > 1) pickMany.launch(request) else pickOne.launch(request)
+    if (showSourceSheet) {
+        PhotoSourceSheet(launcher = photoSource, onDismiss = { showSourceSheet = false })
     }
 
     Column(modifier = Modifier.formField(requester)) {

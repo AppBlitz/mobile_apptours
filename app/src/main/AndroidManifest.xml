@@ -39,6 +39,17 @@
             </intent-filter>
         </activity>
 
+        <!-- "Tomar foto": la cámara del sistema guarda la foto en la caché de la app a través de este proveedor. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!-- Android 12 o menor: AppCompat guarda el idioma elegido en la app y lo aplica al abrirla. -->
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

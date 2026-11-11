@@ -1,5 +1,6 @@
 package co.edu.uniquindio.apptours.domain.usecase.place
 
+import co.edu.uniquindio.apptours.core.util.Validators
 import co.edu.uniquindio.apptours.domain.model.Place
 import co.edu.uniquindio.apptours.domain.model.PlaceDraft
 import co.edu.uniquindio.apptours.domain.model.PlaceStatus
@@ -27,7 +28,7 @@ class CreatePlaceUseCase @Inject constructor(
         // Tras validar, categoría, precio y ubicación ya no son nulos.
         val place = Place(
             id = "",
-            title = draft.title.trim(),
+            title = Validators.singleSpaced(draft.title),
             category = requireNotNull(draft.category),
             description = draft.description.trim(),
             priceRange = requireNotNull(draft.priceRange),

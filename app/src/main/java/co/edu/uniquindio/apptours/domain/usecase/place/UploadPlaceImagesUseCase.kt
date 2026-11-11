@@ -3,6 +3,7 @@ package co.edu.uniquindio.apptours.domain.usecase.place
 import co.edu.uniquindio.apptours.core.common.AppException
 import co.edu.uniquindio.apptours.core.common.FieldError
 import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.domain.repository.ImageKind
 import co.edu.uniquindio.apptours.domain.repository.ImageRepository
 import co.edu.uniquindio.apptours.domain.validation.PlaceForms
 import javax.inject.Inject
@@ -27,7 +28,7 @@ class UploadPlaceImagesUseCase @Inject constructor(
         var done = 0
         val urls = selected.map { photo ->
             if (isUploaded(photo)) return@map photo
-            val url = imageRepository.upload(photo) { fraction -> onProgress((done + fraction) / pending) }
+            val url = imageRepository.upload(photo, ImageKind.PLACE) { fraction -> onProgress((done + fraction) / pending) }
                 .getOrElse { return Result.failure(it) }
             done++
             url
