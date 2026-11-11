@@ -58,8 +58,12 @@ class ImageCompressor @Inject constructor(
         return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
     }
 
-    private fun <T> open(uri: Uri, block: (InputStream) -> T): T =
-        context.contentResolver.openInputStream(uri)?.use(block) ?: throw IOException("No se pudo abrir la foto")
+    // El null del bloque es válido (decodeStream con inJustDecodeBounds siempre devuelve null);
+    // solo es error que no se pueda abrir el stream.
+    private fun <T> open(uri: Uri, block: (InputStream) -> T): T {
+        val stream = context.contentResolver.openInputStream(uri) ?: throw IOException("No se pudo abrir la foto")
+        return stream.use(block)
+    }
 
     private companion object {
         const val MAX_SIDE = 1600
