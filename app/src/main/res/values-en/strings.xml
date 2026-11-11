@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">apptours</string>
 
     <!-- Categories (T-02) -->
     <string name="category_gastronomy">Food &amp; drink</string>

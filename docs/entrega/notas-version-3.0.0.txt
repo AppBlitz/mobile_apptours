@@ -1,0 +1,12 @@
+coLab tour 3.0.0 (entrega final)
+
+- Datos reales en la nube: cuentas, publicaciones, comentarios, votos, visitas y notificaciones.
+- Inicio de sesión con correo o Google y recuperación de contraseña por correo.
+- Mapa real para ver lugares y elegir la ubicación exacta al publicar.
+- Fotos desde la cámara o la galería, y foto de perfil.
+- Moderación: lista de verificación para aprobar, rechazo con motivo y perfil del moderador con XP y trofeos.
+- Recomendaciones según los lugares que visitaste.
+- Aviso de posibles publicaciones duplicadas antes de publicar (con IA).
+- App en español e inglés.
+
+Cuentas de moderador: ver el documento de la entrega.

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">apptours</string>
+    <string name="app_name" translatable="false">coLab tour</string>
 
     <!-- Categorías (T-02) -->
     <string name="category_gastronomy">Gastronomía</string>

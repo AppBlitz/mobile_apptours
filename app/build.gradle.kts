@@ -22,6 +22,14 @@ val cloudinaryUploadPreset: String = localProperties.getProperty("CLOUDINARY_UPL
 val geminiApiKey: String = localProperties.getProperty("GEMINI_API_KEY", "")
 val geminiModel: String = localProperties.getProperty("GEMINI_MODEL", "").ifBlank { "gemini-3.5-flash" }
 
+// Firma de release (IT-12): keystore.properties y el .jks viven fuera del repositorio.
+// Si no existe el archivo, el APK release sale sin firmar (no se puede instalar ni distribuir).
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val hasReleaseKeystore = keystoreProperties.getProperty("storeFile").orEmpty().isNotBlank()
+
 android {
     namespace = "co.edu.uniquindio.apptours"
     compileSdk {
@@ -32,8 +40,8 @@ android {
         applicationId = "co.edu.uniquindio.apptours"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "3.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -46,8 +54,23 @@ android {
         buildConfigField("String", "GEMINI_MODEL", "\"$geminiModel\"")
     }
 
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseKeystore) signingConfig = signingConfigs.getByName("release")
+            // Solo procesadores de teléfonos reales: las librerías nativas del mapa para emuladores
+            // (x86/x86_64) casi duplicaban el APK. El build debug las conserva para el emulador.
+            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
