@@ -1,0 +1,70 @@
+package co.edu.uniquindio.apptours.features.user.placeform
+
+import androidx.annotation.StringRes
+import co.edu.uniquindio.apptours.core.common.FormField
+import co.edu.uniquindio.apptours.core.common.FormState
+import co.edu.uniquindio.apptours.domain.model.DefaultLocation
+import co.edu.uniquindio.apptours.domain.model.DuplicateCandidate
+import co.edu.uniquindio.apptours.domain.model.Place
+import co.edu.uniquindio.apptours.domain.model.PlaceCategory
+import co.edu.uniquindio.apptours.domain.model.PlaceDraft
+import co.edu.uniquindio.apptours.domain.model.PlaceStatus
+import co.edu.uniquindio.apptours.domain.model.PriceRange
+
+data class PlaceFormUiState(
+    val isEditing: Boolean = false,
+    val isLoading: Boolean = false,
+    @StringRes val loadErrorRes: Int? = null,
+    /** Estado que tenía la publicación al abrirla para editar (para avisar que vuelve a revisión). */
+    val originalStatus: PlaceStatus? = null,
+    val title: String = "",
+    val category: PlaceCategory? = null,
+    val description: String = "",
+    val priceRange: PriceRange? = null,
+    val selectedDays: List<String> = Place.DEFAULT_DAYS,
+    val openTime: String = "7:00 a. m.",
+    val closeTime: String = "7:00 p. m.",
+    /** Fotos en orden: las ya publicadas (https) y las recién elegidas (content://). */
+    val photos: List<String> = emptyList(),
+    /** Avance de la carga de fotos (0..1) mientras se publica; null si no se está cargando. */
+    val uploadProgress: Float? = null,
+    val latitude: Double = DefaultLocation.LATITUDE,
+    val longitude: Double = DefaultLocation.LONGITUDE,
+    val locationPicked: Boolean = false,
+    val form: FormState = FormState(),
+    @StringRes val errorRes: Int? = null,
+    val isSaving: Boolean = false,
+    val showDeleteDialog: Boolean = false,
+    /** "Analizando posibles duplicados…" mientras el modelo revisa los lugares cercanos. */
+    val isCheckingDuplicates: Boolean = false,
+    /** Posibles duplicados; si no está vacío se muestra la hoja para decidir. */
+    val duplicates: List<DuplicateCandidate> = emptyList(),
+    /** No se pudo revisar (sin red, cuota agotada): se avisa y el siguiente "Publicar" no vuelve a revisar. */
+    val duplicateCheckFailed: Boolean = false
+) {
+    val draft: PlaceDraft
+        get() = PlaceDraft(
+            title = title,
+            category = category,
+            description = description,
+            priceRange = priceRange,
+            daysActive = selectedDays,
+            openTime = openTime,
+            closeTime = closeTime,
+            latitude = latitude.takeIf { locationPicked },
+            longitude = longitude.takeIf { locationPicked },
+            photos = photos
+        )
+
+    /** Editar algo ya revisado (verificado, rechazado o resuelto) lo devuelve a la cola de moderación. */
+    val returnsToReview: Boolean
+        get() = isEditing && originalStatus != null && originalStatus != PlaceStatus.PENDIENTE
+}
+
+sealed interface PlaceFormEvent {
+    data object Saved : PlaceFormEvent
+    data object Deleted : PlaceFormEvent
+    data class ScrollToField(val field: FormField) : PlaceFormEvent
+    /** "Ver y comentar el existente": abre el lugar que ya estaba publicado. */
+    data class OpenExistingPlace(val placeId: String) : PlaceFormEvent
+}

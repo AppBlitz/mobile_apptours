@@ -1,0 +1,43 @@
+package co.edu.uniquindio.apptours.domain.usecase.moderation
+
+import co.edu.uniquindio.apptours.core.common.AppException
+import co.edu.uniquindio.apptours.domain.model.ModerationAction
+import co.edu.uniquindio.apptours.domain.model.NotificationArgs
+import co.edu.uniquindio.apptours.domain.model.NotificationType
+import co.edu.uniquindio.apptours.domain.model.PlaceStatus
+import co.edu.uniquindio.apptours.domain.model.PointAction
+import co.edu.uniquindio.apptours.domain.repository.PlaceRepository
+import co.edu.uniquindio.apptours.domain.usecase.auth.GetSessionUseCase
+import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
+import co.edu.uniquindio.apptours.domain.usecase.notification.SendNotificationUseCase
+import javax.inject.Inject
+
+/** Verificar (M-02): la publicación pasa al feed público, el autor gana puntos y es notificado. */
+class VerifyPlaceUseCase @Inject constructor(
+    private val getSession: GetSessionUseCase,
+    private val placeRepository: PlaceRepository,
+    private val recordDecision: RecordModerationDecisionUseCase,
+    private val awardPoints: AwardPointsUseCase,
+    private val sendNotification: SendNotificationUseCase
+) {
+    suspend operator fun invoke(placeId: String): Result<Unit> {
+        val moderator = getSession.requireModerator().getOrElse { return Result.failure(it) }
+        val place = placeRepository.getPlace(placeId)
+            ?: return Result.failure(AppException.PlaceNotFound)
+        // Verificar dos veces no puede dar puntos dos veces.
+        if (place.status == PlaceStatus.VERIFICADA) return Result.success(Unit)
+
+        return recordDecision(moderator, place, ModerationAction.VERIFIED).onSuccess {
+            awardPoints(place.authorId, PointAction.PLACE_VERIFIED)
+            sendNotification(
+                userId = place.authorId,
+                type = NotificationType.VERIFIED,
+                args = mapOf(
+                    NotificationArgs.PLACE_TITLE to place.title,
+                    NotificationArgs.POINTS to PointAction.PLACE_VERIFIED.points.toString()
+                ),
+                relatedPlaceId = place.id
+            )
+        }
+    }
+}

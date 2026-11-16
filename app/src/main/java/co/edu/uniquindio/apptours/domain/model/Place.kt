@@ -1,0 +1,41 @@
+package co.edu.uniquindio.apptours.domain.model
+
+data class Place(
+    val id: String,
+    val title: String,
+    val category: PlaceCategory,
+    val description: String,
+    val priceRange: PriceRange,
+    val daysActive: List<String> = DEFAULT_DAYS,
+    val openTime: String = "7:00 a. m.",
+    val closeTime: String = "7:00 p. m.",
+    val latitude: Double = DefaultLocation.LATITUDE,
+    val longitude: Double = DefaultLocation.LONGITUDE,
+    /** Direcciones https de las fotos (1 a 6); la primera es la portada. */
+    val imageUrls: List<String> = emptyList(),
+    val authorId: String,
+    val authorName: String,
+    val authorLevel: UserLevel = UserLevel.TURISTA,
+    val createdAt: Long = System.currentTimeMillis(),
+    val status: PlaceStatus = PlaceStatus.PENDIENTE,
+    val votesCount: Int = 0,
+    val visitsCount: Int = 0,
+    val rejectionReason: String? = null,
+    val moderatorId: String? = null,
+    val reviewedAt: Long? = null,
+    /**
+     * Ids de los lugares cercanos que la IA marcó como posible duplicado cuando el autor publicó igual
+     * ("No es el mismo, publicar igual"). Vacío si la IA no encontró duplicados.
+     */
+    val possibleDuplicateIds: List<String> = emptyList()
+) {
+    val coverImageUrl: String? get() = imageUrls.firstOrNull()
+
+    /** El moderador ve la etiqueta morada "IA · posible duplicado". */
+    val flaggedAsPossibleDuplicate: Boolean get() = possibleDuplicateIds.isNotEmpty()
+
+    companion object {
+        val ALL_DAYS = listOf("L", "M", "X", "J", "V", "S", "D")
+        val DEFAULT_DAYS = listOf("L", "M", "X", "J", "V", "S")
+    }
+}

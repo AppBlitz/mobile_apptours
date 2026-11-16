@@ -1,3 +1,567 @@
 <resources>
-    <string name="app_name">apptours</string>
+    <string name="app_name" translatable="false">coLab tour</string>
+
+    <!-- Categorías (T-02) -->
+    <string name="category_gastronomy">Gastronomía</string>
+    <string name="category_culture">Cultura</string>
+    <string name="category_nature">Naturaleza</string>
+    <string name="category_entertainment">Entretenimiento</string>
+    <string name="category_history">Historia</string>
+
+    <!-- Rangos de precio (T-04) -->
+    <string name="price_free">Gratuito</string>
+    <string name="price_cheap">Económico</string>
+    <string name="price_moderate">Moderado</string>
+    <string name="price_expensive">Costoso</string>
+
+    <!-- Estados de publicación -->
+    <string name="status_pending">Pendiente de verificación</string>
+    <string name="status_verified">Verificado por moderación</string>
+    <string name="status_rejected">Rechazada</string>
+    <string name="status_resolved">Finalizada / Resuelta</string>
+
+    <!-- Niveles (T-07) -->
+    <string name="level_tourist">Turista</string>
+    <string name="level_explorer">Explorador</string>
+    <string name="level_adventurer">Aventurero</string>
+    <string name="level_local_ambassador">Embajador Local</string>
+    <string name="level_max">Nivel Máximo</string>
+
+    <!-- Horario -->
+    <string name="schedule_every_day">Todos los días</string>
+    <string name="schedule_mon_sat">Lun–Sáb</string>
+    <string name="schedule_format">%1$s %2$s – %3$s</string>
+
+    <!-- Fechas -->
+    <string name="time_just_now">Ahora</string>
+
+    <!-- Errores -->
+    <string name="error_invalid_email">El correo debe tener el formato nombre@dominio.com</string>
+    <string name="error_email_required">Escribe tu correo electrónico</string>
+    <string name="error_password_confirmation_required">Repite la contraseña para confirmarla</string>
+    <string name="error_password_required">La contraseña es obligatoria</string>
+    <string name="error_full_name_required">El nombre completo es obligatorio</string>
+    <string name="error_password_min_length">Mínimo 8 caracteres</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <plurals name="error_password_too_short">
+        <item quantity="one">Falta %1$d carácter: mínimo %2$d</item>
+        <item quantity="other">Faltan %1$d caracteres: mínimo %2$d</item>
+    </plurals>
+    <string name="error_weak_password">La contraseña es muy débil. Usa al menos 8 caracteres combinando letras y números.</string>
+    <string name="error_recent_login_required">Por seguridad, cierra sesión y vuelve a entrar antes de hacer este cambio.</string>
+    <string name="error_too_many_attempts">Demasiados intentos. Espera unos minutos e inténtalo de nuevo.</string>
+    <string name="error_account_disabled">Esta cuenta está deshabilitada.</string>
+    <string name="error_google_sign_in">No pudimos iniciar sesión con Google. Inténtalo de nuevo.</string>
+    <string name="error_google_no_account">No hay cuentas de Google en este dispositivo. Agrega una en los ajustes del teléfono.</string>
+    <string name="error_terms_required">Debes aceptar los términos y la política de privacidad</string>
+    <string name="error_title_required">Escribe el título del lugar</string>
+    <string name="error_category_required">Elige una categoría</string>
+    <string name="error_description_required">Escribe una descripción del lugar</string>
+    <string name="error_price_required">Elige un rango de precio</string>
+    <string name="error_days_required">Elige al menos un día de atención</string>
+    <string name="error_time_required">Escribe la hora</string>
+    <string name="error_time_invalid">Usa el formato 7:00 a. m. o 19:00</string>
+    <string name="error_close_before_open">La hora de cierre debe ser posterior a la de apertura</string>
+    <string name="error_photos_required">Agrega al menos una foto</string>
+    <string name="error_location_required">Toca el mapa para fijar la ubicación del lugar</string>
+    <string name="error_rating_required">Elige una calificación de 1 a 5 estrellas</string>
+    <string name="error_text_too_long">Máximo %1$d caracteres</string>
+    <string name="error_comment_required">Escribe un comentario antes de enviarlo.</string>
+    <string name="error_reject_reason_required">Debes escribir un motivo obligatorio para rechazar la publicación</string>
+    <string name="error_invalid_credentials">Credenciales incorrectas. Verifica tu correo y contraseña.</string>
+    <string name="error_email_in_use">Ya existe una cuenta registrada con este correo.</string>
+    <string name="error_not_authenticated">Tu sesión expiró. Inicia sesión de nuevo.</string>
+    <string name="error_not_allowed">No tienes permiso para realizar esta acción.</string>
+    <string name="error_place_not_found">Publicación no encontrada</string>
+    <string name="error_user_not_found">No encontramos tu perfil de usuario.</string>
+    <string name="error_network">No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="error_load_failed">No pudimos cargar la información.</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="action_continue_with_google">Continuar con Google</string>
+    <string name="auth_or_continue_with">o continúa con</string>
+    <string name="auth_google_terms_hint">Si usas Google, también debes aceptar los términos.</string>
+    <string name="profile_email_verification_sent">Te enviamos un enlace a %1$s. El correo cambia cuando lo confirmes.</string>
+    <string name="profile_email_google_hint">Tu correo lo administra tu cuenta de Google.</string>
+    <string name="loading">Cargando…</string>
+    <string name="error_unknown">Ocurrió un error inesperado. Inténtalo de nuevo.</string>
+
+    <!-- Fotos de la publicación -->
+    <string name="photos_upload_button">Cargar foto</string>
+    <string name="photos_hint">%1$d de %2$d fotos · la primera es la portada</string>
+    <string name="photos_limit_reached">Ya tienes las %1$d fotos permitidas. Quita una para cambiarla.</string>
+    <string name="photos_remove">Quitar foto</string>
+    <string name="photos_cover">Portada</string>
+    <string name="photo_preview">Foto %1$d seleccionada</string>
+    <string name="photo_of_place">Foto %1$d de %2$s</string>
+    <string name="photo_counter">%1$d / %2$d</string>
+    <string name="photos_uploading">Cargando fotos…</string>
+    <string name="photos_uploading_progress">%1$s %2$d %%</string>
+    <string name="error_image_upload">No se pudieron cargar las fotos. Revisa tu conexión e inténtalo de nuevo.</string>
+
+    <!-- Acciones comunes -->
+    <string name="action_close">Cerrar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Eliminar</string>
+
+    <!-- Feed -->
+    <string name="feed_search_placeholder">Buscar lugares por nombre o descripción</string>
+    <string name="feed_mode_list">Lista</string>
+    <string name="feed_mode_map">Mapa</string>
+    <string name="feed_category_all">Todos</string>
+    <string name="feed_location_filter">Filtrar por ubicación</string>
+    <string name="feed_location_nearby">Cercanos</string>
+    <string name="feed_location_city">En mi ciudad</string>
+    <string name="feed_location_all">Todas</string>
+    <string name="feed_location_radius">Hasta %1$d km de tu ubicación</string>
+    <string name="feed_location_any">Sin límite de distancia</string>
+
+    <!-- Formulario de publicación -->
+    <string name="place_form_header_create">Publicar un lugar</string>
+    <string name="place_form_header_edit">Editar publicación</string>
+    <string name="place_form_pending_title">Se creará como «Pendiente de verificación»</string>
+    <string name="place_form_edit_pending_title">Sigue «Pendiente de verificación»</string>
+    <string name="place_form_pending_body">Un moderador comprobará que el lugar exista y que los datos sean precisos antes de mostrarlo en el feed público.</string>
+    <string name="place_form_edit_review_title">Al guardar, vuelve a «Pendiente de verificación»</string>
+    <string name="place_form_edit_review_body">Esta publicación ya fue revisada. Si guardas los cambios saldrá del feed público hasta que un moderador la apruebe de nuevo.</string>
+    <string name="place_form_title_label">Título</string>
+    <string name="place_form_title_placeholder">Ej. Café con terraza y vista</string>
+    <string name="place_form_category_label">Categoría</string>
+    <string name="place_form_category_placeholder">Elige una categoría</string>
+    <string name="place_form_description_label">Descripción</string>
+    <string name="place_form_description_counter">%1$d / %2$d</string>
+    <string name="place_form_description_placeholder">Cuenta qué hace especial este lugar, cómo llegar y qué recomiendas.</string>
+    <string name="place_form_price_label">Rango de precio</string>
+    <string name="place_form_schedule_label">Horario de atención sugerido</string>
+    <string name="place_form_open_label">Abre</string>
+    <string name="place_form_close_label">Cierra</string>
+    <string name="place_form_photos_label">Fotos</string>
+    <string name="place_form_photos_limits">Mínimo 1 · máximo %1$d</string>
+    <string name="place_form_location_label">Ubicación en el mapa</string>
+    <string name="place_form_location_hint">Toca para fijar el punto</string>
+    <string name="place_form_location_pending">Aún no has fijado el punto del lugar.</string>
+    <string name="place_form_submit">Enviar a verificación</string>
+    <string name="place_form_delete">Eliminar publicación</string>
+    <string name="place_delete_title">¿Eliminar publicación?</string>
+    <string name="place_delete_body">Se borrarán la publicación, sus comentarios y sus votos. Esta acción no se puede deshacer.</string>
+
+    <!-- Detalle del lugar -->
+    <string name="action_back">Volver</string>
+    <string name="place_interest_count">Me interesa · %1$d</string>
+    <string name="place_mark_visited">Marcar como visitado</string>
+    <string name="place_visited">Visitado</string>
+    <string name="place_share_experience">Contar mi experiencia</string>
+    <string name="place_action_edit">Editar</string>
+    <string name="place_action_resolve">Finalizar</string>
+    <string name="place_detail_visits_title">VISITAS</string>
+    <plurals name="place_detail_visits_count">
+        <item quantity="one">%1$d persona lo visitó</item>
+        <item quantity="other">%1$d personas lo visitaron</item>
+    </plurals>
+    <string name="comments_title">Comentarios y experiencias (%1$d)</string>
+    <string name="comments_placeholder">Escribe un comentario (+5 pts)…</string>
+    <string name="comments_send">Enviar comentario</string>
+    <string name="comments_visit_tag">Visitó este lugar</string>
+    <string name="rating_description">%1$d de %2$d estrellas</string>
+
+    <!-- Comparte tu experiencia (T-05) -->
+    <string name="experience_title">Comparte tu experiencia</string>
+    <string name="experience_body">Marcaste este lugar como visitado. Cuéntale a la comunidad cómo te fue.</string>
+    <string name="experience_rating_label">Tu calificación</string>
+    <string name="experience_text_label">Tu experiencia (opcional)</string>
+    <string name="experience_text_placeholder">¿Qué te gustó? ¿Qué recomiendas a otros viajeros?</string>
+    <string name="experience_submit">Publicar</string>
+    <string name="experience_skip">Ahora no</string>
+
+    <!-- Mis publicaciones -->
+    <string name="my_places_title">Mis publicaciones</string>
+    <string name="my_places_tab_format">%1$s (%2$d)</string>
+    <string name="my_places_tab_active">Activas</string>
+    <string name="my_places_tab_pending">Pendientes</string>
+    <string name="my_places_tab_resolved">Finalizadas</string>
+    <string name="my_places_tab_rejected">Rechazadas</string>
+    <string name="my_places_empty_active">Aún no tienes publicaciones verificadas en el feed.</string>
+    <string name="my_places_empty_pending">No tienes publicaciones esperando revisión.</string>
+    <string name="my_places_empty_resolved">No tienes publicaciones finalizadas.</string>
+    <string name="my_places_empty_rejected">Ninguna de tus publicaciones ha sido rechazada.</string>
+    <string name="my_places_created_at">Publicada %1$s</string>
+    <string name="my_places_pending_hint">Un moderador la revisará pronto. Mientras tanto no aparece en el feed.</string>
+    <string name="my_places_no_reason">El moderador no dejó un motivo.</string>
+    <string name="my_places_rejected_hint">Puedes editarla para corregirla: volverá a revisión.</string>
+
+    <!-- Notificaciones -->
+    <string name="notifications_title">Notificaciones</string>
+    <plurals name="notifications_unread">
+        <item quantity="one">%1$d sin leer</item>
+        <item quantity="other">%1$d sin leer</item>
+    </plurals>
+    <string name="notifications_mark_all_read">Marcar todas\ncomo leídas</string>
+    <string name="notifications_filter_all">Todas</string>
+    <string name="notifications_filter_unread">No leídas · %1$d</string>
+    <string name="notifications_filter_achievements">Logros</string>
+    <string name="notifications_today">HOY</string>
+    <string name="notifications_earlier">ANTERIORES</string>
+    <string name="notifications_empty">No tienes notificaciones aquí.</string>
+    <string name="notifications_options">Opciones de la notificación</string>
+    <string name="notifications_mark_read">Marcar como leída</string>
+    <string name="notifications_mark_unread">Marcar como no leída</string>
+
+    <!-- Perfil, puntos e insignias -->
+    <string name="profile_points">%1$d puntos</string>
+    <string name="profile_points_to_next">%1$d para %2$s</string>
+    <string name="stats_rejected">Rechazadas</string>
+    <string name="points_rules_title">Cómo sumar puntos</string>
+    <string name="points_value">+%1$d</string>
+    <string name="points_create_place">Crear publicación</string>
+    <string name="points_place_verified">Publicación verificada</string>
+    <string name="points_comment">Comentar</string>
+    <string name="points_vote_received">Recibir un «Me interesa»</string>
+    <string name="points_visit_experience">Marcar visitado y compartir experiencia</string>
+    <string name="points_place_resolved">Publicación resuelta</string>
+    <string name="badges_title">Insignias</string>
+    <string name="badges_count">%1$d de %2$d ganadas</string>
+    <string name="badges_progress">%1$d/%2$d</string>
+    <string name="badges_progress_detail">Progreso: %1$d de %2$d</string>
+    <string name="badges_earned_on">Obtenida el %1$s</string>
+    <string name="badges_just_earned">¡Recién obtenida!</string>
+    <string name="badge_first_place">Primera publicación</string>
+    <string name="badge_first_place_desc">Comparte tu primer lugar con la comunidad.</string>
+    <string name="badge_first_comment">Primer comentario</string>
+    <string name="badge_first_comment_desc">Escribe tu primer comentario en una publicación.</string>
+    <string name="badge_commentator">Comentarista</string>
+    <string name="badge_commentator_desc">Escribe %1$d comentarios en publicaciones.</string>
+    <string name="badge_ten_verified">10 verificadas</string>
+    <string name="badge_ten_verified_desc">Consigue que los moderadores verifiquen %1$d de tus publicaciones.</string>
+    <string name="badge_level_desc">Alcanza %1$d puntos de reputación.</string>
+    <string name="badge_featured_month">Destacado del mes</string>
+    <string name="badge_featured_month_desc">Ten la publicación con más «Me interesa» entre las creadas este mes.</string>
+    <string name="badge_traveler">Viajero</string>
+    <string name="badge_traveler_desc">Marca %1$d lugares como visitados.</string>
+    <string name="badge_gastronomy_lover">Amante de la gastronomía</string>
+    <string name="badge_gastronomy_lover_desc">Visita %1$d lugares de Gastronomía.</string>
+    <string name="badge_culture_lover">Amante de la cultura</string>
+    <string name="badge_culture_lover_desc">Visita %1$d lugares de Cultura.</string>
+    <string name="badge_nature_lover">Amante de la naturaleza</string>
+    <string name="badge_nature_lover_desc">Visita %1$d lugares de Naturaleza.</string>
+    <string name="badge_entertainment_lover">Amante del entretenimiento</string>
+    <string name="badge_entertainment_lover_desc">Visita %1$d lugares de Entretenimiento.</string>
+    <string name="badge_history_lover">Amante de la historia</string>
+    <string name="badge_history_lover_desc">Visita %1$d lugares de Historia.</string>
+
+    <!-- Perfil del moderador (M-06) -->
+    <string name="moderator_tab_queue">Por revisar</string>
+    <string name="moderator_tab_history">Historial</string>
+    <string name="moderator_tab_alerts">Alertas</string>
+    <string name="moderator_tab_profile">Perfil</string>
+    <string name="moderator_profile_title">Mi perfil de moderador</string>
+    <string name="moderator_logout">Cerrar sesión de moderador</string>
+    <string name="moderator_xp">%1$d XP</string>
+    <string name="moderator_xp_to_next">%1$d XP para %2$s</string>
+    <string name="moderator_max_rank">Rango máximo</string>
+    <string name="rank_reviewer">Revisor</string>
+    <string name="rank_guardian">Guardián</string>
+    <string name="rank_curator">Curador</string>
+    <string name="rank_expert">Moderador Experto</string>
+    <string name="moderator_stats_title">Mis estadísticas</string>
+    <string name="moderator_stats_reviewed">Revisadas</string>
+    <string name="moderator_stats_verified">Verificadas</string>
+    <string name="moderator_stats_rejected">Rechazadas</string>
+    <string name="moderator_stats_resolved">Resueltas</string>
+    <string name="moderator_stats_rejection_rate">Tasa de rechazo</string>
+    <string name="moderator_stats_percent">%1$d %%</string>
+    <string name="moderator_stats_today_week">Hoy / semana</string>
+    <string name="moderator_stats_today_week_value">%1$d / %2$d</string>
+    <string name="xp_rules_title">Cómo ganar XP</string>
+    <string name="xp_value">+%1$d XP</string>
+    <string name="xp_verify">Verificar publicación</string>
+    <string name="xp_reject">Rechazar publicación con motivo</string>
+    <string name="xp_resolve">Marcar como resuelta</string>
+    <string name="xp_daily_bonus">Revisar %1$d publicaciones en un día (bonificación)</string>
+    <string name="trophies_title">Trofeos</string>
+    <string name="trophy_first_review">Primera revisión</string>
+    <string name="trophy_reviews_10">10 revisiones</string>
+    <string name="trophy_reviews_50">50 revisiones</string>
+    <string name="trophy_reviews_100">100 revisiones</string>
+    <string name="trophy_reviews_desc">Revisa %1$d publicaciones (verificar, rechazar o resolver).</string>
+    <string name="trophy_first_rejection">Primer rechazo</string>
+    <string name="trophy_first_rejection_desc">Rechaza tu primera publicación con su motivo.</string>
+    <string name="trophy_critical_eye">Ojo crítico</string>
+    <string name="trophy_critical_eye_desc">Rechaza %1$d publicaciones explicando el motivo.</string>
+    <string name="trophy_quality_seal">Sello de calidad</string>
+    <string name="trophy_quality_seal_desc">Verifica %1$d publicaciones.</string>
+    <string name="trophy_intense_day">Jornada intensa</string>
+    <string name="trophy_intense_day_desc">Revisa %1$d publicaciones en un mismo día.</string>
+    <string name="trophy_closer">Cerrador</string>
+    <string name="trophy_closer_desc">Marca %1$d publicaciones como resueltas.</string>
+    <string name="moderator_recent_title">Últimas acciones</string>
+    <string name="moderator_recent_empty">Aún no hay acciones registradas. Cada revisión aparecerá aquí con la XP que te dio.</string>
+    <string name="moderator_recent_reason">Motivo: %1$s</string>
+
+    <!-- Autenticación -->
+    <string name="recovery_link_sent">Hemos enviado un enlace de recuperación a %1$s</string>
+
+    <!-- Moderación -->
+    <string name="moderator_review_action">Revisar</string>
+    <string name="moderation_filter_format">%1$s · %2$d</string>
+    <string name="moderation_filter_pending">Pendientes</string>
+    <string name="moderation_filter_verified">Verificadas</string>
+    <string name="moderation_filter_rejected">Rechazadas</string>
+    <string name="moderation_filter_resolved">Resueltas</string>
+    <string name="moderation_verified_today">Verificadas hoy</string>
+    <string name="moderation_rejected_today">Rechazadas hoy</string>
+    <string name="moderation_resolved_today">Resueltas hoy</string>
+    <string name="moderation_queue_title">Cola de revisión</string>
+    <string name="moderation_queue_order">Más antiguas primero</string>
+    <string name="moderation_empty_pending">No hay publicaciones esperando revisión. ¡Cola al día!</string>
+    <string name="moderation_empty_verified">No hay publicaciones verificadas.</string>
+    <string name="moderation_empty_rejected">No hay publicaciones rechazadas.</string>
+    <string name="moderation_empty_resolved">No hay publicaciones resueltas.</string>
+    <string name="review_current_status">Estado actual: %1$s</string>
+    <string name="review_previous_reason">Motivo dado al autor: %1$s</string>
+    <string name="review_checklist_title">Lista de verificación</string>
+    <string name="review_checklist_hint">Marca cada punto que comprobaste. Para aprobar deben estar todos.</string>
+    <string name="review_check_exists">El lugar existe en la vida real</string>
+    <string name="review_check_location">La ubicación en el mapa es correcta</string>
+    <string name="review_check_schedule_price">El horario y el precio son coherentes</string>
+    <string name="review_check_photos">Las fotos son reales y corresponden al sitio</string>
+    <string name="review_comments_title">Comentarios (%1$d)</string>
+    <string name="review_no_comments">Aún no hay comentarios en esta publicación.</string>
+    <string name="review_verify">Verificar / Aprobar</string>
+    <plurals name="review_verify_missing">
+        <item quantity="one">Falta %1$d punto de la lista por comprobar.</item>
+        <item quantity="other">Faltan %1$d puntos de la lista por comprobar.</item>
+    </plurals>
+    <string name="review_resolve">Marcar resuelta</string>
+    <string name="review_reject">Rechazar</string>
+    <string name="review_other_actions">Otras acciones</string>
+    <string name="reject_title">Rechazar publicación</string>
+    <string name="reject_place_by">%1$s · por %2$s</string>
+    <string name="reject_body">La publicación dejará de mostrarse en el feed público y el autor verá tu motivo en sus notificaciones.</string>
+    <string name="reject_reason_label">Motivo del rechazo *</string>
+    <string name="reject_reason_counter">Obligatorio · %1$d / %2$d</string>
+    <string name="reject_reason_placeholder">Explica qué está mal y cómo puede corregirlo el autor…</string>
+    <string name="reject_quick_location">Ubicación incorrecta</string>
+    <string name="reject_quick_not_exists">El lugar no existe</string>
+    <string name="reject_quick_inaccurate">Información imprecisa</string>
+    <string name="reject_quick_inappropriate">Contenido inapropiado</string>
+    <string name="reject_confirm">Confirmar rechazo</string>
+    <string name="moderation_history_title">Historial de revisiones</string>
+    <string name="moderation_history_summary">%1$d aprobadas · %2$d rechazadas</string>
+    <string name="moderation_history_empty">Aún no has revisado publicaciones.\nTus decisiones aparecerán aquí.</string>
+    <string name="moderation_decision_approved">Aprobada</string>
+    <string name="moderation_decision_rejected">Rechazada</string>
+    <string name="moderation_decision_resolved">Resuelta</string>
+    <string name="moderation_reviewed_at">Revisada %1$s</string>
+    <string name="moderation_author">por %1$s</string>
+    <string name="moderation_rejection_reason">Motivo del rechazo</string>
+
+    <!-- Mapas y ubicación (IT-7) -->
+    <string name="map_unavailable">El mapa no está disponible en este momento.</string>
+    <string name="map_my_location">Mi ubicación</string>
+    <string name="map_coordinates">%1$.5f, %2$.5f</string>
+    <string name="map_picker_hint">Mueve el mapa o tócalo para dejar el pin sobre el punto exacto.</string>
+    <string name="map_picker_confirm">Confirmar punto</string>
+    <string name="map_picker_close">Cerrar</string>
+    <string name="map_picker_title_place">Ubicación del lugar</string>
+    <string name="map_picker_title_address">Tu dirección</string>
+    <string name="map_pick_on_map">Elegir en el mapa</string>
+    <string name="map_change_point">Cambiar punto</string>
+    <string name="map_directions">Cómo llegar</string>
+    <string name="map_directions_unavailable">No hay una aplicación de mapas para abrir la ruta.</string>
+    <string name="location_permission_denied">Sin permiso de ubicación. Puedes elegir el punto moviendo el mapa.</string>
+    <string name="location_unavailable">No pudimos obtener tu ubicación. Revisa que la ubicación del teléfono esté activa.</string>
+    <string name="location_nearby_saved">Mostrando lugares cerca de tu dirección guardada.</string>
+    <string name="location_nearby_device">Mostrando lugares cerca de donde estás.</string>
+    <string name="place_detail_about">Sobre este lugar</string>
+    <string name="place_detail_exact_location">Ubicación exacta</string>
+    <string name="place_see_detail">Ver detalle</string>
+    <string name="account_location_point">Punto elegido en el mapa</string>
+    <string name="register_address_pending">Aún no has fijado tu dirección.</string>
+    <string name="register_address_hint">Guardamos el punto que elijas en el mapa para mostrarte lugares cercanos.</string>
+
+    <!-- Recomendaciones por historial de visitas (N-01) -->
+    <string name="recommendations_title">Recomendados para ti</string>
+    <string name="recommendations_tastes">Según tus visitas</string>
+    <plurals name="recommendations_based_on">
+        <item quantity="one">Calculado con tu %1$d visita y %2$d zona que frecuentas. Así se reparten tus gustos:</item>
+        <item quantity="other">Calculado con tus %1$d visitas y %2$d zonas que frecuentas. Así se reparten tus gustos:</item>
+    </plurals>
+    <string name="recommendations_affinity_chip">%1$s · %2$d %%</string>
+    <string name="recommendations_cold_start_title">Aún te conocemos poco</string>
+    <plurals name="recommendations_cold_start">
+        <item quantity="one">Tienes %1$d lugar visitado. Mientras tanto te mostramos los más votados cerca de ti; marca lugares como “Visitado” y las recomendaciones se ajustarán a tus gustos.</item>
+        <item quantity="other">Tienes %1$d lugares visitados. Mientras tanto te mostramos los más votados cerca de ti; marca lugares como “Visitado” y las recomendaciones se ajustarán a tus gustos.</item>
+    </plurals>
+    <string name="recommendations_origin_device">Las distancias se miden desde donde estás ahora.</string>
+    <string name="recommendations_origin_saved">Las distancias se miden desde tu dirección guardada.</string>
+    <string name="recommendations_empty">No hay lugares nuevos para recomendarte por ahora. Explora el inicio o vuelve cuando haya más publicaciones.</string>
+    <plurals name="recommendation_reason_category">
+        <item quantity="one">Porque visitaste %1$d lugar de %2$s</item>
+        <item quantity="other">Porque visitaste %1$d lugares de %2$s</item>
+    </plurals>
+    <string name="recommendation_reason_new_category">Algo distinto: aún no visitas lugares de %1$s</string>
+    <string name="recommendation_reason_with_zone">%1$s · a %2$s de una zona que frecuentas</string>
+    <plurals name="recommendation_reason_popular">
+        <item quantity="one">De los más votados cerca de ti · %1$d voto</item>
+        <item quantity="other">De los más votados cerca de ti · %1$d votos</item>
+    </plurals>
+    <string name="recommendation_distance">A %1$s de ti</string>
+    <string name="recommendation_match">Coincidencia %1$d %%</string>
+    <string name="feed_recommendations_top">Empieza por: %1$s</string>
+    <string name="feed_recommendations_cold_start">Los más votados cerca de ti. Marca visitas para personalizarlos.</string>
+    <string name="feed_recommendations_hint">Marca lugares como “Visitado” y te sugerimos otros a tu gusto.</string>
+    <string name="feed_recommendations_open">Ver recomendaciones</string>
+
+    <!-- Posibles duplicados antes de publicar (IA-01) -->
+    <string name="duplicates_checking">Analizando posibles duplicados…</string>
+    <string name="duplicates_check_failed">No se pudo verificar si ya existe un lugar parecido. Puedes publicar de todos modos.</string>
+    <plurals name="duplicates_title">
+        <item quantity="one">Este lugar podría estar publicado</item>
+        <item quantity="other">Estos %1$d lugares podrían ser el mismo</item>
+    </plurals>
+    <string name="duplicates_subtitle">Encontramos publicaciones cercanas muy parecidas. Si es el mismo lugar, comparte lo que sabes en la que ya existe.</string>
+    <string name="duplicates_meta">A %1$s · %2$d %% parecido</string>
+    <string name="duplicates_open_existing">Ver y comentar el existente</string>
+    <string name="duplicates_publish_anyway">No es el mismo, publicar igual</string>
+
+    <!-- IT-11: textos que estaban en duro en las pantallas -->
+    <string name="field_email_label">Correo electrónico</string>
+    <string name="field_email_placeholder">tu@correo.com</string>
+    <string name="field_password_label">Contraseña</string>
+    <string name="field_password_placeholder">Tu contraseña</string>
+    <string name="field_full_name_label">Nombre completo</string>
+    <string name="field_full_name_placeholder">Tu nombre</string>
+    <string name="field_password_new_placeholder">Mínimo 8, con letras y números</string>
+    <string name="field_password_confirm_label">Confirmar contraseña</string>
+    <string name="field_password_confirm_placeholder">Repite tu contraseña</string>
+    <string name="password_toggle">Mostrar u ocultar la contraseña</string>
+    <string name="auth_login">Iniciar sesión</string>
+    <string name="auth_register">Registrarme</string>
+    <string name="auth_create_account">Crear cuenta</string>
+    <string name="forgot_title">¿Olvidaste tu contraseña?</string>
+    <string name="forgot_body">Escribe el correo de tu cuenta y te enviaremos un enlace para crear una contraseña nueva.</string>
+    <string name="forgot_submit">Enviar enlace de recuperación</string>
+    <string name="forgot_hint">Sirve para usuarios y moderadores. Si no lo ves en tu bandeja, revisa la carpeta de spam.</string>
+    <string name="forgot_back_to_login">Volver a iniciar sesión</string>
+    <string name="login_tagline">Explora. Comparte. Descubre.</string>
+    <string name="login_forgot_question">"¿Olvidaste tu contraseña? "</string>
+    <string name="login_recover">Recuperar</string>
+    <string name="login_first_time">¿Primera vez en coLab tour?</string>
+    <string name="register_tagline">Únete a la comunidad de exploradores</string>
+    <string name="register_terms">Acepto los términos y la política de privacidad</string>
+    <string name="welcome_skip">Omitir</string>
+    <string name="welcome_title">Descubre lo que las\nguías no cuentan</string>
+    <string name="welcome_body">Lugares compartidos por viajeros y locales,\nverificados por moderadores para que llegues\nsin sorpresas.</string>
+    <string name="welcome_start">Comenzar</string>
+    <string name="brand_logo_description">Logo de coLab tour</string>
+    <string name="moderator_mode">Modo moderador</string>
+    <string name="moderation_panel_title">Panel de moderación</string>
+    <string name="review_pending_badge">Pendiente</string>
+    <string name="ai_duplicate_badge">IA · posible duplicado</string>
+    <string name="ai_duplicate_banner">La IA encontró publicaciones cercanas muy parecidas y el autor decidió publicar igual. Revisa que no sea un lugar repetido antes de verificarlo.</string>
+    <string name="map_card_close">Cerrar tarjeta del lugar</string>
+    <string name="review_sent_at">Enviada %1$s</string>
+    <string name="detail_price_title">PRECIO</string>
+    <string name="detail_schedule_title">HORARIO SUGERIDO</string>
+    <string name="detail_distance_title">DISTANCIA</string>
+    <string name="detail_relevance_title">RELEVANCIA</string>
+    <string name="detail_distance_value">%1$s de ti</string>
+    <string name="detail_published_by">"Publicado por "</string>
+    <string name="account_title">Ajustes de cuenta</string>
+    <string name="account_change_photo">Cambiar foto</string>
+    <string name="account_address">Dirección</string>
+    <string name="account_saved">Cambios guardados correctamente.</string>
+    <string name="account_save">Guardar cambios</string>
+    <string name="account_danger_zone">Zona de peligro</string>
+    <string name="account_delete_warning">Eliminar tu cuenta borra tu perfil, tus publicaciones, puntos e insignias. Esta acción no se puede deshacer.</string>
+    <string name="account_delete">Eliminar cuenta</string>
+    <string name="account_delete_title">¿Eliminar tu cuenta?</string>
+    <string name="account_delete_body">Se borrarán tu perfil, tus publicaciones, votos y visitas, y volverás al inicio de sesión.</string>
+    <string name="account_delete_confirm">Sí, eliminar</string>
+    <string name="feed_header_title">Descubre lugares</string>
+    <string name="feed_greeting">Hola, %1$s</string>
+    <string name="feed_list_title">Cerca de ti</string>
+    <string name="feed_list_order">Ordenado por relevancia</string>
+    <string name="feed_badge_verified">Verificado</string>
+    <string name="feed_badge_resolved">Finalizado</string>
+    <string name="place_interest">Me interesa</string>
+    <string name="map_card_price_hours">%1$s · %2$s – %3$s</string>
+    <string name="tab_home">Inicio</string>
+    <string name="tab_alerts">Alertas</string>
+    <string name="tab_profile">Perfil</string>
+    <string name="profile_title">Mi perfil</string>
+    <string name="profile_logout">Cerrar sesión</string>
+    <string name="stats_title">Mis estadísticas</string>
+    <string name="stats_visited">Lugares visitados</string>
+    <string name="stats_votes_received">Votos recibidos</string>
+    <string name="time_placeholder_open">7:00 a. m.</string>
+    <string name="time_placeholder_close">7:00 p. m.</string>
+    <string name="author_with_level">%1$s · %2$s</string>
+    <!-- Marca: no se traduce -->
+    <string name="brand_co" translatable="false">co</string>
+    <string name="brand_lab" translatable="false">Lab</string>
+    <string name="brand_tour_dashed" translatable="false">— tour —</string>
+    <string name="brand_tour_suffix" translatable="false">" tour"</string>
+
+    <!-- Días (inicial) y relevancia -->
+    <string name="day_short_mon">L</string>
+    <string name="day_short_tue">M</string>
+    <string name="day_short_wed">X</string>
+    <string name="day_short_thu">J</string>
+    <string name="day_short_fri">V</string>
+    <string name="day_short_sat">S</string>
+    <string name="day_short_sun">D</string>
+    <string name="relevance_high">Alta</string>
+    <string name="relevance_medium">Media</string>
+    <string name="relevance_growing">En crecimiento</string>
+    <plurals name="relevance_votes">
+        <item quantity="one">%1$d voto · %2$s</item>
+        <item quantity="other">%1$d votos · %2$s</item>
+    </plurals>
+
+    <!-- Notificaciones: se arman con los datos guardados (tipo + args) en el idioma actual -->
+    <string name="notif_vote_title">%1$s marcó «Me interesa» en tu publicación «%2$s»</string>
+    <string name="notif_vote_body">Sumaste +%1$d puntos de reputación.</string>
+    <string name="notif_comment_title">%1$s comentó en «%2$s»</string>
+    <string name="notif_verified_title">Un moderador verificó tu publicación «%1$s»</string>
+    <string name="notif_verified_body">Ya es visible en el feed público. Ganaste +%1$d puntos.</string>
+    <string name="notif_rejected_title">Un moderador rechazó tu publicación «%1$s»</string>
+    <string name="notif_rejected_body">Motivo: %1$s</string>
+    <string name="notif_resolved_title">Un moderador marcó como resuelta tu publicación «%1$s»</string>
+    <string name="notif_resolved_body">Sumaste +%1$d puntos.</string>
+    <string name="notif_level_title">¡Subiste de nivel! Ahora eres %1$s</string>
+    <string name="notif_level_body">Llegaste a %1$d puntos de reputación. Sigue compartiendo lugares y experiencias.</string>
+    <string name="notif_badge_title">¡Nueva insignia: %1$s!</string>
+    <string name="notif_badge_body">La encontrarás en tu perfil, con la fecha en que la ganaste.</string>
+    <string name="notif_trophy_title">¡Nuevo trofeo: %1$s!</string>
+    <string name="notif_trophy_body">Lo encontrarás en tu perfil de moderador.</string>
+    <string name="stats_active">Publicaciones\nactivas</string>
+    <string name="stats_finished">Finalizadas</string>
+    <string name="stats_pending">Pendientes de\nverificación</string>
+
+    <!-- Idioma de la app -->
+    <string name="language_title">Idioma</string>
+    <string name="language_system">Sistema</string>
+    <string name="language_spanish" translatable="false">Español</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_hint">“Sistema” usa el idioma del teléfono.</string>
+    <!-- Fotos: cámara o galería -->
+    <string name="photos_source_title">Agregar foto</string>
+    <string name="photos_take_photo">Tomar foto</string>
+    <string name="photos_from_gallery">Elegir de la galería</string>
+    <string name="photos_camera_unavailable">No encontramos una app de cámara en este dispositivo.</string>
+
+    <!-- Foto de perfil -->
+    <string name="account_photo_description">Foto de perfil</string>
+    <string name="account_photo_uploading">Cargando foto… %1$d %%</string>
+    <string name="account_photo_saved">Foto de perfil actualizada.</string>
+
+    <!-- Validaciones de contenido -->
+    <string name="error_name_invalid">El nombre solo puede tener letras y un espacio entre palabras (también guion o apóstrofo), sin números ni símbolos</string>
+    <string name="error_password_letters_digits">La contraseña debe combinar letras y números</string>
+    <string name="error_password_edge_spaces">La contraseña no puede empezar ni terminar con un espacio</string>
+    <string name="error_title_invalid_chars" formatted="false">Usa solo letras, números y signos básicos (. , : - \' &amp; ( ) # ! ? / %)</string>
+    <string name="error_text_forbidden_chars">No uses los signos &lt; ni &gt;</string>
+    <string name="error_text_no_letters">Escribe palabras: el texto no puede tener solo números o símbolos</string>
+    <string name="error_comment_no_letters">El comentario debe tener letras o números, no solo símbolos</string>
+    <string name="error_text_repeated_chars">No repitas el mismo carácter más de %1$d veces seguidas</string>
 </resources>
