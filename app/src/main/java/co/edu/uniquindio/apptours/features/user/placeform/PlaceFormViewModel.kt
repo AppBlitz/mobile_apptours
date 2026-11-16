@@ -45,6 +45,12 @@ class PlaceFormViewModel @Inject constructor(
     /** true cuando el usuario ya revisó (o no se pudo revisar) los duplicados del texto y ubicación actuales. */
     private var duplicatesReviewed = false
 
+    /**
+     * Lugares que la IA señaló como posible duplicado. Si el autor publica igual, se guardan en la publicación
+     * y el moderador la ve con la etiqueta "IA · posible duplicado". Al editar se parte de lo ya guardado.
+     */
+    private var possibleDuplicateIds: List<String> = emptyList()
+
     private val _uiState = MutableStateFlow(PlaceFormUiState(isEditing = placeId != null, isLoading = placeId != null))
     val uiState: StateFlow<PlaceFormUiState> = _uiState.asStateFlow()
 
@@ -67,6 +73,7 @@ class PlaceFormViewModel @Inject constructor(
                         _uiState.update { it.copy(isLoading = false, loadErrorRes = R.string.error_place_not_found) }
                         return@onSuccess
                     }
+                    possibleDuplicateIds = place.possibleDuplicateIds
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -153,10 +160,12 @@ class PlaceFormViewModel @Inject constructor(
         _uiState.update { it.copy(isCheckingDuplicates = false) }
         val duplicates = result.getOrElse {
             // Sin red o sin cuota: no se bloquea; se avisa y el próximo "Publicar" publica.
+            // La marca que ya tuviera la publicación (al editar) se conserva.
             duplicatesReviewed = true
             _uiState.update { it.copy(duplicateCheckFailed = true) }
             return false
         }
+        possibleDuplicateIds = duplicates.map { it.place.id }
         if (duplicates.isEmpty()) return true
         _uiState.update { it.copy(duplicates = duplicates) }
         return false
@@ -181,9 +190,9 @@ class PlaceFormViewModel @Inject constructor(
         _uiState.update { it.copy(isSaving = true, errorRes = null) }
         val onProgress: (Float) -> Unit = { p -> _uiState.update { it.copy(uploadProgress = p) } }
         val result = if (placeId == null) {
-            createPlace(s.draft, onProgress).map { }
+            createPlace(s.draft, possibleDuplicateIds, onProgress).map { }
         } else {
-            updatePlace(placeId, s.draft, onProgress)
+            updatePlace(placeId, s.draft, possibleDuplicateIds, onProgress)
         }
         _uiState.update { it.copy(isSaving = false, uploadProgress = null) }
         result

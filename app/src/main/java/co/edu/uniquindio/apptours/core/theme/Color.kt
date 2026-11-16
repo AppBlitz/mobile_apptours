@@ -16,3 +16,7 @@ val ColabTextSecondary = Color(0xFF5C665E)
 val ColabError = Color(0xFFB3261E)
 val ColabErrorBg = Color(0xFFFCEEEE)
 val ColabGrayBorder = Color(0xFFDCD8C8)
+
+// Etiqueta de la IA para los moderadores ("IA · posible duplicado").
+val ColabPurple = Color(0xFF6A3FA0)
+val ColabPurpleBg = Color(0xFFEDE4F7)

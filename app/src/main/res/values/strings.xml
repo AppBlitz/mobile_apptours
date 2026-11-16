@@ -456,6 +456,9 @@
     <string name="moderator_mode">Modo moderador</string>
     <string name="moderation_panel_title">Panel de moderación</string>
     <string name="review_pending_badge">Pendiente</string>
+    <string name="ai_duplicate_badge">IA · posible duplicado</string>
+    <string name="ai_duplicate_banner">La IA encontró publicaciones cercanas muy parecidas y el autor decidió publicar igual. Revisa que no sea un lugar repetido antes de verificarlo.</string>
+    <string name="map_card_close">Cerrar tarjeta del lugar</string>
     <string name="review_sent_at">Enviada %1$s</string>
     <string name="detail_price_title">PRECIO</string>
     <string name="detail_schedule_title">HORARIO SUGERIDO</string>

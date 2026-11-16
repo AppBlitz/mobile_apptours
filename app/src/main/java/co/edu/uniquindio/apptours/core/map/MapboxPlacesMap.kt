@@ -17,6 +17,7 @@ import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
+import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.viewannotation.geometry
@@ -24,7 +25,8 @@ import com.mapbox.maps.viewannotation.viewAnnotationOptions
 
 /**
  * Mapa del feed: un marcador por lugar con el color de su categoría. Tocar un marcador lo selecciona
- * (la tarjeta del lugar la dibuja quien usa el mapa). Incluye el botón "Mi ubicación".
+ * (la tarjeta del lugar la dibuja quien usa el mapa); tocar el mapa fuera de un marcador llama a [onMapClick]
+ * (sirve para cerrar la tarjeta). Incluye el botón "Mi ubicación".
  */
 @Composable
 fun MapboxPlacesMap(
@@ -33,7 +35,8 @@ fun MapboxPlacesMap(
     onPlaceSelected: (Place) -> Unit,
     initialLatitude: Double,
     initialLongitude: Double,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMapClick: () -> Unit = {}
 ) {
     if (!MapDefaults.enabled) {
         MapUnavailablePlaceholder(modifier)
@@ -53,7 +56,11 @@ fun MapboxPlacesMap(
         MapboxMap(
             modifier = Modifier.matchParentSize(),
             mapViewportState = viewport,
-            scaleBar = {}
+            scaleBar = {},
+            onMapClickListener = OnMapClickListener {
+                onMapClick()
+                false
+            }
         ) {
             MapEffect(showPuck) { mapView ->
                 mapView.location.updateSettings {

@@ -22,9 +22,17 @@ data class Place(
     val visitsCount: Int = 0,
     val rejectionReason: String? = null,
     val moderatorId: String? = null,
-    val reviewedAt: Long? = null
+    val reviewedAt: Long? = null,
+    /**
+     * Ids de los lugares cercanos que la IA marcó como posible duplicado cuando el autor publicó igual
+     * ("No es el mismo, publicar igual"). Vacío si la IA no encontró duplicados.
+     */
+    val possibleDuplicateIds: List<String> = emptyList()
 ) {
     val coverImageUrl: String? get() = imageUrls.firstOrNull()
+
+    /** El moderador ve la etiqueta morada "IA · posible duplicado". */
+    val flaggedAsPossibleDuplicate: Boolean get() = possibleDuplicateIds.isNotEmpty()
 
     companion object {
         val ALL_DAYS = listOf("L", "M", "X", "J", "V", "S", "D")

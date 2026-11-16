@@ -121,6 +121,9 @@ class FeedViewModel @Inject constructor(
 
     fun onSelectMapPlace(placeId: String) = controls.update { it.copy(selectedMapPlaceId = placeId) }
 
+    /** Cierra la tarjeta del lugar en el mapa (botón X, tocar el mapa o "atrás"). */
+    fun onDismissMapPlace() = controls.update { it.copy(selectedMapPlaceId = null) }
+
     fun onToggleInterest(placeId: String) {
         viewModelScope.launch { toggleInterest(placeId) }
     }

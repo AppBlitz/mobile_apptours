@@ -455,6 +455,9 @@
     <string name="moderator_mode">Moderator mode</string>
     <string name="moderation_panel_title">Moderation panel</string>
     <string name="review_pending_badge">Pending</string>
+    <string name="ai_duplicate_badge">AI · possible duplicate</string>
+    <string name="ai_duplicate_banner">The AI found very similar places nearby and the author chose to publish anyway. Make sure it is not a repeated place before verifying it.</string>
+    <string name="map_card_close">Close place card</string>
     <string name="review_sent_at">Submitted %1$s</string>
     <string name="detail_price_title">PRICE</string>
     <string name="detail_schedule_title">SUGGESTED HOURS</string>

@@ -127,6 +127,10 @@ fun ModeratorReviewScreen(
             )
 
             Column(modifier = Modifier.padding(20.dp)) {
+                if (place.flaggedAsPossibleDuplicate) {
+                    AiDuplicateBanner(modifier = Modifier.fillMaxWidth())
+                    Spacer(modifier = Modifier.height(14.dp))
+                }
                 ReviewPlaceInfo(place = place)
 
                 Spacer(modifier = Modifier.height(14.dp))

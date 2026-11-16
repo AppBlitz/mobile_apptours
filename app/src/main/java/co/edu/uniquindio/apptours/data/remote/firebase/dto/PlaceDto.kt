@@ -31,7 +31,8 @@ data class PlaceDto(
     val visitsCount: Int = 0,
     val rejectionReason: String? = null,
     val moderatorId: String? = null,
-    val reviewedAt: Timestamp? = null
+    val reviewedAt: Timestamp? = null,
+    val possibleDuplicateIds: List<String> = emptyList()
 ) {
     /** Campos que cambia el autor al editar; no incluye contadores ni datos de moderación. */
     fun editableFields(): Map<String, Any?> = mapOf(
@@ -46,7 +47,8 @@ data class PlaceDto(
         "longitude" to longitude,
         "imageUrls" to imageUrls,
         "status" to status,
-        "rejectionReason" to rejectionReason
+        "rejectionReason" to rejectionReason,
+        "possibleDuplicateIds" to possibleDuplicateIds
     )
 
     fun toMap(): Map<String, Any?> = editableFields() + mapOf(
@@ -81,7 +83,8 @@ data class PlaceDto(
         visitsCount = visitsCount,
         rejectionReason = rejectionReason,
         moderatorId = moderatorId,
-        reviewedAt = reviewedAt?.toMillis()
+        reviewedAt = reviewedAt?.toMillis(),
+        possibleDuplicateIds = possibleDuplicateIds
     )
 
     companion object {
@@ -107,7 +110,8 @@ data class PlaceDto(
             visitsCount = doc.getLong("visitsCount")?.toInt() ?: 0,
             rejectionReason = doc.getString("rejectionReason"),
             moderatorId = doc.getString("moderatorId"),
-            reviewedAt = doc.getTimestamp("reviewedAt")
+            reviewedAt = doc.getTimestamp("reviewedAt"),
+            possibleDuplicateIds = (doc.get("possibleDuplicateIds") as? List<String>).orEmpty()
         )
     }
 }
@@ -133,5 +137,6 @@ fun Place.toDto(): PlaceDto = PlaceDto(
     visitsCount = visitsCount,
     rejectionReason = rejectionReason,
     moderatorId = moderatorId,
-    reviewedAt = reviewedAt?.toTimestamp()
+    reviewedAt = reviewedAt?.toTimestamp(),
+    possibleDuplicateIds = possibleDuplicateIds
 )

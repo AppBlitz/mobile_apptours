@@ -17,6 +17,7 @@ class UpdatePlaceUseCase @Inject constructor(
     suspend operator fun invoke(
         placeId: String,
         draft: PlaceDraft,
+        possibleDuplicateIds: List<String> = emptyList(),
         onUploadProgress: (Float) -> Unit = {}
     ): Result<Unit> {
         draft.validate()?.let { return Result.failure(it) }
@@ -40,7 +41,8 @@ class UpdatePlaceUseCase @Inject constructor(
                 longitude = requireNotNull(draft.longitude),
                 imageUrls = imageUrls,
                 status = PlaceStatus.PENDIENTE,
-                rejectionReason = null
+                rejectionReason = null,
+                possibleDuplicateIds = possibleDuplicateIds.distinct().filter { it != placeId }
             )
         )
     }

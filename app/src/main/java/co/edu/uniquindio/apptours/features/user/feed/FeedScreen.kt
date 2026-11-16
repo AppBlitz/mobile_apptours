@@ -75,6 +75,7 @@ fun FeedRoute(
         },
         onCategorySelected = viewModel::onCategorySelected,
         onSelectMapPlace = viewModel::onSelectMapPlace,
+        onDismissMapPlace = viewModel::onDismissMapPlace,
         onToggleInterest = viewModel::onToggleInterest,
         onToggleVisited = viewModel::onToggleVisited,
         onShowList = onShowList,
@@ -94,6 +95,7 @@ fun FeedScreen(
     onLocationFilterSelected: (LocationFilter) -> Unit,
     onCategorySelected: (PlaceCategory?) -> Unit,
     onSelectMapPlace: (String) -> Unit,
+    onDismissMapPlace: () -> Unit,
     onToggleInterest: (String) -> Unit,
     onToggleVisited: (String) -> Unit,
     onShowList: () -> Unit,
@@ -163,6 +165,7 @@ fun FeedScreen(
                 votedPlaceIds = state.votedPlaceIds,
                 visitedPlaceIds = state.visitedPlaceIds,
                 onSelectPlace = onSelectMapPlace,
+                onDismissPlace = onDismissMapPlace,
                 onToggleInterest = onToggleInterest,
                 onToggleVisited = onToggleVisited,
                 onOpenPlaceDetail = onOpenPlaceDetail

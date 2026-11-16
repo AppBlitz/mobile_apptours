@@ -11,7 +11,10 @@ import co.edu.uniquindio.apptours.domain.usecase.gamification.AwardPointsUseCase
 import co.edu.uniquindio.apptours.domain.usecase.gamification.EvaluateBadgesUseCase
 import javax.inject.Inject
 
-/** Sube las fotos, crea la publicación en estado PENDIENTE (U-08) y otorga los puntos de publicar. */
+/**
+ * Sube las fotos, crea la publicación en estado PENDIENTE (U-08) y otorga los puntos de publicar.
+ * [possibleDuplicateIds] son los lugares que la IA señaló como posible duplicado (el autor publicó igual).
+ */
 class CreatePlaceUseCase @Inject constructor(
     private val getSession: GetSessionUseCase,
     private val placeRepository: PlaceRepository,
@@ -19,7 +22,11 @@ class CreatePlaceUseCase @Inject constructor(
     private val awardPoints: AwardPointsUseCase,
     private val evaluateBadges: EvaluateBadgesUseCase
 ) {
-    suspend operator fun invoke(draft: PlaceDraft, onUploadProgress: (Float) -> Unit = {}): Result<String> {
+    suspend operator fun invoke(
+        draft: PlaceDraft,
+        possibleDuplicateIds: List<String> = emptyList(),
+        onUploadProgress: (Float) -> Unit = {}
+    ): Result<String> {
         draft.validate()?.let { return Result.failure(it) }
         val author = getSession.require().getOrElse { return Result.failure(it) }
         // Las fotos se suben solo cuando todo lo demás es válido; sin fotos subidas no se publica.
@@ -41,7 +48,8 @@ class CreatePlaceUseCase @Inject constructor(
             authorId = author.id,
             authorName = author.fullName,
             authorLevel = author.level,
-            status = PlaceStatus.PENDIENTE
+            status = PlaceStatus.PENDIENTE,
+            possibleDuplicateIds = possibleDuplicateIds.distinct()
         )
         return placeRepository.create(place).onSuccess {
             awardPoints(author.id, PointAction.CREATE_PLACE)

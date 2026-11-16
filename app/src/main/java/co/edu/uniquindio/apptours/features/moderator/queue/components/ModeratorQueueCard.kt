@@ -76,7 +76,13 @@ internal fun ModeratorQueueCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CategoryBadgeChip(category = place.category)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CategoryBadgeChip(category = place.category)
+                    if (place.flaggedAsPossibleDuplicate) {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        AiDuplicateBadge()
+                    }
+                }
                 Text(
                     text = relativeTimeLabel(place.createdAt),
                     fontSize = 12.sp,
